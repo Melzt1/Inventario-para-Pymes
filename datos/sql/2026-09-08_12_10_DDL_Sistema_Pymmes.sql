@@ -14,7 +14,7 @@ CREATE TABLE direcciones(
 CREATE TABLE categorias(
     id_categoria INTEGER AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
-    descripcion VARCHAR(255) NOT NULL
+    descripcion VARCHAR(255) NOT NULL,
 
     CONSTRAINT pk_categoria PRIMARY KEY (id_categoria)
 );
@@ -57,7 +57,7 @@ CREATE TABLE producto_proveedor(
 
     CONSTRAINT fk_producto_proveedor_producto FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
     CONSTRAINT fk_producto_proveedor_proveedor FOREIGN KEY (id_proveedor) REFERENCES proveedores(id_proveedor)
-):
+);
 
 CREATE TABLE productos_perecibles(
     id_producto INTEGER,
@@ -100,6 +100,7 @@ CREATE TABLE inventarios(
     CONSTRAINT fk_inventario_almacen FOREIGN KEY (id_almacen) REFERENCES almacenes(id_almacen),
 
     -- Evita que un mismo producto tenga mas de un registro de inventario dentro del mismo almacen.
+    -- Evitar que se dupliquen registros del mismo producto en la misma bodega.
     CONSTRAINT uk_inventario_producto_almacen UNIQUE (id_producto, id_almacen)
 );
 
@@ -112,6 +113,6 @@ CREATE TABLE movimientos(
     id_inventario INTEGER NOT NULL,
 
     CONSTRAINT pk_movimiento PRIMARY KEY (id_movimiento),
-    
+
     CONSTRAINT fk_movimiento_inventario FOREIGN KEY (id_inventario) REFERENCES inventarios(id_inventario)
 );
