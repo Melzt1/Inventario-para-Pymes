@@ -31,6 +31,8 @@ CREATE TABLE proveedores(
     CONSTRAINT pk_proveedor PRIMARY KEY (id_proveedor),
 
     CONSTRAINT fk_proveedor_direccion FOREIGN KEY (id_direccion) REFERENCES direcciones(id_direccion)
+    -- CHECK para que estado solo pueda ser 0 o 1.
+    CHECK (estado IN (0,1))
 );
 
 CREATE TABLE productos(
@@ -49,10 +51,10 @@ CREATE TABLE productos(
     CONSTRAINT fk_producto_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria),
     
     -- CHECK para validar que si agregan una fecha de elaboracion y una fecha de vencimiento, la fecha de vencimiento sea mayor o igual a la fecha de elaboracion.
-    CHECK (
-        fecha_elaboracion IS NULL OR fecha_vencimiento IS NULL 
-        OR fecha_vencimiento >= fecha_elaboracion
-        )
+    CHECK (fecha_elaboracion IS NULL OR fecha_vencimiento IS NULL OR fecha_vencimiento >= fecha_elaboracion),
+
+    -- CHECK para que estado solo pueda ser 0 o 1.
+    CHECK (estado IN (0,1))
 );
 
 -- RELACION PRODUCTO - PROVEEDOR
@@ -80,6 +82,8 @@ CREATE TABLE almacenes(
     CONSTRAINT pk_almacen PRIMARY KEY (id_almacen),
 
     CONSTRAINT fk_almacen_direccion FOREIGN KEY (id_direccion) REFERENCES direcciones(id_direccion)
+    -- CHECK para que estado solo pueda ser 0 o 1.
+    CHECK (estado IN (0,1))
 );
 
 CREATE TABLE stocks(
