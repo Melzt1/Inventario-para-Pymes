@@ -46,21 +46,27 @@ CREATE TABLE productos(
     id_categoria INTEGER NOT NULL,
 
     CONSTRAINT pk_producto PRIMARY KEY (id_producto),
-
-    CONSTRAINT fk_producto_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+    CONSTRAINT fk_producto_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria),
+    
+    -- CHECK para validar que si agregan una fecha de elaboracion y una fecha de vencimiento, la fecha de vencimiento sea mayor o igual a la fecha de elaboracion.
+    CHECK (
+        fecha_elaboracion IS NULL OR fecha_vencimiento IS NULL 
+        OR fecha_vencimiento >= fecha_elaboracion
+        )
 );
 
 -- RELACION PRODUCTO - PROVEEDOR
 CREATE TABLE producto_proveedor(
     id_producto INTEGER NOT NULL,
     id_proveedor INTEGER NOT NULL,
-    es_principal TINYINT(1) DEFAULT 0,
+    es_principal TINYINT(1) DEFAULT 0 NOT NULL,  -- AGREGUE EL NOT NULL PARA IMPEDIR EL ESTADO NULL Y MANTENER SOLO 0 o 1
 
     -- PRIMARY KEY COMPUESTA
     CONSTRAINT pk_producto_proveedor PRIMARY KEY (id_producto, id_proveedor),
 
     CONSTRAINT fk_producto_proveedor_producto FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-    CONSTRAINT fk_producto_proveedor_proveedor FOREIGN KEY (id_proveedor) REFERENCES proveedores(id_proveedor)
+    CONSTRAINT fk_producto_proveedor_proveedor FOREIGN KEY (id_proveedor) REFERENCES proveedores(id_proveedor),
+    CHECK (es_principal IN (0,1)) -- Para chequear que el valor de es_principal sea 0 o 1 y no permita mas valores.
 );
 
 
