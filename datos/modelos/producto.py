@@ -1,0 +1,12 @@
+class Producto:
+    def __init__(self,id_producto,nombre,sku,precio_costo,precio_venta,descripcion,fecha_elaboracion,fecha_vencimiento,estado,id_categoria):
+        self.__id_producto= id_producto
+        self.__nombre= nombre
+        self.__sku= sku
+        self.__precio_costo= precio_costo
+        self.__precio_venta= precio_venta
+        self.__descripcion= descripcion
+        self.__fecha_elaboracion= fecha_elaboracion
+        self.__fecha_vencimiento= fecha_vencimiento
+        self.__estado= estado
+        self.__id_categoria= id_categoria
