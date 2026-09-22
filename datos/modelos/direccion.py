@@ -1,4 +1,4 @@
-class Direccion:
+class Direccion():
     def __init__(self,id_direccion,calle,numero,comuna,ciudad):
         self.__id_direccion= id_direccion
         self.__calle= calle

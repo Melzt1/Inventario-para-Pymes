@@ -8,4 +8,4 @@ class Proveedor():
         self.__telefono= telefono
         self.__estado= estado
         self.__id_direccion= id_direccion
-    
+        
