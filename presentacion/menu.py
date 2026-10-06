@@ -1,4 +1,5 @@
 from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior
+from presentacion.interaccion_pyme import lista_categorias
 
 def menu_principal():
     while True:
@@ -9,7 +10,7 @@ def menu_principal():
         opcion = input("Ingresa una opcion: ")
 
         if opcion == "1":
-            pass
+            lista_categorias()
         elif opcion == "2":     
             pass
         elif opcion == "3":

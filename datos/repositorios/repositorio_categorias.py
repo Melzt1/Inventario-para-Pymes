@@ -1,6 +1,6 @@
-from datos.modelos.categoria import Categorias
+from datos.modelos.categoria import Categoria
 
 def listado_categorias():
-    categorias = Categorias.select()
+    categorias = Categoria.select()
     if categorias:
         return categorias

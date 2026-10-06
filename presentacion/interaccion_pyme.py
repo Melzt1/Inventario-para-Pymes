@@ -3,11 +3,11 @@ from prettytable import PrettyTable
 
 
 def lista_categorias():
-    tabla_categoria = PrettyTable
-    tabla_categoria.field_names = ['Id', 'Nombre', 'Descripcion']
+    tabla_categorias = PrettyTable()
+    tabla_categorias.field_names = ['Id', 'Nombre', 'Descripcion']
     
     categorias = listado_categorias()
     if categorias:
         for categoria in categorias:
-            tabla_categoria.add_row([categoria.id_categoria, categoria.nombre, categoria.descripcion])
-            #print(f"{categoria.id_categoria} - {categoria.nombre} - {categoria.descripcion}")
+            tabla_categorias.add_row([categoria.id_categoria, categoria.nombre, categoria.descripcion])
+        print(tabla_categorias)
