@@ -1,6 +1,20 @@
-class Inventario:
-    def __init__(self, id_inventario, id_producto, id_almacen, id_stock):
-        self.id_inventario = id_inventario
-        self.id_producto = id_producto
-        self.id_almacen = id_almacen
-        self.id_stock = id_stock
+from peewee import Model, IntegerField, AutoField
+from datos.conexion import conectar_db
+
+database = conectar_db()
+
+class BaseModel(Model):
+    class Meta:
+        database = database
+
+class Inventario(BaseModel):
+    id_inventario = AutoField()
+    id_almacen = IntegerField(index=True)
+    id_producto = IntegerField()
+    id_stock = IntegerField(unique=True)
+
+    class Meta:
+        table_name = 'inventarios'
+        indexes = (
+            (('id_producto', 'id_almacen'), True),
+        )

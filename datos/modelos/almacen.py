@@ -1,6 +1,19 @@
-class Almacen:
-    def __init__(self, id_almacen, nombre, encargado, estado):
-        self.id_almacen = id_almacen
-        self.nombre = nombre
-        self.encargado = encargado
-        self.estado = estado
+from peewee import Model, CharField, BooleanField, AutoField, IntegerField
+from datos.conexion import conectar_db
+
+database = conectar_db()
+
+class BaseModel(Model):
+    class Meta:
+        database = database
+
+
+class Almacen(BaseModel):
+    id_almacen = AutoField()
+    nombre = CharField(max_length=50)
+    encargado = CharField(max_length=50)
+    estado = BooleanField(constraints=[SQL(defecto)])
+    id_direccion = IntegerField(index=True)
+
+    class Meta:
+        table_name = 'almacenes'    

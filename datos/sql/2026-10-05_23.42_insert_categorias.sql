@@ -1,0 +1,16 @@
+INSERT INTO categorias (nombre, descripcion) VALUES
+('Alimentos', 'Productos destinados al consumo humano.'),
+('Bebidas', 'Bebidas liquidas, gaseosas, jugos y agua.'),
+('Limpieza', 'Productos utilizados para la limpieza y aseo.'),
+('Higiene personal', 'Productos destinados al cuidado e higiene personal.'),
+('Electronica', 'Dispositivos y accesorios electronicos.'),
+('Oficina', 'Articulos y materiales utilizados en oficinas.'),
+('Herramientas', 'Herramientas manuales y electricas para trabajos diversos.'),
+('Ferreteria', 'Materiales y accesorios para construccion y reparaciones.'),
+('Ropa', 'Prendas de vestir y accesorios textiles.'),
+('Calzado', 'Todo tipo de calzado para uso personal.'),
+('Hogar', 'Productos y accesorios para el hogar.'),
+('Jugueteria', 'Juguetes y articulos destinados al entretenimiento infantil.'),
+('Mascotas', 'Productos, alimentos y accesorios para mascotas.'),
+('Deportes', 'Articulos y equipamiento para actividades deportivas.'),
+('Papeleria', 'Cuadernos, lapices, papel y otros articulos de papeleria.');
