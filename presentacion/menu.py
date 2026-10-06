@@ -1,5 +1,7 @@
 from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria 
-from presentacion.interaccion_pyme import lista_categorias
+from negocio.negocio_categoria import lista_categorias
+from presentacion.presentacion_pyme import solicitar_datos_categoria
+
 
 def menu_principal():
     while True:
@@ -17,13 +19,15 @@ def menu_principal():
                 opcion_sub_menu = input('\nIngrese su opción [0-1]: ').strip()
                 if opcion_sub_menu == "1":
                     lista_categorias()
+                elif opcion_sub_menu == "2":
+                    solicitar_datos_categoria()
                 elif opcion_sub_menu == "0":
                     break
                 else:
                     print("Opcion invalida.")   
         elif opcion == "2":     
             pass
-        elif opcion == "3":
+        elif opcion == "0":
             print("Programa Finalizado.")
             break
         else:
