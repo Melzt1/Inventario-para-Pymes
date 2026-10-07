@@ -10,6 +10,8 @@ def guardar_categorias(categoria:Categoria):
     try:
         guardar = categoria.save()
         print(guardar)
+        return True
+
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
     except OperationalError as e:
@@ -21,4 +23,5 @@ def guardar_categorias(categoria:Categoria):
     finally:
         print("Proceso finalizado.")
 
+    return False
              

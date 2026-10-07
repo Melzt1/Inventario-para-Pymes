@@ -5,7 +5,7 @@ from datos.modelos.categoria import Categoria
 
 def lista_categorias():
     tabla_categorias = PrettyTable()
-    tabla_categorias.field_names = ['Id', 'Nombre', 'Descripcion']
+    tabla_categorias.field_names = ['Id', 'Nombre', 'Descripcion', 'estado']
     
     categorias = listado_categorias()
 
@@ -14,7 +14,7 @@ def lista_categorias():
         return
     
     for categoria in categorias:
-        tabla_categorias.add_row([categoria.id_categoria, categoria.nombre, categoria.descripcion])
+        tabla_categorias.add_row([categoria.id_categoria, categoria.nombre, categoria.descripcion, ('Deshabilitado', 'Habilitado')[categoria.estado]])
     print(tabla_categorias)
 
 def crear_categoria(nombre, descripcion):        
@@ -42,4 +42,25 @@ def actualizar_categoria(id_categoria, nombre, descripcion):
 
     categoria.nombre = nombre
     categoria.descripcion = descripcion
-    return guardar_categorias(categoria)      
+    return guardar_categorias(categoria)
+
+# Metodo para Eliminar Categoria (borrado logico)
+def desactivar_categoria(id_categoria):
+    categoria = obtener_categoria(id_categoria)
+
+    if categoria is None:
+        return False
+
+    # estado es un booleano, solo necesito cambiarlo a False para desactivarlo
+    categoria.estado = False
+    return guardar_categorias(categoria)
+
+# Metodo para activar Categoria
+def activar_categoria(id_categoria):
+    categoria = obtener_categoria(id_categoria)
+
+    if categoria is None:
+        return False
+
+    categoria.estado = True
+    return guardar_categorias(categoria)

@@ -1,6 +1,6 @@
 from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria 
 from negocio.negocio_categoria import lista_categorias
-from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria
+from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria, solicitar_desactivar_categoria, solicitar_activar_categoria
 
 
 def menu_principal():
@@ -22,7 +22,11 @@ def menu_principal():
                 elif opcion_sub_menu == "2":
                     solicitar_datos_categoria()
                 elif opcion_sub_menu == "3":
-                    solicitar_actualizar_categoria()                                            
+                    solicitar_actualizar_categoria()
+                elif opcion_sub_menu == "4":
+                    solicitar_desactivar_categoria()
+                elif opcion_sub_menu == "5":
+                    solicitar_activar_categoria()                                                                      
                 elif opcion_sub_menu == "0":
                     break
                 else:

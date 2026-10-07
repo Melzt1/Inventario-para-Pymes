@@ -11,6 +11,8 @@ submenu_categoria = {
     "1": "Listar categorías",
     "2": "Guardar cateogria",
     "3": "Actualizar cateogria",
+    '4': "Desactivar categoria",
+    '5': "Activar categoria",
     "0": "Volver al menú principal",
 }
 
