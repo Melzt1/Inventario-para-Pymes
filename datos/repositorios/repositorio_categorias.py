@@ -19,4 +19,6 @@ def guardar_categorias(categoria:Categoria):
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
     finally:
-        print("Proceso finalizado.")        
+        print("Proceso finalizado.")
+
+             

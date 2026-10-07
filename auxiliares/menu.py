@@ -10,6 +10,7 @@ menu_superior = {
 submenu_categoria = {
     "1": "Listar categorías",
     "2": "Guardar cateogria",
+    "3": "Actualizar cateogria",
     "0": "Volver al menú principal",
 }
 
