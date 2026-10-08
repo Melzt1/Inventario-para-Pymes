@@ -1,5 +1,5 @@
 from negocio.negocio_categoria import crear_categoria, actualizar_categoria, obtener_categoria, desactivar_categoria, activar_categoria
-from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_ENTERO, MENSAJE_CATEGORIA_NO_EXISTE
+from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_ENTERO, MENSAJE_ID_NO_EXISTE, OPCION_INVALIDA
 
 def solicitar_datos_categoria():
     nombre = descripcion = ""
@@ -24,7 +24,7 @@ def solicitar_actualizar_categoria():
 
     # Si no encontro la categoria se detiene la funcion actual
     if categoria is None:
-        print(MENSAJE_CATEGORIA_NO_EXISTE)
+        print(MENSAJE_ID_NO_EXISTE)
         return 
 
     nombre = input("Ingrese el nombre de la categoria: ")   
@@ -42,7 +42,7 @@ def solicitar_desactivar_categoria():
     categoria = obtener_categoria(id_categoria)
 
     if categoria is None:
-        print(MENSAJE_CATEGORIA_NO_EXISTE)
+        print(MENSAJE_ID_NO_EXISTE)
         return 
 
     confirmar = input(f"Estas seguro de desactivar la categoria: {categoria.nombre}? (S/N): ").strip().upper()
@@ -55,7 +55,7 @@ def solicitar_desactivar_categoria():
     elif confirmar == "N":
         print("Opcion Cancelada.")
     else:
-        print("Opcion invalida.") 
+        print(OPCION_INVALIDA) 
 
 def solicitar_activar_categoria():
     try:
@@ -67,7 +67,7 @@ def solicitar_activar_categoria():
     categoria = obtener_categoria(id_categoria)
 
     if categoria is None:
-        print(MENSAJE_CATEGORIA_NO_EXISTE)
+        print(MENSAJE_ID_NO_EXISTE)
         return 
 
     return activar_categoria(id_categoria)

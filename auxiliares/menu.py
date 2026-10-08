@@ -1,6 +1,6 @@
 menu_superior = {
-    "1": "Gestión de categorías (lista)",
-    "2": "Gestión de proveedores (En proceso)",
+    "1": "Gestión de categorías (Funcionando)",
+    "2": "Gestión de proveedores (Funcionando)",
     "3": "Gestión de productos (No hace nada)",
     "4": "Gestión de almacenes (No hace nada)",
     "5": "Gestión de inventario y movimientos (No hace nada)",
@@ -20,7 +20,8 @@ submenu_proveedor = {
     "1": "Listar proveedores",
     "2": "Registrar proveedor",
     "3": "Actualizar proveedor",
-    '4': "Desactivar proveedor",
-    '5': "Activar proovedor",
+    "4": "Actualizar direccion proveedor",
+    '5': "Desactivar proveedor",
+    '6': "Activar proovedor",
     "0": "Volver al menú principal"
 }

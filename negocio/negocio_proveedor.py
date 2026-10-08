@@ -6,7 +6,7 @@ from prettytable import PrettyTable
 
 def lista_proveedores():
     tabla_proveedores = PrettyTable()
-    tabla_proveedores.field_names(['Id', 'Rut', 'Nombre', 'Correo', 'Telefono', 'Estado', 'Id Direccion'])
+    tabla_proveedores.field_names = ['Id', 'Rut', 'Nombre', 'Correo', 'Telefono', 'Estado', 'Id Direccion']
 
     proveedores = listado_proveedores()
 
@@ -15,19 +15,64 @@ def lista_proveedores():
         return
 
     for proveedor in proveedores:
-        tabla_proveedores.add_row[(
+        tabla_proveedores.add_row([
             proveedor.id_proveedor,
             proveedor.rut,
             proveedor.nombre,
             proveedor.correo,
             proveedor.telefono,
             ('Deshabilitado', 'Habilitado')[proveedor.estado],
-            proveedor.id_direccion
-        )]
-
+            proveedor.id_direccion])
     print(tabla_proveedores)
 
+def validar_rut(rut):
+    # Limpiar los caracteres del rut (puntos y guion) 
+    rut_limpio = rut.replace(".", "").replace("-","")
+
+    # obtener todos los digitos menos el DV
+    rut_sin_dv = rut_limpio[:-1] 
+    dv_original = rut_limpio[-1]
+
+    multiplicador = 2
+    suma = 0
+
+    # reversed para invertir los digitos del rut
+    for digito in reversed(rut_sin_dv):
+        resultado = int(digito) * multiplicador # Hacemos un cast para poder multiplicar
+        suma += resultado
+
+        # Aumentamos 1 por cada iteracion hasta 7 y luego lo reseteamos
+        multiplicador += 1
+        if multiplicador == 8:
+            multiplicador = 2
+
+    # calcular el digito verificador
+    resto = suma % 11
+    dv_calculado = 11 - resto
+
+    if dv_calculado == 11:
+        dv_calculado = "0"
+    elif dv_calculado  == 10:
+        dv_calculado = "K" 
+    else:
+        dv_calculado = str(dv_calculado )  
+
+    # retonar si coincide con el digito verificador orignal
+    return dv_original == dv_calculado
+
+# validaciones unique
+# Validar si el correo ingresado ya existe en la db
+def validar_correo_en_uso(correo):
+    return Proveedor.select().where(Proveedor.correo == correo).exists()
+
+# Validar si el telefono ingresado ya existe en la db
+def validar_telefono_en_uso(telefono):
+    return Proveedor.select().where(Proveedor.telefono == telefono).exists()
+
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
+    if not validar_rut(rut):
+        return False
+
     nuevo_proveedor = Proveedor()
     nuevo_proveedor.rut = rut
     nuevo_proveedor.nombre = nombre
@@ -37,10 +82,60 @@ def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ci
     # asociar direccion (relacion entre entidades)
     nueva_direccion = crear_direccion(calle, numero, comuna, ciudad)
 
-    # Intentar guardar direccion, si no puede devuelve False asi no intenta crear un proveedor sin direccion
+    # Si no puede guardar direccion, devuelve False asi no intenta crear un proveedor sin direccion
     if not guardar_direcciones(nueva_direccion):
         return False 
 
     # asignar al proveedor el objeto Direccion
     nuevo_proveedor.id_direccion = nueva_direccion
     return guardar_proveedores(nuevo_proveedor)
+
+def obtener_proveedor(id_proveedor):
+    try:
+        return Proveedor[id_proveedor]
+    except Proveedor.DoesNotExist:
+        return None
+
+# Actualizar solo datos que pueden variar
+def actualizar_proveedor(id_proveedor, correo, telefono):
+    proveedor = obtener_proveedor(id_proveedor)
+
+    if proveedor is None:
+        return False
+
+    proveedor.correo = correo
+    proveedor.telefono = telefono
+    return guardar_proveedores(proveedor)    
+
+def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
+    proveedor = obtener_proveedor(id_proveedor)
+
+    if proveedor is None:
+        return False
+
+    direccion = proveedor.id_direccion
+
+    proveedor.calle = calle
+    proveedor.numero = numero
+    proveedor.comuna = comuna
+    proveedor.ciudad = ciudad
+    return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
+
+def inhabilitar_proveedor(id_proveedor):
+    proveedor = obtener_proveedor(id_proveedor)
+
+    if proveedor is None:
+        return False
+
+    proveedor.estado = False
+    return guardar_proveedores(proveedor)
+
+def habilitar_proveedor(id_proveedor):
+    proveedor = obtener_proveedor(id_proveedor)
+
+    if proveedor is None:
+        return False
+
+    proveedor.estado = True
+    return guardar_proveedores(proveedor)
+

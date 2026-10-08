@@ -1,7 +1,8 @@
 from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria, submenu_proveedor
 from negocio.negocio_categoria import lista_categorias
+from negocio.negocio_proveedor import lista_proveedores
 from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria, solicitar_desactivar_categoria, solicitar_activar_categoria
-from presentacion.presentacion_proveedor import solicitar_datos_proveedor
+from presentacion.presentacion_proveedor import solicitar_datos_proveedor, solicitar_actualizar_proveedor, solicitar_actualizar_direccion_proveedor, solicitar_inhabilitar_proveedor, solicitar_habilitar_proveedor
 from auxiliares.mensajes import MENSAJE_ID_ENTERO, OPCION_INVALIDA
 
 
@@ -14,7 +15,7 @@ def menu_principal():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-7]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-5]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
@@ -37,7 +38,7 @@ def menu_categoria():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-2]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-5]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
@@ -63,14 +64,22 @@ def menu_proveedor():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-4]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-6]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
 
         if opcion == 1:
-            print("Aun no estoy creado :C")
+            lista_proveedores()
         elif opcion == 2:
-            solicitar_datos_proveedor()            
+            solicitar_datos_proveedor()
+        elif opcion == 3:
+            solicitar_actualizar_proveedor()
+        elif opcion == 4:
+            solicitar_actualizar_direccion_proveedor()   
+        elif opcion == 5:
+            solicitar_inhabilitar_proveedor()
+        elif opcion == 6:
+            solicitar_habilitar_proveedor()                                                                     
         elif opcion != 0:
             print(OPCION_INVALIDA)
