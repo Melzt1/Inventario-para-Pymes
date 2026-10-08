@@ -1,16 +1,16 @@
-from datos.modelos.categoria import Categoria
+from datos.modelos.proveedor import Proveedor
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_categorias():
-    categorias = Categoria.select()
-    if categorias:
-        return categorias
+def listado_proveedores():
+    proveedores = Proveedor.select()
+    if proveedores:
+        return proveedores
 
-def guardar_categorias(categoria:Categoria):
+def guardar_proveedores(proveedor:Proveedor):
     try:
-        guardar = categoria.save()
-        if guardar:
-            print(f"Categoria guardada con exito con ID: {categoria.id_categoria}")
+        guardar_proveedor = proveedor.save()
+        if guardar_proveedor:
+            print(f"Proveedor registrado con exito con ID: {proveedor.id_proveedor}")
         return True
 
     except IntegrityError as e:

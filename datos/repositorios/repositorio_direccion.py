@@ -1,18 +1,12 @@
-from datos.modelos.categoria import Categoria
+# from peewee import 
+from datos.modelos.direccion import Direccion
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_categorias():
-    categorias = Categoria.select()
-    if categorias:
-        return categorias
-
-def guardar_categorias(categoria:Categoria):
+def guardar_direcciones(direccion: Direccion):
     try:
-        guardar = categoria.save()
-        if guardar:
-            print(f"Categoria guardada con exito con ID: {categoria.id_categoria}")
-        return True
-
+        guardar_direccion = direccion.save()
+        return guardar_direccion
+    
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
     except OperationalError as e:
@@ -25,4 +19,4 @@ def guardar_categorias(categoria:Categoria):
         print("Proceso finalizado.")
 
     return False
-             
+        

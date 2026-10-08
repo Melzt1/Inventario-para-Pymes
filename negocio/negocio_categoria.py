@@ -21,13 +21,13 @@ def crear_categoria(nombre, descripcion):
     nueva_categoria = Categoria()
     nueva_categoria.nombre = nombre
     nueva_categoria.descripcion = descripcion
-    guardar_categorias(nueva_categoria)
+    return guardar_categorias(nueva_categoria)
                     
 
 # Metodo para Obtener el id de la categoria para actualizar
 def obtener_categoria(id_categoria):
     try: 
-        #return Categoria.get_by_id(id_categoria)
+        # return Categoria.get_by_id(id_categoria)
         return Categoria[id_categoria]
     except Categoria.DoesNotExist:
         return None
