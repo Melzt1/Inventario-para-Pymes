@@ -113,12 +113,8 @@ def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
     if proveedor is None:
         return False
 
+    # La relacion (clave foranea) hace que proveedor.id_direccion entregue el objeto Direccion
     direccion = proveedor.id_direccion
-
-    proveedor.calle = calle
-    proveedor.numero = numero
-    proveedor.comuna = comuna
-    proveedor.ciudad = ciudad
     return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
 
 def inhabilitar_proveedor(id_proveedor):

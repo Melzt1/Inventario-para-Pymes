@@ -64,11 +64,8 @@ def actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad):
     if almacen is None:
         return False
 
+    # La relacion (clave foranea) hace que almacen.id_direccion entregue el objeto Direccion
     direccion = almacen.id_almacen
-    almacen.calle = calle
-    almacen.numero = numero
-    almacen.comuna = comuna
-    almacen.ciudad = ciudad
     return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
 
 def inhabilitar_almacen(id_almacen):

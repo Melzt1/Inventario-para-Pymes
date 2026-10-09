@@ -1,5 +1,6 @@
 from negocio.negocio_categoria import crear_categoria, actualizar_categoria, obtener_categoria, desactivar_categoria, activar_categoria
 from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_ENTERO, MENSAJE_ID_NO_EXISTE, OPCION_INVALIDA
+from auxiliares.entradas import forzar_entero
 
 def solicitar_datos_categoria():
     nombre = descripcion = ""
@@ -12,11 +13,7 @@ def solicitar_datos_categoria():
     return crear_categoria(nombre, descripcion)
 
 def solicitar_actualizar_categoria():
-    try:
-        id_categoria = int(input(SOLICITUD_ID_CATEGORIA))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return
+    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
 
     # Buscamos la categoria por su ID
     # Si existe, obtenemos el objeto Categoria y si no existe obtenemos None
@@ -33,11 +30,7 @@ def solicitar_actualizar_categoria():
     return actualizar_categoria(id_categoria, nombre, descripcion) 
 
 def solicitar_desactivar_categoria():
-    try:
-        id_categoria = int(input(SOLICITUD_ID_CATEGORIA))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return
+    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
 
     categoria = obtener_categoria(id_categoria)
 
@@ -58,11 +51,7 @@ def solicitar_desactivar_categoria():
         print(OPCION_INVALIDA) 
 
 def solicitar_activar_categoria():
-    try:
-        id_categoria = int(input(SOLICITUD_ID_CATEGORIA))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return
+    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
 
     categoria = obtener_categoria(id_categoria)
 

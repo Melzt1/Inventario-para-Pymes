@@ -1,5 +1,6 @@
 from negocio.negocio_almacen import listado_almacenes, crear_almacen, actualizar_almacen, actualizar_direccion_almacen, habilitar_almacen, obtener_almacen, inhabilitar_almacen
 from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_ENTERO, MENSAJE_ID_NO_EXISTE
+from auxiliares.entradas import forzar_entero
 
 def solicitar_datos_almacen():
     print("\n=== Datos del almacen ===")
@@ -16,10 +17,7 @@ def solicitar_datos_almacen():
     return crear_almacen(nombre, encargado, calle, numero, comuna, ciudad)
 
 def solicitar_actualizar_almacen():
-    try:
-        id_almacen = int(input(SOLICITUD_ID_ALMACEN))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
+    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 
     almacen = obtener_almacen(id_almacen)
 
@@ -32,10 +30,7 @@ def solicitar_actualizar_almacen():
     return actualizar_almacen(id_almacen, nombre, encargado)        
 
 def solicitar_actualizar_direccion_almacen():
-    try:
-        id_almacen = int(input(SOLICITUD_ID_ALMACEN))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
+    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 
     almacen = obtener_almacen(id_almacen)
 
@@ -50,10 +45,7 @@ def solicitar_actualizar_direccion_almacen():
     return actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad)
 
 def solicitar_inhabilitar_almacen():
-    try:
-        id_almacen = int(input(SOLICITUD_ID_ALMACEN))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
+    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 
     almacen = obtener_almacen(id_almacen)
 
@@ -64,10 +56,7 @@ def solicitar_inhabilitar_almacen():
     return inhabilitar_almacen(almacen)
 
 def solicitar_habilitar_almacen():
-    try:
-        id_almacen = int(input(SOLICITUD_ID_ALMACEN))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
+    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 
     almacen = obtener_almacen(id_almacen)
 

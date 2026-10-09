@@ -1,5 +1,6 @@
 from negocio.negocio_proveedor import registrar_proveedor, obtener_proveedor, validar_rut, validar_correo_en_uso, validar_telefono_en_uso, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor
-from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_ENTERO, MENSAJE_ID_NO_EXISTE
+from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_NO_EXISTE
+from auxiliares.entradas import forzar_entero
 
 def solicitar_datos_proveedor():
     print("\n=== Datos del proveedor ===")
@@ -31,11 +32,7 @@ def solicitar_datos_proveedor():
         calle, numero, comuna, ciudad)
 
 def solicitar_actualizar_proveedor():
-    try:
-        id_proveedor = int(input(SOLICITUD_ID_PROVEEDOR))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return
+    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
 
     proveedor = obtener_proveedor(id_proveedor)
 
@@ -58,11 +55,7 @@ def solicitar_actualizar_proveedor():
     return actualizar_proveedor(id_proveedor, correo, telefono)
 
 def solicitar_actualizar_direccion_proveedor():
-    try:
-        id_proveedor = int(input(SOLICITUD_ID_PROVEEDOR))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return 
+    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
 
     proveedor = obtener_proveedor(id_proveedor)   
 
@@ -78,11 +71,7 @@ def solicitar_actualizar_direccion_proveedor():
     return actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad)    
 
 def solicitar_inhabilitar_proveedor():
-    try:
-        id_proveedor = int(input(SOLICITUD_ID_PROVEEDOR))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return 
+    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
 
     proveedor = obtener_proveedor(id_proveedor)   
 
@@ -93,11 +82,7 @@ def solicitar_inhabilitar_proveedor():
     return inhabilitar_proveedor(id_proveedor)
 
 def solicitar_habilitar_proveedor():
-    try:
-        id_proveedor = int(input(SOLICITUD_ID_PROVEEDOR))
-    except ValueError:
-        print(MENSAJE_ID_ENTERO)
-        return 
+    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
 
     proveedor = obtener_proveedor(id_proveedor)   
 
