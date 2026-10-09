@@ -28,8 +28,7 @@ def solicitar_datos_proveedor():
     comuna = input("Ingrese la comuna: ")
     ciudad = input("Ingrese la ciudad: ")
     return registrar_proveedor(rut, nombre, correo, telefono, 
-        calle, numero, comuna, ciudad
-    )
+        calle, numero, comuna, ciudad)
 
 def solicitar_actualizar_proveedor():
     try:
