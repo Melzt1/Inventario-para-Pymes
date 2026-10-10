@@ -74,16 +74,13 @@ def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ci
     if not validar_rut(rut):
         return False
 
-    if not rut_en_uso(rut):
+    if rut_en_uso(rut):
         return False
 
-    if not existe_rut(rut):
+    if correo_en_uso(correo):
         return False
 
-    if not correo_en_uso(correo):
-        return False
-
-    if not telefono_en_uso(telefono):
+    if telefono_en_uso(telefono):
         return False
     
     nuevo_proveedor = Proveedor()

@@ -2,7 +2,7 @@ from datos.modelos.proveedor import Proveedor
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_proveedores():
-    return Proveedor.select()
+    return Proveedor.select().where(Proveedor.estado == True) #para ocultar las de borrado logico
 
 def guardar_proveedores(proveedor:Proveedor):
     try:
@@ -16,8 +16,6 @@ def guardar_proveedores(proveedor:Proveedor):
         print(f"Error de validación de datos: {e}")
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
-    finally:
-        print("Proceso finalizado.")
 
     return False
 

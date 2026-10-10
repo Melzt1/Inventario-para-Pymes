@@ -31,8 +31,8 @@ def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fec
     nuevo_producto = Producto()
     nuevo_producto.nombre = nombre
     nuevo_producto.sku = sku
-    nuevo_producto.precio_venta = precio_costo
-    nuevo_producto.precio_costo =precio_venta
+    nuevo_producto.precio_costo = precio_costo
+    nuevo_producto.precio_venta =precio_venta
     nuevo_producto.descripcion = descripcion
     nuevo_producto.fecha_elaboracion = fecha_elaboracion
     nuevo_producto.fecha_vencimiento = fecha_vencimiento

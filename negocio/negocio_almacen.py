@@ -39,7 +39,9 @@ def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
     # asignar al almacen el objeto Direccion
     nuevo_almacen.id_direccion = nueva_direccion
     return guardar_almacen(nuevo_almacen)
-    
+
+def obtener_almacen(id_almacen):
+    return obtener_almacen_por_id(id_almacen)    
 
 def actualizar_almacen(id_almacen, nombre, encagado):
     almacen = obtener_almacen_por_id(id_almacen)
@@ -58,11 +60,11 @@ def actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad):
         return False
 
     # La relacion (clave foranea) hace que almacen.id_direccion entregue el objeto Direccion
-    direccion = almacen.id_almacen
+    direccion = almacen.id_direccion
     return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
 
 def inhabilitar_almacen(id_almacen):
-    almacen = obtener_almacen_por_id(id_almacen)
+    almacen = obtener_almacen(id_almacen)
 
     if Almacen is None:
         return False
@@ -71,13 +73,11 @@ def inhabilitar_almacen(id_almacen):
     return guardar_almacen(almacen)
 
 def habilitar_almacen(id_almacen):
-    almacen = obtener_almacen_por_id(id_almacen)
+    almacen = obtener_almacen(id_almacen)
 
     if Almacen is None:
         return False
 
     almacen.estado = True
-    return guardar_almacen(almacen)
+    return obtener_almacen(almacen)
 
-def obtener_almacen(id_almacen):
-    return obtener_almacen_por_id(id_almacen)

@@ -1,5 +1,7 @@
-from peewee import Model, BooleanField, SQL, IntegerField, CompositeKey
+from peewee import Model, BooleanField, SQL, ForeignKeyField, CompositeKey
 from datos.conexion import conectar_db
+from datos.modelos.producto import Producto
+from datos.modelos.proveedor import Proveedor
 
 database = conectar_db()
 
@@ -8,9 +10,9 @@ class BaseModel(Model):
         database = database
 
 class ProductoProveedor(BaseModel):
-    es_principal = BooleanField(constraints=[SQL("DEFAULT 0")], null=True)
-    id_producto = IntegerField()
-    id_proveedor = IntegerField(index=True)
+    id_producto = ForeignKeyField(Producto, field=Producto.id_producto, column_name="id_producto")
+    id_proveedor = ForeignKeyField(Proveedor, field=Proveedor.id_proveedor, column_name="id_proveedor")
+    es_principal = BooleanField(constraints=[SQL("DEFAULT 0")])
 
     class Meta:
         table_name = 'producto_proveedor'

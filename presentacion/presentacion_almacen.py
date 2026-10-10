@@ -1,4 +1,4 @@
-from negocio.negocio_almacen import listado_almacenes, crear_almacen, actualizar_almacen, actualizar_direccion_almacen, habilitar_almacen, obtener_almacen, inhabilitar_almacen
+from negocio.negocio_almacen import crear_almacen, actualizar_almacen, actualizar_direccion_almacen, habilitar_almacen, obtener_almacen, inhabilitar_almacen
 from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import forzar_entero, mostrar_resultado
 from prettytable import PrettyTable

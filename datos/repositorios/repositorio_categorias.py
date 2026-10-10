@@ -2,7 +2,7 @@ from datos.modelos.categoria import Categoria
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_categorias():
-    return Categoria.select()
+    return Categoria.select().where(Categoria.estado == True) #para ocultar las de borrado logico
 
 def guardar_categorias(categoria:Categoria):
     try:
@@ -16,9 +16,7 @@ def guardar_categorias(categoria:Categoria):
         print(f"Error de validación de datos: {e}")
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
-    finally:
-        print("Proceso finalizado.")
-
+        
     return False
              
 def obtener_categoria_por_id(id_categoria):

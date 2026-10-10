@@ -2,7 +2,7 @@ from datos.modelos.producto import Producto
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_productos():
-    return Producto.select()
+    return Producto.select().where(Producto.estado == True) #para ocultar las de borrado logico
 
 
 def guardar_productos(prodcuto:Producto):
@@ -17,8 +17,6 @@ def guardar_productos(prodcuto:Producto):
         print(f"Error de validación de datos: {e}")
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
-    finally:
-        print("Proceso finalizado.")
 
     return False
 

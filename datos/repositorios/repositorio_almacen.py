@@ -2,7 +2,7 @@ from datos.modelos.almacen import Almacen
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_almacenes():
-    return Almacen.select()
+    return Almacen.select().where(Almacen.estado == True) #para ocultar las de borrado logico
 
 def guardar_almacen(almacen:Almacen):
     try:
@@ -16,8 +16,6 @@ def guardar_almacen(almacen:Almacen):
         print(f"Error de validación de datos: {e}")
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
-    finally:
-        print("Proceso finalizado.")
 
     return False
 

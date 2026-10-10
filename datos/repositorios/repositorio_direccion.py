@@ -14,8 +14,6 @@ def guardar_direcciones(direccion: Direccion):
         print(f"Error de validación de datos: {e}")
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
-    finally:
-        print("Proceso finalizado.")
-
+        
     return False
         

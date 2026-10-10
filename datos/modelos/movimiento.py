@@ -1,4 +1,5 @@
-from peewee import Model, IntegerField, CharField, DateTimeField, AutoField
+from peewee import Model, IntegerField, CharField, DateTimeField, AutoField, SQL, ForeignKeyField
+from datos.modelos.inventario import Inventario
 from datos.conexion import conectar_db
 
 database = conectar_db()
@@ -13,7 +14,11 @@ class Movimiento(BaseModel):
     cantidad = IntegerField()
     tipo = CharField()
     fecha = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")], null=True)
-    id_inventario = IntegerField(index=True)
+    id_inventario = ForeignKeyField(
+        Inventario,
+        field=Inventario.id_inventario,
+        column_name="id_inventario"
+    )
     
     class Meta:
         table_name = 'movimientos'
