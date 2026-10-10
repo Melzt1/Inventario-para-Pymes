@@ -1,4 +1,4 @@
-from datos.repositorios.repositorio_categorias import listado_categorias, guardar_categorias
+from datos.repositorios.repositorio_categorias import listado_categorias, guardar_categorias, obtener_categoria_por_id
 from prettytable import PrettyTable
 from datos.modelos.categoria import Categoria
 
@@ -23,14 +23,9 @@ def crear_categoria(nombre, descripcion):
     nueva_categoria.descripcion = descripcion
     return guardar_categorias(nueva_categoria)
                     
-
-# Metodo para Obtener el id de la categoria para actualizar
+# Metodo para validar el id
 def obtener_categoria(id_categoria):
-    try: 
-        # return Categoria.get_by_id(id_categoria)
-        return Categoria[id_categoria]
-    except Categoria.DoesNotExist:
-        return None
+    return obtener_categoria_por_id(id_categoria)
 
 # Metodo para Actualizar Categoria
 def actualizar_categoria(id_categoria, nombre, descripcion):

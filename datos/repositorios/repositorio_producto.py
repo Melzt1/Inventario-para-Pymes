@@ -1,12 +1,13 @@
-from datos.modelos.categoria import Categoria
+from datos.modelos.producto import Producto
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_categorias():
-    return Categoria.select()
+def listado_productos():
+    return Producto.select()
 
-def guardar_categorias(categoria:Categoria):
+
+def guardar_productos(prodcuto:Producto):
     try:
-        return categoria.save()
+        return prodcuto.save()
 
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
@@ -20,10 +21,12 @@ def guardar_categorias(categoria:Categoria):
         print("Proceso finalizado.")
 
     return False
-             
-def obtener_categoria_por_id(id_categoria):
-    try: 
-        # lo mismo que: return Categoria.get_by_id(id_categoria)
-        return Categoria[id_categoria]
-    except Categoria.DoesNotExist:
+
+def obtener_producto_por_id(id_producto):
+    try:
+        return Producto[id_producto]
+    except Producto.DoesNotExist:
         return None
+
+def existe_sku(sku):
+    return Producto.select().where(Producto.sku == sku).exists()    

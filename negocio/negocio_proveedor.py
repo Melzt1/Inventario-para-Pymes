@@ -1,5 +1,5 @@
 from datos.modelos.proveedor import Proveedor
-from datos.repositorios.repositorio_proveedor import listado_proveedores, guardar_proveedores
+from datos.repositorios.repositorio_proveedor import listado_proveedores, guardar_proveedores, obtener_proveedor_por_id, existe_correo, existe_telefono, existe_rut
 from datos.repositorios.repositorio_direccion import guardar_direcciones
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 from prettytable import PrettyTable
@@ -60,19 +60,32 @@ def validar_rut(rut):
     # retonar si coincide con el digito verificador orignal
     return dv_original == dv_calculado
 
-# validaciones unique
-# Validar si el correo ingresado ya existe en la db
-def validar_correo_en_uso(correo):
-    return Proveedor.select().where(Proveedor.correo == correo).exists()
+# VALIDACIONES UNIQUE
+def rut_en_uso(rut):
+    return existe_rut(rut)
 
-# Validar si el telefono ingresado ya existe en la db
-def validar_telefono_en_uso(telefono):
-    return Proveedor.select().where(Proveedor.telefono == telefono).exists()
+def correo_en_uso(correo):
+    return existe_correo(correo)
+
+def telefono_en_uso(telefono):
+    return existe_telefono(telefono)
 
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
     if not validar_rut(rut):
         return False
 
+    if not rut_en_uso(rut):
+        return False
+
+    if not existe_rut(rut):
+        return False
+
+    if not correo_en_uso(correo):
+        return False
+
+    if not telefono_en_uso(telefono):
+        return False
+    
     nuevo_proveedor = Proveedor()
     nuevo_proveedor.rut = rut
     nuevo_proveedor.nombre = nombre
@@ -90,15 +103,9 @@ def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ci
     nuevo_proveedor.id_direccion = nueva_direccion
     return guardar_proveedores(nuevo_proveedor)
 
-def obtener_proveedor(id_proveedor):
-    try:
-        return Proveedor[id_proveedor]
-    except Proveedor.DoesNotExist:
-        return None
-
 # Actualizar solo datos que pueden variar
 def actualizar_proveedor(id_proveedor, correo, telefono):
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = obtener_proveedor_por_id(id_proveedor)
 
     if proveedor is None:
         return False
@@ -108,7 +115,7 @@ def actualizar_proveedor(id_proveedor, correo, telefono):
     return guardar_proveedores(proveedor)    
 
 def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = obtener_proveedor_por_id(id_proveedor)
 
     if proveedor is None:
         return False
@@ -118,7 +125,7 @@ def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
     return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
 
 def inhabilitar_proveedor(id_proveedor):
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = obtener_proveedor_por_id(id_proveedor)
 
     if proveedor is None:
         return False
@@ -127,7 +134,7 @@ def inhabilitar_proveedor(id_proveedor):
     return guardar_proveedores(proveedor)
 
 def habilitar_proveedor(id_proveedor):
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = obtener_proveedor_por_id(id_proveedor)
 
     if proveedor is None:
         return False
@@ -135,3 +142,5 @@ def habilitar_proveedor(id_proveedor):
     proveedor.estado = True
     return guardar_proveedores(proveedor)
 
+def obtener_proveedor(id_almacen):
+    return obtener_proveedor_por_id(id_almacen)

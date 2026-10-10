@@ -2,17 +2,12 @@ from datos.modelos.almacen import Almacen
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_almacenes():
-    almacenes = Almacen.select()
-    if almacenes:
-        return almacenes
+    return Almacen.select()
 
 def guardar_almacen(almacen:Almacen):
     try:
-        guardar = almacen.save()
-        if guardar:
-            print(f"Almacen guardado con exito con ID: {almacen.id_almacen}")
-        return True
-
+        return almacen.save()
+    
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
     except OperationalError as e:
@@ -25,3 +20,10 @@ def guardar_almacen(almacen:Almacen):
         print("Proceso finalizado.")
 
     return False
+
+# obtener el objeto almacen por su ID
+def obtener_almacen_por_id(id_almacen):
+    try:
+        return Almacen[id_almacen]
+    except Almacen.DoesNotExist:
+        return None

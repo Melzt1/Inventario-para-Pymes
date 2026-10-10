@@ -4,8 +4,7 @@ from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def guardar_direcciones(direccion: Direccion):
     try:
-        guardar_direccion = direccion.save()
-        return guardar_direccion
+        return direccion.save()
     
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")

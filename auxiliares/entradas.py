@@ -9,3 +9,9 @@ def forzar_entero(mensaje):
         except ValueError:
             print(MENSAJE_ID_ENTERO)
     return numero
+
+def mostrar_resultado(resultado, mensaje_exitoso, mensaje_fallido):
+    if resultado:
+        print(mensaje_exitoso)
+    else:
+        print(mensaje_fallido)        

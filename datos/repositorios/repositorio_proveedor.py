@@ -2,16 +2,11 @@ from datos.modelos.proveedor import Proveedor
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def listado_proveedores():
-    proveedores = Proveedor.select()
-    if proveedores:
-        return proveedores
+    return Proveedor.select()
 
 def guardar_proveedores(proveedor:Proveedor):
     try:
-        guardar_proveedor = proveedor.save()
-        if guardar_proveedor:
-            print(f"Proveedor registrado con exito con ID: {proveedor.id_proveedor}")
-        return True
+        return proveedor.save()
 
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
@@ -25,4 +20,20 @@ def guardar_proveedores(proveedor:Proveedor):
         print("Proceso finalizado.")
 
     return False
-             
+
+# CONSULTAS A LA DB
+def obtener_proveedor_por_id(id_proveedor):
+    try:
+        return Proveedor[id_proveedor]
+    except Proveedor.DoesNotExist:
+        return None
+
+# Consultar si el correo, telefono y rut ingresado ya existe en la db 
+def existe_correo(correo):
+    return Proveedor.select().where(Proveedor.correo == correo).exists()
+
+def existe_telefono(telefono):
+    return Proveedor.select().where(Proveedor.telefono == telefono).exists()
+
+def existe_rut(rut):
+    return Proveedor.select().where(Proveedor.rut == rut).exists()
