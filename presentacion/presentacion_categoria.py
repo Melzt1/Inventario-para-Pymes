@@ -19,15 +19,13 @@ def solicitar_consultar_categoria():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    tabla_categoria = PrettyTable()
-    tabla_categoria.field_names = ['ID', 'Nombre', 'Descripcion', 'Estado']
-    tabla_categoria.add_row([
-        categoria.id_categoria,
-        categoria.nombre,
-        categoria.descripcion,
-        ('Deshabilitado', 'Habilitado')[categoria.estado]
-    ])
-    print(tabla_categoria)
+    estado = "Habilitado" if categoria.estado else "Deshabilitado"
+
+    print("\n=== Categoria encontrada ===")
+    print(f"{'ID':<16}: {categoria.id_categoria}")
+    print(f"{'Nombre':<16}: {categoria.nombre}")
+    print(f"{'Descripcion':<16}: {categoria.descripcion}")
+    print(f"{'Estado':<16}: {estado}\n")
 
 def solicitar_actualizar_categoria():
     id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)

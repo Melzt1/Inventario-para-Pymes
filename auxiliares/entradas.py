@@ -1,5 +1,8 @@
 from auxiliares.mensajes import MENSAJE_ID_ENTERO
 
+""" En este repositorio somos hater del while True!
+    Si eres partidario del while True por favor sal de este repositorio """
+
 def forzar_entero(mensaje):
     valido = False
     while not valido:
@@ -8,6 +11,16 @@ def forzar_entero(mensaje):
             valido = True
         except ValueError:
             print(MENSAJE_ID_ENTERO)
+    return numero
+
+def forzar_positivo(mensaje):
+    valido = False
+    while not valido:
+        numero = forzar_entero(mensaje)
+        if numero > 0:
+            valido = True
+        else:
+            print("Debes ingresar un valor mayor que cero")
     return numero
 
 def mostrar_resultado(resultado, mensaje_exitoso, mensaje_fallido):

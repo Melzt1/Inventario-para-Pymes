@@ -27,19 +27,30 @@ def lista_productos():
         ])
     print(tabla_productos)
 
+# Metodos para validar valores en los precios
+def validar_precio_costo_negativo(precio_costo):
+    # True si el precio costo es mayor que cero
+    return precio_costo > 0
 
-def validar_precios_negativos(precio_costo, precio_venta):
-    # True si ambos precios son positivos
-    return precio_costo > 0 and precio_venta > 0
+def validar_precio_venta_negativo(precio_venta):
+    # True si el precio venta es mayor que cero
+    return precio_venta > 0
+
 
 def validar_precio_venta(precio_costo, precio_venta):
-    # True si el precio de venta es mayor o igual al costo.
+    # True si el precio de venta es mayor o igual al precio costo.
     return precio_venta >= precio_costo
 
 # Metodo CREATE
 def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, id_categoria):
 
-    if not validar_precios_negativos(precio_costo, precio_venta):
+    if not validar_precio_costo_negativo(precio_costo):
+        return False
+
+    if not validar_precio_venta_negativo(precio_venta):
+        return False
+
+    if not validar_precio_venta(precio_costo, precio_venta):
         return False
     
     nuevo_producto = Producto()
@@ -64,7 +75,7 @@ def obtener_producto(id_producto):
 # Metodo READ
 
 # Metodo UPDATE
-def actualizar_producto(id_producto, nombre, sku, precio_venta, descripcion):
+def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion):
     producto = obtener_producto(id_producto)
 
     # Si no ecuentra el ID dejamos de actualizar
@@ -78,6 +89,7 @@ def actualizar_producto(id_producto, nombre, sku, precio_venta, descripcion):
     # Si encuentra el ID seteamos los nuevos parametros 
     producto.nombre = nombre
     producto.sku = sku
+    producto.precio_costo = precio_costo
     producto.precio_venta = precio_venta
     producto.descripcion = descripcion
 

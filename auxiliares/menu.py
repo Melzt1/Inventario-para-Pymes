@@ -37,7 +37,7 @@ submenu_almacen = {
     "4": "Actualizar almacen",
     "5": "Actualizar direccion almacen",
     '6': "Desactivar almacen",
-    '7': "Activar almacen",
+    '7': "Activar almacen",    
     "0": VOLVER_AL_MENU
 }
 
@@ -46,9 +46,13 @@ submenu_producto = {
     "2": "Registrar producto",
     "3": "Consultar producto por ID",
     "4": "Actualizar producto",
-    "5": "Asignar proveedor al producto",
-    "6": "Desactivar producto",
-    "7": "Activar producto",
-    "8": "Consultar stock del producto",
+    "5": "Desactivar producto",
+    '6': "Activar producto",  
+
+    # Opciones del producto (7-10) estaran disponibles al implementar (producto_proveedor) 
+    "7": "Asignar proveedor principal al producto",
+    "8": "Asignar proveedor secundario al producto",
+    "9": "Quitar proveedor al producto",
+    '10': "Ver proveedores del producto",
     "0": VOLVER_AL_MENU
 }

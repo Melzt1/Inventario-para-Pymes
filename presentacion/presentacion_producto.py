@@ -1,11 +1,10 @@
-from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, validar_precios_negativos
+from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto
 from negocio.negocio_categoria import obtener_categoria
 from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE, SOLICITUD_ID_PRODUCTO
-from auxiliares.entradas import forzar_entero, mostrar_resultado, campo_obligatorio, campo_opcional
+from auxiliares.entradas import forzar_entero, mostrar_resultado, campo_obligatorio, campo_opcional, forzar_positivo
 from datetime import datetime
 
-""" FALTA CREAR METODO PARA VALIDAR FECHAS, VALIDAR QUE LOS PRECIOS SEAN POSITIVOS
-    Y QUE EL PRECIO VENTA SEA MAYOR AL PRECIO COSTO """
+""" Falta crear metodo para validar fechas en el ingreso de productos. """
 
 def solicitar_datos_producto():
     nombre = campo_obligatorio("Ingrese el nombre del producto: ")
@@ -15,14 +14,13 @@ def solicitar_datos_producto():
         print(f"El SKU: '{sku}' ya fue registrado.")
         return False
 
-    precio_costo = forzar_entero("Ingrese el precio costo del producto: ")
-    precio_venta = forzar_entero("Ingrese el precio venta del producto: ")
-
-    # METODO DE PRUEBA
-    if not validar_precios_negativos(precio_costo, precio_venta):
-        print("El precio debe ser positivo")
-        return False
-
+    precio_costo = forzar_positivo("Ingrese el precio costo del producto: ")
+    precio_venta = forzar_positivo("Ingrese el precio venta del producto: ")
+        
+    while precio_venta < precio_costo:
+        print("El precio de venta no puede ser menor que el precio costo")
+        precio_venta = forzar_positivo("Ingrese el precio venta del producto: ")
+    
     descripcion = campo_obligatorio("Ingrese la descripcion del producto: ")
 
     fecha_elaboracion = input("Ingrese la fecha de elaboracion (DD-MM-YYYY): ")
@@ -42,6 +40,35 @@ def solicitar_datos_producto():
     resultado = registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, categoria)
     mostrar_resultado(resultado, "Producto registado con exito", "No se pudo registrar el producto.")
 
+def solicitar_consultar_producto():
+    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
+
+    producto = obtener_producto(id_producto)
+
+    if producto is None:
+        print(MENSAJE_ID_NO_EXISTE)
+        return False
+
+    # La FK entrega el objeto Categoria, no el ID
+    categoria = producto.id_categoria
+
+    estado = "Habilitado" if producto.estado else "Deshabilitado"
+    fecha_elaboracion = producto.fecha_elaboracion or "No aplica"
+    fecha_vencimiento = producto.fecha_vencimiento or "No aplica"
+
+    # <18 es para alinear el texto 18 espacios a la izquierda y se vea ordenado
+    print("\n=== Producto encontrado ===")
+    print(f"{'ID':<18}: {producto.id_producto}")
+    print(f"{'Nombre':<18}: {producto.nombre}")
+    print(f"{'SKU':<18}: {producto.sku}")
+    print(f"{'Precio costo':<18}: {producto.precio_costo}")
+    print(f"{'Precio venta':<18}: {producto.precio_venta}")
+    print(f"{'Descripcion':<18}: {producto.descripcion}")
+    print(f"{'Fecha elaboracion':<18}: {fecha_elaboracion}")
+    print(f"{'Fecha vencimiento':<18}: {fecha_vencimiento}")
+    print(f"{'Estado':<18}: {estado}")
+    print(f"{'Categoria':<18}: {categoria.nombre}\n")
+
 def solicitar_actualizar_producto():
     id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
     producto = obtener_producto(id_producto)
@@ -57,8 +84,15 @@ def solicitar_actualizar_producto():
     if sku != producto.sku and sku_en_uso(sku, id_producto):
         print(f"El SKU '{sku}' ya se encuentra registrado.")
         return False
+
+    # hacklife para recibir un String vacio en una variable INT
+    precio_costo = input("Ingrese el nuevo precio de costo (ENTER para mantener): ")
+    if precio_costo == "":
+        precio_costo = producto.precio_costo
+    else:
+        precio_costo = int(precio_costo)    
     
-    # hacklife para admitir un String vacio al solicitar un INT
+    # hacklife para recibir un String vacio en una variable INT
     precio_venta = input("Ingrese el nuevo precio de venta (ENTER para mantener): ")
     if precio_venta == "":
         precio_venta = producto.precio_venta
@@ -67,8 +101,29 @@ def solicitar_actualizar_producto():
 
     descripcion = campo_opcional("Ingrese la nueva descripcion", producto.descripcion) 
 
-    resultado =  actualizar_producto(id_producto, nombre, sku, precio_venta, descripcion)
+    resultado =  actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion)
     mostrar_resultado(resultado, "Producto actualizado con exito.", "No se pudo actualizar el producto.")
     
+def solicitar_desactivar_producto():
+    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
+    producto = obtener_producto(id_producto)
 
+    if not producto:
+        print(MENSAJE_ID_NO_EXISTE)
+        return False
+
+    resultado = desactivar_producto(producto)
+    mostrar_resultado(resultado, f"Producto: {producto.nombre} Deasctivado con exito", "No se pudo desactivar el producto.")
+
+def solicitar_activar_producto():
+    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
+    producto = obtener_producto(id_producto)
+
+    if not producto:
+        print(MENSAJE_ID_NO_EXISTE)
+        return False
+
+    resultado = activar_producto(producto)
+    mostrar_resultado(resultado, f"Producto: {producto.nombre} Activado con exito", "No se pudo activar el producto.")
+    
 

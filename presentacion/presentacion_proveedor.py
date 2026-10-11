@@ -29,10 +29,10 @@ def solicitar_datos_proveedor():
         return False
     
     print("\n=== Direccion del proveedor ===")
-    calle = input("Ingrese el nombre de la calle: ")
+    calle = campo_obligatorio("Ingrese el nombre de la calle: ")
     numero = input("Ingrese el numero de la direccion: ")
-    comuna = input("Ingrese la comuna: ")
-    ciudad = input("Ingrese la ciudad: ")
+    comuna = campo_obligatorio("Ingrese la comuna: ")
+    ciudad = campo_obligatorio("Ingrese la ciudad: ")
 
     resultado = registrar_proveedor(rut, nombre, correo, telefono, 
         calle, numero, comuna, ciudad)
@@ -47,24 +47,19 @@ def solicitar_consultar_proveedor():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    # obtener el objeto Direccion para mostrar los datos relacionados con almacen
+    # La FK entrega el objeto Direccion, no el ID
     direccion = proveedor.id_direccion
 
-    tabla_proveedor = PrettyTable()
-    tabla_proveedor.field_names = ['ID', 'Rut', 'Nombre', 'Correo', 'Telefono', 'Estado', 'Calle', 'Numero', 'Comuna', 'Ciudad']
-    tabla_proveedor.add_row([
-        proveedor.id_proveedor,
-        proveedor.rut,
-        proveedor.nombre,
-        proveedor.correo,
-        proveedor.telefono,
-        ('Deshabilitado', 'Habilitado')[proveedor.estado],
-        direccion.calle,
-        direccion.numero,
-        direccion.comuna,
-        direccion.ciudad
-    ])
-    print(tabla_proveedor)
+    estado = "Habilitado" if proveedor.estado else "Deshabilitado"
+
+    print("\n=== Proveedor encontrado ===")
+    print(f"{'ID':<16}: {proveedor.id_proveedor}")
+    print(f"{'RUT':<16}: {proveedor.rut}")
+    print(f"{'Nombre':<16}: {proveedor.nombre}")
+    print(f"{'Correo':<16}: {proveedor.correo}")
+    print(f"{'Telefono':<16}: {proveedor.telefono}")
+    print(f"{'Estado':<16}: {estado}")
+    print(f"{'Direccion':<16}: {direccion.calle} {direccion.numero or '_'}, {direccion.comuna}, {direccion.ciudad}\n")
 
 def solicitar_actualizar_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)

@@ -28,22 +28,17 @@ def solicitar_consultar_almacen():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    # obtener el objeto Direccion para mostrar los datos relacionados con almacen
+    # La FK entrega el objeto Direccion, no el ID
     direccion = almacen.id_direccion
 
-    tabla_almacen = PrettyTable()
-    tabla_almacen.field_names = ['ID', 'Nombre', 'Encargado', 'Estado', 'Calle', 'Numero', 'Comuna', 'Ciudad']
-    tabla_almacen.add_row([
-        almacen.id_almacen,
-        almacen.nombre,
-        almacen.encargado,
-        ('Deshabilitado', 'Habilitado')[almacen.estado],
-        direccion.calle,
-        direccion.numero,
-        direccion.comuna,
-        direccion.ciudad
-    ])
-    print(tabla_almacen)
+    estado = "Habilitado" if almacen.estado else "Deshabilitado"
+
+    print("\n=== Almacen encontrado ===")
+    print(f"{'ID':<16}: {almacen.id_almacen}")
+    print(f"{'Nombre':<16}: {almacen.nombre}")
+    print(f"{'Encargado':<16}: {almacen.encargado}")
+    print(f"{'Estado':<16}: {estado}")
+    print(f"{'Direccion':<16}  : {direccion.calle} {direccion.numero or '_'}, {direccion.comuna}, {direccion.ciudad}\n")
 
 def solicitar_actualizar_almacen():
     id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
