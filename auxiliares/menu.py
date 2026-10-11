@@ -13,7 +13,7 @@ submenu_categoria = {
     "1": "Listar categorías",
     "2": "Guardar cateogria",
     "3": "Consultar categoria por ID",
-    "4": "Actualizar cateogria",
+    "4": "Actualizar categoria",
     '5': "Desactivar categoria",
     '6': "Activar categoria",
     "0": VOLVER_AL_MENU
@@ -26,7 +26,7 @@ submenu_proveedor = {
     "4": "Actualizar proveedor",
     "5": "Actualizar direccion proveedor",
     '6': "Desactivar proveedor",
-    '7': "Activar proovedor",
+    '7': "Activar proveedor",
     "0": VOLVER_AL_MENU
 }
 

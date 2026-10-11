@@ -1,20 +1,20 @@
 from negocio.negocio_almacen import crear_almacen, actualizar_almacen, actualizar_direccion_almacen, habilitar_almacen, obtener_almacen, inhabilitar_almacen
 from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
-from auxiliares.entradas import forzar_entero, mostrar_resultado
+from auxiliares.entradas import forzar_entero, mostrar_resultado, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
 
 def solicitar_datos_almacen():
     print("\n=== Datos del almacen ===")
 
-    nombre = input("Ingrese el nombre del almacen: ")
-    encargado = input("Ingrese el nombre del encargado: ")
+    nombre = campo_obligatorio("Ingrese el nombre del almacen: ")
+    encargado = campo_obligatorio("Ingrese el nombre del encargado: ")
 
     
-    print("\n=== Direccinn del almacen ===")
-    calle = input("Ingrese el nombre de la calle: ")
+    print("\n=== Direccion del almacen ===")
+    calle = campo_obligatorio("Ingrese el nombre de la calle: ")
     numero = input("Ingrese el numero de la direccion: ")
-    comuna = input("Ingrese la comuna: ")
-    ciudad = input("Ingrese la ciudad: ")
+    comuna = campo_obligatorio("Ingrese la comuna: ")
+    ciudad = campo_obligatorio("Ingrese la ciudad: ")
 
     resultado = crear_almacen(nombre, encargado, calle, numero, comuna, ciudad)
     mostrar_resultado(resultado, "Almacen registrado con exito.", "No se pudo registrar el almacen.")
@@ -54,8 +54,8 @@ def solicitar_actualizar_almacen():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    nombre = input("Ingrese el nuevo nombre del almacen: ")
-    encargado = input("Ingrese el nombre del nuevo encargado: ")    
+    nombre = campo_opcional("Ingrese el nuevo nombre", almacen.nombre)
+    encargado = campo_opcional("Ingrese el nuevo encargado", almacen.encargado)    
 
     resultado = actualizar_almacen(id_almacen, nombre, encargado)
     mostrar_resultado(resultado, "Almacen actualizado con exito.", "No se pudo actualizar el almacen.")        
@@ -68,11 +68,13 @@ def solicitar_actualizar_direccion_almacen():
     if almacen is None:
         print(MENSAJE_ID_NO_EXISTE)
         return False
-
-    calle = input("Ingrese el nombre de la calle: ")
-    numero = input("Ingrese el numero de la direccion: ")
-    comuna = input("Ingrese la comuna: ")
-    ciudad = input("Ingrese la ciudad: ")
+    
+    # La FK entrega el objeto Direccion
+    direccion = almacen.id_direccion
+    calle = campo_opcional("Ingrese el nombre de la calle", direccion.calle)
+    numero = campo_opcional("Ingrese el numero de la direccion", direccion.numero)
+    comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
+    ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
 
     resultado = actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad)
     mostrar_resultado(resultado, "Direccion actualizada con exito.", "No se pudo actualizar la direccion.")

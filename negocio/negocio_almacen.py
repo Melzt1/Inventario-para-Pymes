@@ -66,7 +66,7 @@ def actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad):
 def inhabilitar_almacen(id_almacen):
     almacen = obtener_almacen(id_almacen)
 
-    if Almacen is None:
+    if almacen is None:
         return False
 
     almacen.estado = False
@@ -75,9 +75,9 @@ def inhabilitar_almacen(id_almacen):
 def habilitar_almacen(id_almacen):
     almacen = obtener_almacen(id_almacen)
 
-    if Almacen is None:
+    if almacen is None:
         return False
 
     almacen.estado = True
-    return obtener_almacen(almacen)
+    return guardar_almacen(almacen)
 

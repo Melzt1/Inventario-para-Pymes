@@ -33,6 +33,10 @@ def validar_rut(rut):
     rut_sin_dv = rut_limpio[:-1] 
     dv_original = rut_limpio[-1]
 
+    # validar que sean digitos
+    if not rut_sin_dv.isdigit():
+        return False
+
     multiplicador = 2
     suma = 0
 
@@ -57,19 +61,20 @@ def validar_rut(rut):
     else:
         dv_calculado = str(dv_calculado )  
 
-    # retonar si coincide con el digito verificador orignal
+    # Comprobar si coincide con el digito verificador orignal
     return dv_original == dv_calculado
 
 # VALIDACIONES UNIQUE
 def rut_en_uso(rut):
     return existe_rut(rut)
 
-def correo_en_uso(correo):
-    return existe_correo(correo)
+def correo_en_uso(correo, id_proveedor=None):
+    return existe_correo(correo, id_proveedor)
 
-def telefono_en_uso(telefono):
-    return existe_telefono(telefono)
+def telefono_en_uso(telefono, id_proveedor=None):
+    return existe_telefono(telefono, id_proveedor)
 
+# Metodo CREATE
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
     if not validar_rut(rut):
         return False

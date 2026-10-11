@@ -1,13 +1,7 @@
-from peewee import Model, CharField, BooleanField, SQL, DateField, IntegerField, AutoField, ForeignKeyField
-from datos.conexion import conectar_db
+from peewee import CharField, BooleanField, SQL, DateField, IntegerField, AutoField, ForeignKeyField
 from auxiliares.mensajes import defecto
 from datos.modelos.categoria import Categoria
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class Producto(BaseModel):
     id_producto = AutoField()

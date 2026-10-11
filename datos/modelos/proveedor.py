@@ -1,13 +1,7 @@
-from peewee import Model, AutoField, BooleanField, SQL, CharField, ForeignKeyField
+from peewee import AutoField, BooleanField, SQL, CharField, ForeignKeyField
 from datos.modelos.direccion import Direccion
 from auxiliares.mensajes import defecto
-from datos.conexion import conectar_db
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class Proveedor(BaseModel):
     id_proveedor = AutoField()

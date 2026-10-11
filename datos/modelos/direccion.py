@@ -1,11 +1,5 @@
-from peewee import Model, CharField, AutoField
-from datos.conexion import conectar_db
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from peewee import CharField, AutoField
+from datos.modelos.models import BaseModel
 
 class Direccion(BaseModel):
     id_direccion = AutoField()

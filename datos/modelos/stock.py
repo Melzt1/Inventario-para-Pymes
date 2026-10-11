@@ -1,11 +1,5 @@
-from peewee import *
-from datos.conexion import conectar_db
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from peewee import AutoField, IntegerField
+from datos.modelos.models import BaseModel
 
 class Stock(BaseModel):
     id_stock = AutoField()

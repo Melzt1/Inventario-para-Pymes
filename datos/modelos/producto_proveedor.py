@@ -1,13 +1,7 @@
-from peewee import Model, BooleanField, SQL, ForeignKeyField, CompositeKey
-from datos.conexion import conectar_db
+from peewee import BooleanField, SQL, ForeignKeyField, CompositeKey
 from datos.modelos.producto import Producto
 from datos.modelos.proveedor import Proveedor
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class ProductoProveedor(BaseModel):
     id_producto = ForeignKeyField(Producto, field=Producto.id_producto, column_name="id_producto")

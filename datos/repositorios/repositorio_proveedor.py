@@ -26,12 +26,19 @@ def obtener_proveedor_por_id(id_proveedor):
     except Proveedor.DoesNotExist:
         return None
 
-# Consultar si el correo, telefono y rut ingresado ya existe en la db 
-def existe_correo(correo):
-    return Proveedor.select().where(Proveedor.correo == correo).exists()
-
-def existe_telefono(telefono):
-    return Proveedor.select().where(Proveedor.telefono == telefono).exists()
-
+# consulta si el rut ya existe en la db
 def existe_rut(rut):
     return Proveedor.select().where(Proveedor.rut == rut).exists()
+
+# Consultar si el correo y telefono ingresado ya existen en la db ignorando al objeto Proveedor actual
+def existe_correo(correo, id_proveedor=None):
+    consulta = Proveedor.select().where(Proveedor.correo == correo)
+    if id_proveedor is not None:
+        consulta = consulta.where(Proveedor.id_proveedor != id_proveedor)
+    return consulta.exists()
+
+def existe_telefono(telefono, id_proveedor=None):
+    consulta = Proveedor.select().where(Proveedor.telefono == telefono)
+    if id_proveedor is not None:
+        consulta = consulta.where(Proveedor.id_proveedor != id_proveedor)
+    return consulta.exists()

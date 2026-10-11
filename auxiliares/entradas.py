@@ -15,3 +15,20 @@ def mostrar_resultado(resultado, mensaje_exitoso, mensaje_fallido):
         print(mensaje_exitoso)
     else:
         print(mensaje_fallido)        
+
+def campo_obligatorio(mensaje):
+    valido = False
+    while not valido:
+        texto = input(mensaje).strip()
+        if texto == "":
+            print("Este campo es obligatorio!")
+            continue
+        valido = True
+    return texto        
+
+def campo_opcional(mensaje, valor_actual):
+    valor_nuevo = input(f"{mensaje} (ENTER para mantener): ").strip()
+
+    if valor_nuevo == "":
+        return valor_actual
+    return valor_nuevo

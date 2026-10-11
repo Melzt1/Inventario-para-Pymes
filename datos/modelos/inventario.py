@@ -1,14 +1,8 @@
-from peewee import Model, ForeignKeyField, AutoField
-from datos.conexion import conectar_db
+from peewee import ForeignKeyField, AutoField
 from datos.modelos.almacen import Almacen
 from datos.modelos.producto import Producto
 from datos.modelos.stock import Stock
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class Inventario(BaseModel):
     id_inventario = AutoField()

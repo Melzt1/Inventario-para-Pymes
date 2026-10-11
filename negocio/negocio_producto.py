@@ -27,7 +27,21 @@ def lista_productos():
         ])
     print(tabla_productos)
 
+
+def validar_precios_negativos(precio_costo, precio_venta):
+    # True si ambos precios son positivos
+    return precio_costo > 0 and precio_venta > 0
+
+def validar_precio_venta(precio_costo, precio_venta):
+    # True si el precio de venta es mayor o igual al costo.
+    return precio_venta >= precio_costo
+
+# Metodo CREATE
 def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, id_categoria):
+
+    if not validar_precios_negativos(precio_costo, precio_venta):
+        return False
+    
     nuevo_producto = Producto()
     nuevo_producto.nombre = nombre
     nuevo_producto.sku = sku
@@ -40,6 +54,52 @@ def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fec
     return guardar_productos(nuevo_producto)
 
 # Validacion Unique
-def sku_en_uso(sku):
-    return existe_sku(sku)
+def sku_en_uso(sku, id_producto=None):
+    return existe_sku(sku, id_producto)
 
+# Metodo para obtener el objeto por su id
+def obtener_producto(id_producto):
+    return obtener_producto_por_id(id_producto)
+
+# Metodo READ
+
+# Metodo UPDATE
+def actualizar_producto(id_producto, nombre, sku, precio_venta, descripcion):
+    producto = obtener_producto(id_producto)
+
+    # Si no ecuentra el ID dejamos de actualizar
+    if producto is None:
+        return False
+
+    # Verificamos que otro producto no tenga el nuevo SKU
+    if sku != producto.sku and sku_en_uso(sku, id_producto):    
+        return False
+    
+    # Si encuentra el ID seteamos los nuevos parametros 
+    producto.nombre = nombre
+    producto.sku = sku
+    producto.precio_venta = precio_venta
+    producto.descripcion = descripcion
+
+    # Reutilizamos la funcion ya que utiliza (.save)
+    return guardar_productos(producto)
+
+
+# Metodo Delete (borrado logico)
+def desactivar_producto(id_producto):
+    producto = obtener_producto(id_producto)
+
+    if producto is None:
+        return False
+
+    producto.estado = False
+    return guardar_productos(producto)
+
+def activar_producto(id_producto):
+    producto = obtener_producto(id_producto)
+
+    if producto is None:
+        return False
+
+    producto.estado = True
+    return guardar_productos(producto)

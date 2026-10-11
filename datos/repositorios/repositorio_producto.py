@@ -26,5 +26,13 @@ def obtener_producto_por_id(id_producto):
     except Producto.DoesNotExist:
         return None
 
-def existe_sku(sku):
-    return Producto.select().where(Producto.sku == sku).exists()    
+
+# Granito de arena by CHATGPT (La clave para al momento de hacer un update mantener el sku(unique))
+# La consulta pregunta si otro producto tiene ese SKU, excluyendo el ID del producto actual.
+def existe_sku(sku, id_producto = None):
+    consulta = Producto.select().where(Producto.sku == sku)
+
+    if id_producto is not None:
+        consulta = consulta.where(Producto.id_producto != id_producto)
+
+    return consulta.exists()    

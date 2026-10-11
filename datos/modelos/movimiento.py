@@ -1,12 +1,6 @@
-from peewee import Model, IntegerField, CharField, DateTimeField, AutoField, SQL, ForeignKeyField
+from peewee import IntegerField, CharField, DateTimeField, AutoField, SQL, ForeignKeyField
 from datos.modelos.inventario import Inventario
-from datos.conexion import conectar_db
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class Movimiento(BaseModel):
     id_movimiento = AutoField()

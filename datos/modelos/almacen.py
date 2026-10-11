@@ -1,13 +1,7 @@
-from peewee import Model, CharField, BooleanField, AutoField, ForeignKeyField, SQL
+from peewee import CharField, BooleanField, AutoField, ForeignKeyField, SQL
 from auxiliares.mensajes import defecto
 from datos.modelos.direccion import Direccion
-from datos.conexion import conectar_db
-
-database = conectar_db()
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+from datos.modelos.models import BaseModel
 
 class Almacen(BaseModel):
     id_almacen = AutoField()
