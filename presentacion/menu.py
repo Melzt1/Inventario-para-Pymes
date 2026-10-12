@@ -7,6 +7,7 @@ from presentacion.presentacion_categoria import solicitar_datos_categoria, solic
 from presentacion.presentacion_proveedor import solicitar_datos_proveedor, solicitar_actualizar_proveedor, solicitar_actualizar_direccion_proveedor, solicitar_inhabilitar_proveedor, solicitar_consultar_proveedor, solicitar_habilitar_proveedor
 from presentacion.presentacion_almacen import solicitar_datos_almacen, solicitar_actualizar_almacen, solicitar_actualizar_direccion_almacen, solicitar_inhabilitar_almacen, solicitar_consultar_almacen, solicitar_habilitar_almacen
 from presentacion.presentacion_producto import solicitar_datos_producto, solicitar_actualizar_producto, solicitar_desactivar_producto, solicitar_consultar_producto, solicitar_activar_producto
+from presentacion.presentacion_producto_proveedor import solicitar_asignar_proveedor_principal, solicitar_asignar_proveedor_secundario, solicitar_quitar_proveedor
 from auxiliares.mensajes import MENSAJE_ID_ENTERO, OPCION_INVALIDA
 
 
@@ -136,9 +137,9 @@ def menu_producto():
 
         # Opciones del producto (7-10) estaran disponibles al implementar (producto_proveedor) 
 
-        # print("\n === Proveedores del producto ===")
-        # for clave in ("7", "8", "9", "10"):
-        #     print(f'[{clave}] - {submenu_producto[clave]}')
+        print("\n === Proveedores del producto ===")
+        for clave in ("7", "8", "9", "10"):
+            print(f'[{clave}] - {submenu_producto[clave]}')
 
         print("\n[0] Volver al menú principal")
 
@@ -159,6 +160,12 @@ def menu_producto():
         elif opcion == 5:
             solicitar_desactivar_producto() 
         elif opcion == 6:
-            solicitar_activar_producto()                                                                                                              
+            solicitar_activar_producto()
+        elif opcion == 7:
+            solicitar_asignar_proveedor_principal()  
+        elif opcion == 8:
+            solicitar_asignar_proveedor_secundario()
+        elif opcion == 9:
+            solicitar_quitar_proveedor()                                                                                                                                                               
         elif opcion != 0:
             print(OPCION_INVALIDA)     
