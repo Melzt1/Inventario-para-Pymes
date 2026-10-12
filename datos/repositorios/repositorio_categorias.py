@@ -18,10 +18,7 @@ def guardar_categorias(categoria:Categoria):
         print(f"Error general de Peewee: {e}")
         
     return False
-             
+  
+# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)             
 def obtener_categoria_por_id(id_categoria):
-    try: 
-        # lo mismo que: return Categoria.get_by_id(id_categoria)
-        return Categoria[id_categoria]
-    except Categoria.DoesNotExist:
-        return None
+    return Categoria.get_or_none(Categoria.id_categoria == id_categoria)

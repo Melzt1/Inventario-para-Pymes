@@ -20,12 +20,9 @@ def guardar_productos(prodcuto:Producto):
 
     return False
 
+# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)     
 def obtener_producto_por_id(id_producto):
-    try:
-        return Producto[id_producto]
-    except Producto.DoesNotExist:
-        return None
-
+    return Producto.get_or_none(Producto.id_producto == id_producto)
 
 # Granito de arena by CHATGPT (La clave para al momento de hacer un update mantener el sku(unique))
 # La consulta pregunta si otro producto tiene ese SKU, excluyendo el ID del producto actual.

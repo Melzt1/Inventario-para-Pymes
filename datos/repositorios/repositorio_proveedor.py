@@ -19,12 +19,9 @@ def guardar_proveedores(proveedor:Proveedor):
 
     return False
 
-# CONSULTAS A LA DB
+# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)   
 def obtener_proveedor_por_id(id_proveedor):
-    try:
-        return Proveedor[id_proveedor]
-    except Proveedor.DoesNotExist:
-        return None
+    return Proveedor.get_or_none(Proveedor.id_proveedor == id_proveedor)
 
 # consulta si el rut ya existe en la db
 def existe_rut(rut):

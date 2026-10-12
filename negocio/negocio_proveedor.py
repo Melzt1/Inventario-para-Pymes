@@ -112,6 +112,12 @@ def actualizar_proveedor(id_proveedor, correo, telefono):
     if proveedor is None:
         return False
 
+    if correo_en_uso(correo):
+        return False
+
+    if telefono_en_uso(telefono):
+        return False
+    
     proveedor.correo = correo
     proveedor.telefono = telefono
     return guardar_proveedores(proveedor)    

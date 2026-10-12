@@ -112,7 +112,7 @@ def solicitar_desactivar_producto():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    resultado = desactivar_producto(producto)
+    resultado = desactivar_producto(id_producto)
     mostrar_resultado(resultado, f"Producto: {producto.nombre} Deasctivado con exito", "No se pudo desactivar el producto.")
 
 def solicitar_activar_producto():
@@ -123,7 +123,7 @@ def solicitar_activar_producto():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    resultado = activar_producto(producto)
+    resultado = activar_producto(id_producto)
     mostrar_resultado(resultado, f"Producto: {producto.nombre} Activado con exito", "No se pudo activar el producto.")
     
 

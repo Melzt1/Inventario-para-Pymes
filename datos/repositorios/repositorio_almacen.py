@@ -19,9 +19,7 @@ def guardar_almacen(almacen:Almacen):
 
     return False
 
-# obtener el objeto almacen por su ID
+# obtener el objeto almacen por su ID 
+# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)
 def obtener_almacen_por_id(id_almacen):
-    try:
-        return Almacen[id_almacen]
-    except Almacen.DoesNotExist:
-        return None
+    return Almacen.get_or_none(Almacen.id_almacen == id_almacen)

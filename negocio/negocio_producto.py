@@ -85,7 +85,16 @@ def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, de
     # Verificamos que otro producto no tenga el nuevo SKU
     if sku != producto.sku and sku_en_uso(sku, id_producto):    
         return False
-    
+
+    if not validar_precio_costo_negativo(precio_costo):
+        return False
+
+    if not validar_precio_venta_negativo(precio_venta):
+        return False
+
+    if not validar_precio_venta(precio_costo, precio_venta):
+        return False
+        
     # Si encuentra el ID seteamos los nuevos parametros 
     producto.nombre = nombre
     producto.sku = sku

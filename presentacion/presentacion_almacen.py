@@ -83,7 +83,7 @@ def solicitar_inhabilitar_almacen():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    resultado = inhabilitar_almacen(almacen)
+    resultado = inhabilitar_almacen(id_almacen)
     mostrar_resultado(resultado, f"Almacen: {almacen.nombre} inhabilitado con exito.", "No se pudo inhabilitar el almacen.")
 
 def solicitar_habilitar_almacen():
