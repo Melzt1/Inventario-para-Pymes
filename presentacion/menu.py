@@ -1,12 +1,8 @@
 from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria, submenu_proveedor, submenu_almacen, submenu_producto
-from negocio.negocio_categoria import lista_categorias
-from negocio.negocio_proveedor import lista_proveedores
-from negocio.negocio_almacen import lista_almacenes
-from negocio.negocio_producto import lista_productos
-from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria, solicitar_desactivar_categoria,  solicitar_consultar_categoria, solicitar_activar_categoria
-from presentacion.presentacion_proveedor import solicitar_datos_proveedor, solicitar_actualizar_proveedor, solicitar_actualizar_direccion_proveedor, solicitar_inhabilitar_proveedor, solicitar_consultar_proveedor, solicitar_habilitar_proveedor
-from presentacion.presentacion_almacen import solicitar_datos_almacen, solicitar_actualizar_almacen, solicitar_actualizar_direccion_almacen, solicitar_inhabilitar_almacen, solicitar_consultar_almacen, solicitar_habilitar_almacen
-from presentacion.presentacion_producto import solicitar_datos_producto, solicitar_actualizar_producto, solicitar_desactivar_producto, solicitar_consultar_producto, solicitar_activar_producto
+from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria, solicitar_desactivar_categoria,  solicitar_consultar_categoria, solicitar_activar_categoria, mostrar_categorias
+from presentacion.presentacion_proveedor import solicitar_datos_proveedor, solicitar_actualizar_proveedor, solicitar_actualizar_direccion_proveedor, solicitar_inhabilitar_proveedor, solicitar_consultar_proveedor, solicitar_habilitar_proveedor, mostrar_proveedores
+from presentacion.presentacion_almacen import solicitar_datos_almacen, solicitar_actualizar_almacen, solicitar_actualizar_direccion_almacen, solicitar_inhabilitar_almacen, solicitar_consultar_almacen, solicitar_habilitar_almacen, mostrar_almacenes
+from presentacion.presentacion_producto import solicitar_datos_producto, solicitar_actualizar_producto, solicitar_desactivar_producto, solicitar_consultar_producto, solicitar_activar_producto, mostrar_productos
 from presentacion.presentacion_producto_proveedor import solicitar_asignar_proveedor_principal, solicitar_asignar_proveedor_secundario, solicitar_quitar_proveedor
 from auxiliares.mensajes import MENSAJE_ID_ENTERO, OPCION_INVALIDA
 
@@ -53,7 +49,7 @@ def menu_categoria():
             continue
 
         if opcion == 1:
-            lista_categorias()
+            mostrar_categorias()
         elif opcion == 2:
             solicitar_datos_categoria()
         elif opcion == 3:
@@ -81,7 +77,7 @@ def menu_proveedor():
             continue
 
         if opcion == 1:
-            lista_proveedores()
+            mostrar_proveedores()
         elif opcion == 2:
             solicitar_datos_proveedor()
         elif opcion == 3:
@@ -111,7 +107,7 @@ def menu_almacen():
             continue
 
         if opcion == 1:
-            lista_almacenes()
+            mostrar_almacenes()
         elif opcion == 2:
             solicitar_datos_almacen()
         elif opcion == 3:
@@ -150,7 +146,7 @@ def menu_producto():
             continue
 
         if opcion == 1:
-            lista_productos()
+            mostrar_productos()
         elif opcion == 2:
             solicitar_datos_producto()
         elif opcion == 3:

@@ -1,31 +1,9 @@
 from datos.repositorios.repositorio_producto import listado_productos, guardar_productos, obtener_producto_por_id, existe_sku
 from datos.modelos.producto import Producto
-from prettytable import PrettyTable
 
+# Metodo READ
 def lista_productos():
-    tabla_productos = PrettyTable()
-    tabla_productos.field_names = ['ID', 'Nombre', 'SKU', 'Precio Costo', 'Precio Venta', 'Descripcion', 'Fecha Elaboracion', 'Fecha Vencimiento', 'Estado', 'ID Categoria']
-
-    productos = listado_productos()
-
-    if not productos:
-        print("No hay productos registrados.")
-        return
-
-    for producto in productos:
-        tabla_productos.add_row([
-            producto.id_producto,
-            producto.nombre,
-            producto.sku,
-            producto.precio_costo,
-            producto.precio_venta,
-            producto.descripcion,
-            producto.fecha_elaboracion,
-            producto.fecha_vencimiento,
-            ('Inhabilitado', 'Habilitado')[producto.estado],
-            producto.id_categoria
-        ])
-    print(tabla_productos)
+    return listado_productos()
 
 # Metodos para validar valores en los precios
 def validar_precio_costo_negativo(precio_costo):
@@ -72,7 +50,6 @@ def sku_en_uso(sku, id_producto=None):
 def obtener_producto(id_producto):
     return obtener_producto_por_id(id_producto)
 
-# Metodo READ
 
 # Metodo UPDATE
 def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion):

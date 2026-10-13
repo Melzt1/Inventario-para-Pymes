@@ -1,21 +1,9 @@
 from datos.repositorios.repositorio_categorias import listado_categorias, guardar_categorias, obtener_categoria_por_id
-from prettytable import PrettyTable
 from datos.modelos.categoria import Categoria
 
-
+# Metodo READ
 def lista_categorias():
-    tabla_categorias = PrettyTable()
-    tabla_categorias.field_names = ['Id', 'Nombre', 'Descripcion', 'estado']
-    
-    categorias = listado_categorias()
-
-    if not categorias:
-        print("No hay categorías registradas.")
-        return
-    
-    for categoria in categorias:
-        tabla_categorias.add_row([categoria.id_categoria, categoria.nombre, categoria.descripcion, ('Deshabilitado', 'Habilitado')[categoria.estado]])
-    print(tabla_categorias)
+    return listado_categorias()
 
 def crear_categoria(nombre, descripcion):        
     nueva_categoria = Categoria()

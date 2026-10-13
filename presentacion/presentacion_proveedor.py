@@ -1,7 +1,30 @@
-from negocio.negocio_proveedor import registrar_proveedor, obtener_proveedor, validar_rut, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor, rut_en_uso, correo_en_uso, telefono_en_uso
+from negocio.negocio_proveedor import lista_proveedores, registrar_proveedor, obtener_proveedor, validar_rut, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor, rut_en_uso, correo_en_uso, telefono_en_uso
 from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_NO_EXISTE
-from auxiliares.entradas import forzar_entero, mostrar_resultado, campo_obligatorio, campo_opcional
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
+
+def mostrar_proveedores():
+    proveedores = lista_proveedores()
+
+    if not proveedores:
+        print("No hay proveedores registrados.")
+        return
+
+    tabla_proveedores = PrettyTable()
+    tabla_proveedores.field_names = ['Id', 'Rut', 'Nombre', 'Correo', 'Telefono', 'Estado', 'Id Direccion']
+
+    for proveedor in proveedores:
+        tabla_proveedores.add_row([
+            proveedor.id_proveedor,
+            proveedor.rut,
+            proveedor.nombre,
+            proveedor.correo,
+            proveedor.telefono,
+            ('Deshabilitado', 'Habilitado')[proveedor.estado],
+            proveedor.id_direccion,
+        ])
+
+    print(tabla_proveedores)
 
 def solicitar_datos_proveedor():
     print("\n=== Datos del proveedor ===")
@@ -36,7 +59,7 @@ def solicitar_datos_proveedor():
 
     resultado = registrar_proveedor(rut, nombre, correo, telefono, 
         calle, numero, comuna, ciudad)
-    mostrar_resultado(resultado, "Proveedor registrado con exito.", "No se pudo registrar el proveedor")
+    print("Proveedor registrado con exito.") if resultado else print("No se pudo registrar el proveedor.")
 
 def solicitar_consultar_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
@@ -82,7 +105,7 @@ def solicitar_actualizar_proveedor():
         return False
 
     resultado = actualizar_proveedor(id_proveedor, correo, telefono)
-    mostrar_resultado(resultado, "Prveedor actualizado con exito.", "No se pudo actualizar el proveedor.")
+    print("Proveedor actualizado con exito.") if resultado else print("No se pudo actualizar el proveedor.")
 
 def solicitar_actualizar_direccion_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
@@ -99,7 +122,7 @@ def solicitar_actualizar_direccion_proveedor():
     ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
 
     resultado = actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad)  
-    mostrar_resultado(resultado, "Direccion de proveedor actualizada con exito.", "No se pudo actualizar la direccion.")  
+    print("Direccion de proveedor actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")
 
 def solicitar_inhabilitar_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
@@ -111,7 +134,7 @@ def solicitar_inhabilitar_proveedor():
         return
 
     resultado = inhabilitar_proveedor(id_proveedor)
-    mostrar_resultado(resultado, "Prveedor inhabilitado con exito.", "No se pudo inhabilitar el proveedor.")
+    print("Prveedor inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el proveedor.")
 
 def solicitar_habilitar_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
@@ -123,4 +146,4 @@ def solicitar_habilitar_proveedor():
         return
 
     resultado = habilitar_proveedor(id_proveedor)     
-    mostrar_resultado(resultado, "Prveedor habilitado con exito.", "No se pudo habilitar el proveedor.")   
+    print("Prveedor habilitado con exito.") if resultado else print("No se pudo habilitar el proveedor.")

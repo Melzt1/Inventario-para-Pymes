@@ -23,12 +23,6 @@ def forzar_positivo(mensaje):
             print("Debes ingresar un valor mayor que cero")
     return numero
 
-def mostrar_resultado(resultado, mensaje_exitoso, mensaje_fallido):
-    if resultado:
-        print(mensaje_exitoso)
-    else:
-        print(mensaje_fallido)        
-
 def campo_obligatorio(mensaje):
     valido = False
     while not valido:

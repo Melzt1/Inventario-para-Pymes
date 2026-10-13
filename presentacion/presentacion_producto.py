@@ -1,10 +1,37 @@
-from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto
+from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto, lista_productos
 from negocio.negocio_categoria import obtener_categoria
 from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE, SOLICITUD_ID_PRODUCTO
-from auxiliares.entradas import forzar_entero, mostrar_resultado, campo_obligatorio, campo_opcional, forzar_positivo
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo
 from datetime import datetime
+from prettytable import PrettyTable
 
 """ Falta crear metodo para validar fechas en el ingreso de productos. """
+
+def mostrar_productos():
+    productos = lista_productos()
+
+    if not productos:
+        print("No hay productos registrados.")
+        return
+
+    tabla_productos = PrettyTable()
+    tabla_productos.field_names = ['ID', 'Nombre', 'SKU', 'Precio Costo', 'Precio Venta', 'Descripcion', 'Fecha Elaboracion', 'Fecha Vencimiento', 'Estado', 'Categoria']
+
+    for producto in productos:
+        tabla_productos.add_row([
+            producto.id_producto,
+            producto.nombre,
+            producto.sku,
+            producto.precio_costo,
+            producto.precio_venta,
+            producto.descripcion,
+            producto.fecha_elaboracion or '-',
+            producto.fecha_vencimiento or '-',
+            ('Inhabilitado', 'Habilitado')[producto.estado],
+            producto.id_categoria.nombre,
+        ])
+
+    print(tabla_productos)
 
 def solicitar_datos_producto():
     nombre = campo_obligatorio("Ingrese el nombre del producto: ")
@@ -38,7 +65,7 @@ def solicitar_datos_producto():
         return False
 
     resultado = registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, categoria)
-    mostrar_resultado(resultado, "Producto registado con exito", "No se pudo registrar el producto.")
+    print("Producto registado con exito.") if resultado else print("No se pudo registrar el producto.")
 
 def solicitar_consultar_producto():
     id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
@@ -102,7 +129,7 @@ def solicitar_actualizar_producto():
     descripcion = campo_opcional("Ingrese la nueva descripcion", producto.descripcion) 
 
     resultado =  actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion)
-    mostrar_resultado(resultado, "Producto actualizado con exito.", "No se pudo actualizar el producto.")
+    print("Producto actualizado con exito.") if resultado else print("No se pudo actualizar el producto.")
     
 def solicitar_desactivar_producto():
     id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
@@ -113,7 +140,7 @@ def solicitar_desactivar_producto():
         return False
 
     resultado = desactivar_producto(id_producto)
-    mostrar_resultado(resultado, f"Producto: {producto.nombre} Deasctivado con exito", "No se pudo desactivar el producto.")
+    print("Producto desactivado con exito.") if resultado else print("No se pudo desactivar el producto.")
 
 def solicitar_activar_producto():
     id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
@@ -124,6 +151,6 @@ def solicitar_activar_producto():
         return False
 
     resultado = activar_producto(id_producto)
-    mostrar_resultado(resultado, f"Producto: {producto.nombre} Activado con exito", "No se pudo activar el producto.")
+    print(f"Producto: {producto.nombre} Activado con exito") if resultado else print("No se pudo activar el producto.")
     
 

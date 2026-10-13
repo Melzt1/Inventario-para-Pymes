@@ -2,28 +2,10 @@ from datos.modelos.proveedor import Proveedor
 from datos.repositorios.repositorio_proveedor import listado_proveedores, guardar_proveedores, obtener_proveedor_por_id, existe_correo, existe_telefono, existe_rut
 from datos.repositorios.repositorio_direccion import guardar_direcciones
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
-from prettytable import PrettyTable
 
+# Metodo READ
 def lista_proveedores():
-    tabla_proveedores = PrettyTable()
-    tabla_proveedores.field_names = ['Id', 'Rut', 'Nombre', 'Correo', 'Telefono', 'Estado', 'Id Direccion']
-
-    proveedores = listado_proveedores()
-
-    if not proveedores:
-        print("No hay proveedores registrados.")
-        return
-
-    for proveedor in proveedores:
-        tabla_proveedores.add_row([
-            proveedor.id_proveedor,
-            proveedor.rut,
-            proveedor.nombre,
-            proveedor.correo,
-            proveedor.telefono,
-            ('Deshabilitado', 'Habilitado')[proveedor.estado],
-            proveedor.id_direccion])
-    print(tabla_proveedores)
+    return listado_proveedores()
 
 def validar_rut(rut):
     # Limpiar los caracteres del rut (puntos y guion) 
