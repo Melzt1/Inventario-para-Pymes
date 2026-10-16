@@ -1,11 +1,9 @@
 from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto, lista_productos
 from negocio.negocio_categoria import obtener_categoria
 from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE, SOLICITUD_ID_PRODUCTO
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo, forzar_fecha
 from datetime import datetime
 from prettytable import PrettyTable
-
-""" Falta crear metodo para validar fechas en el ingreso de productos. """
 
 def mostrar_productos():
     productos = lista_productos()
@@ -50,11 +48,8 @@ def solicitar_datos_producto():
     
     descripcion = campo_obligatorio("Ingrese la descripcion del producto: ")
 
-    fecha_elaboracion = input("Ingrese la fecha de elaboracion (DD-MM-YYYY): ")
-    fecha_elaboracion = datetime.strptime(fecha_elaboracion, "%d-%m-%Y").date()
-
-    fecha_vencimiento = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
-    fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%d-%m-%Y").date()
+    fecha_elaboracion = forzar_fecha("Ingrese la fecha de elaboracion 'DD-MM-YYYY' (ENTER si no aplica): ", obligatorio=False)
+    fecha_vencimiento = forzar_fecha("Ingrese la fecha de vencimiento 'DD-MM-YYYY' (ENTER si no aplica): ", obligatorio=False)
     
     # Obtener el objeto Categoria por su ID para hacer la relacion
     id_categoria = forzar_entero("Ingrese la categoria (Ingrasar por ID):")

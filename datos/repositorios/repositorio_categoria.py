@@ -6,7 +6,8 @@ def listado_categorias():
 
 def guardar_categorias(categoria:Categoria):
     try:
-        return categoria.save()
+        categoria.save()
+        return True
 
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")

@@ -1,12 +1,11 @@
 from auxiliares.mensajes import VOLVER_AL_MENU
 
 menu_superior = {
-    "1": "Gestión de categorías (Funcionando)",
-    "2": "Gestión de proveedores (Funcionando)",
-    "3": "Gestión de productos (Funcionado)",
-    "4": "Gestión de almacenes (Funcionando)",
-    "5": "Gestión de inventario y movimientos (4/8)",
-
+    "1": "Gestión de categorías",
+    "2": "Gestión de proveedores",
+    "3": "Gestión de productos",
+    "4": "Gestión de almacenes",
+    "5": "Gestión de inventario y movimientos",
     "0": "Salir",
 }
 
@@ -73,8 +72,8 @@ submenu_inventario = {
 submenu_movimientos = {
     "1": "Registrar entrada de stock",
     "2": "Registrar salida de stock",
-    "3": "Consultar movimientos (ENTRADA/SALIDA)",
+    "3": "Consultar movimientos por tipo",
     "4": "Consultar movimientos por rango de fecha",    
-    "5": "Ver historial de movimientos",
+    "5": "Ver historial completo",
     "0": "Volver al menu anterior"
 }

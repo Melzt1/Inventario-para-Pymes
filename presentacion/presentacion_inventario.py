@@ -25,6 +25,14 @@ def consultar_inventario_producto():
     producto = obtener_producto(id_producto)
     almacen = obtener_almacen(id_almacen)
 
+    if producto is None:
+        print("No existe un producto con ese ID.")
+        return
+
+    if almacen is None:
+        print("No existe un almacén con ese ID.")
+        return
+    
     inventario = obtener_inventario_producto(id_producto, id_almacen)
     if inventario is None:
         print(f"No hay inventario para el producto '{producto.nombre}' en el almacen '{almacen.nombre}'")
@@ -37,7 +45,6 @@ def consultar_inventario_producto():
 
 
 def mostrar_inventario_almacen():
-    
     id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
     almacen = obtener_almacen(id_almacen)
     if almacen is None:

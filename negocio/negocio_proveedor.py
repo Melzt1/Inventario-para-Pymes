@@ -9,14 +9,18 @@ def lista_proveedores():
 
 def validar_rut(rut):
     # Limpiar los caracteres del rut (puntos y guion) 
-    rut_limpio = rut.replace(".", "").replace("-","")
+    rut_limpio = rut.replace(".", "").replace("-","").upper()
 
+    # Debe existir al menos un dígito y un dígito verificador.
+    if len(rut_limpio) < 2:
+        return False
+    
     # obtener todos los digitos menos el DV
     rut_sin_dv = rut_limpio[:-1] 
     dv_original = rut_limpio[-1]
 
     # validar que sean digitos
-    if not rut_sin_dv.isdigit():
+    if not rut_sin_dv.isdigit() or dv_original not in "0123456789K":
         return False
 
     multiplicador = 2
@@ -33,8 +37,7 @@ def validar_rut(rut):
             multiplicador = 2
 
     # calcular el digito verificador
-    resto = suma % 11
-    dv_calculado = 11 - resto
+    dv_calculado = 11 - (suma % 11)
 
     if dv_calculado == 11:
         dv_calculado = "0"

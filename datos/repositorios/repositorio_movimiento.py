@@ -6,12 +6,12 @@ def sumar_stock(id_inventario, cantidad):
     return Inventario.update(stock_actual=Inventario.stock_actual + cantidad).where(Inventario.id_inventario == id_inventario).execute()
 
 def restar_stock(id_inventario, cantidad):
-    return Inventario.update(stock_actual=Inventario.stock_actual - cantidad).where(Inventario.id_inventario == id_inventario).execute()
+    return (Inventario.update(stock_actual=Inventario.stock_actual - cantidad).where((Inventario.id_inventario == id_inventario) & 
+                                                                                     (Inventario.stock_actual >= cantidad)).execute())
 
 def registrar_movimiento(movimiento: Movimiento):
     try:
-        movimiento.save()
-        return True
+        return movimiento.save()
     
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")

@@ -1,4 +1,5 @@
 from auxiliares.mensajes import MENSAJE_ID_ENTERO
+from datetime import datetime
 
 """ En este repositorio somos hater del while True!
     Si eres partidario del while True por favor sal de este repositorio """
@@ -39,3 +40,16 @@ def campo_opcional(mensaje, valor_actual):
     if valor_nuevo == "":
         return valor_actual
     return valor_nuevo
+
+def forzar_fecha(mensaje, obligatorio=False):
+    fecha_valida = False
+    while not fecha_valida:
+        texto = input(mensaje).strip()
+        if obligatorio and texto == "":
+            return
+        try: 
+            fecha = datetime.strptime(texto, "%d-%m-%Y").date()
+            fecha_valida = True
+        except ValueError:
+            print("Ingrese una fecha válida con el formato DD-MM-YYYY.")   
+    return fecha                   
