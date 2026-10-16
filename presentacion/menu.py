@@ -1,9 +1,10 @@
-from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria, submenu_proveedor, submenu_almacen, submenu_producto
+from auxiliares import nombre_aplicacion, version_aplicacion, menu_superior, submenu_categoria, submenu_proveedor, submenu_almacen, submenu_producto, submenu_producto_proveedor, submenu_inventario, submenu_movimientos
 from presentacion.presentacion_categoria import solicitar_datos_categoria, solicitar_actualizar_categoria, solicitar_desactivar_categoria,  solicitar_consultar_categoria, solicitar_activar_categoria, mostrar_categorias
 from presentacion.presentacion_proveedor import solicitar_datos_proveedor, solicitar_actualizar_proveedor, solicitar_actualizar_direccion_proveedor, solicitar_inhabilitar_proveedor, solicitar_consultar_proveedor, solicitar_habilitar_proveedor, mostrar_proveedores
 from presentacion.presentacion_almacen import solicitar_datos_almacen, solicitar_actualizar_almacen, solicitar_actualizar_direccion_almacen, solicitar_inhabilitar_almacen, solicitar_consultar_almacen, solicitar_habilitar_almacen, mostrar_almacenes
 from presentacion.presentacion_producto import solicitar_datos_producto, solicitar_actualizar_producto, solicitar_desactivar_producto, solicitar_consultar_producto, solicitar_activar_producto, mostrar_productos
-from presentacion.presentacion_producto_proveedor import solicitar_asignar_proveedor_principal, solicitar_asignar_proveedor_secundario, solicitar_quitar_proveedor
+from presentacion.presentacion_producto_proveedor import solicitar_asignar_proveedor_principal, solicitar_asignar_proveedor_secundario, solicitar_quitar_proveedor, mostrar_proveedores_producto
+from presentacion.presentacion_inventario import solicitar_asociar_producto_almacen, consultar_inventario_producto,mostrar_inventario_almacen, mostrar_productos_stock_critico
 from auxiliares.mensajes import MENSAJE_ID_ENTERO, OPCION_INVALIDA
 
 
@@ -28,7 +29,9 @@ def menu_principal():
         elif opcion == 3:
             menu_producto()            
         elif opcion == 4:
-            menu_almacen()            
+            menu_almacen()
+        elif opcion == 5:
+            menu_inventario()                          
         elif opcion == 0:
             print("Programa Finalizado.")
         else:
@@ -43,7 +46,7 @@ def menu_categoria():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-5]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-6]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
@@ -71,7 +74,7 @@ def menu_proveedor():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-6]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-7]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
@@ -101,7 +104,7 @@ def menu_almacen():
             print(f'[{clave}] - {valor}')
 
         try:
-            opcion = int(input('\nIngrese su opción [0-6]: ').strip())
+            opcion = int(input('\nIngrese su opción [0-7]: ').strip())
         except ValueError:
             print(MENSAJE_ID_ENTERO)
             continue
@@ -124,44 +127,104 @@ def menu_almacen():
             print(OPCION_INVALIDA) 
 
 def menu_producto():
-    opcion = -1
+    opcion = ""
 
-    while opcion != 0:
-        print("\n === Gestion de Productos ===")
-        for clave in ("1", "2", "3", "4", "5", "6"):
-            print(f'[{clave}] - {submenu_producto[clave]}')
+    while opcion != "0":
+        print("\n === Gestión de Productos ===")
 
-        # Opciones del producto (7-10) estaran disponibles al implementar (producto_proveedor) 
+        for clave, valor in submenu_producto.items():
+            print(f'[{clave}] - {valor}')
 
-        print("\n === Proveedores del producto ===")
-        for clave in ("7", "8", "9", "10"):
-            print(f'[{clave}] - {submenu_producto[clave]}')
+        opcion = input('\nIngrese su opción [0-7]: ').strip()
 
-        print("\n[0] Volver al menú principal")
-
-        try:
-            opcion = int(input('\nIngrese su opción [0-9]: ').strip())
-        except ValueError:
-            print(MENSAJE_ID_ENTERO)
-            continue
-
-        if opcion == 1:
+        if opcion == "1":
             mostrar_productos()
-        elif opcion == 2:
+        elif opcion == "2":
             solicitar_datos_producto()
-        elif opcion == 3:
-            solicitar_consultar_producto()            
-        elif opcion == 4:
-            solicitar_actualizar_producto()   
-        elif opcion == 5:
-            solicitar_desactivar_producto() 
-        elif opcion == 6:
+        elif opcion == "3":
+            solicitar_consultar_producto()
+        elif opcion == "4":
+            solicitar_actualizar_producto()
+        elif opcion == "5":
+            solicitar_desactivar_producto()
+        elif opcion == "6":
             solicitar_activar_producto()
-        elif opcion == 7:
-            solicitar_asignar_proveedor_principal()  
-        elif opcion == 8:
+        elif opcion == "7":
+            menu_producto_proveedor()
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)   
+
+def menu_producto_proveedor():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Gestión de Proveedores del Producto ===")
+
+        for clave, valor in submenu_producto_proveedor.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input('\nIngrese su opción [0-4]: ').strip()
+
+        if opcion == "1":
+            solicitar_asignar_proveedor_principal()
+        elif opcion == "2":
             solicitar_asignar_proveedor_secundario()
-        elif opcion == 9:
-            solicitar_quitar_proveedor()                                                                                                                                                               
-        elif opcion != 0:
-            print(OPCION_INVALIDA)     
+        elif opcion == "3":
+            solicitar_quitar_proveedor()
+        elif opcion == "4":
+            mostrar_proveedores_producto()
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)       
+
+def menu_inventario():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Gestión de Inventario ===")
+
+        for clave, valor in submenu_inventario.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input('\nIngrese su opción [0-5]: ').strip()
+
+        if opcion == "1":
+            solicitar_asociar_producto_almacen()
+        elif opcion == "2":
+            consultar_inventario_producto()  
+        elif opcion == "3":
+            mostrar_inventario_almacen() 
+        elif opcion == "4":
+            mostrar_productos_stock_critico()  
+        elif opcion == "5":
+            menu_movimientos()                                               
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)
+
+def menu_movimientos():
+    opcion = ""
+    while True:
+        print("\n === Gestión de Movimientos ===")
+
+        for clave, valor in submenu_movimientos.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input('\nIngrese su opción [0-4]: ').strip()
+
+        if opcion == "1":
+            solicitar_registrar_entrada()
+        elif opcion == "2":
+            solicitar_registrar_salida()
+        elif opcion == "3":
+            solicitar_consultar_movimiento()
+        elif opcion == "4":
+            mostrar_historial_movimientos()
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)

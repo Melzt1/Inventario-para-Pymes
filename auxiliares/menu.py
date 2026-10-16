@@ -3,9 +3,10 @@ from auxiliares.mensajes import VOLVER_AL_MENU
 menu_superior = {
     "1": "Gestión de categorías (Funcionando)",
     "2": "Gestión de proveedores (Funcionando)",
-    "3": "Gestión de productos (En proceso)",
+    "3": "Gestión de productos (Funcionado)",
     "4": "Gestión de almacenes (Funcionando)",
-    "5": "Gestión de inventario y movimientos (No hace nada)",
+    "5": "Gestión de inventario y movimientos (4/8)",
+
     "0": "Salir",
 }
 
@@ -48,11 +49,31 @@ submenu_producto = {
     "4": "Actualizar producto",
     "5": "Desactivar producto",
     '6': "Activar producto",  
+    "7": "Gestión de relaciones producto-proveedor",
+    "0": VOLVER_AL_MENU
+}
 
-    # Opciones del producto (7-10) estaran disponibles al implementar (producto_proveedor) 
-    "7": "Asignar proveedor principal al producto",
-    "8": "Asignar proveedor secundario al producto",
-    "9": "Quitar proveedor al producto",
-    '10': "Ver proveedores del producto",
+submenu_producto_proveedor = {
+    "1": "Asignar proveedor principal al producto",
+    "2": "Asignar proveedor secundario al producto",
+    "3": "Quitar proveedor al producto",
+    "4": "Ver proveedores del producto",
+    "0": "Volver al menu anterior"
+}
+
+submenu_inventario = {
+    "1": "Asociar producto a un almacen",
+    "2": "Consultar inventario de un producto en un almacen",
+    "3": "Listar inventario de un almacen",
+    "4": "Listar productos bajo stock minimo",
+    "5": "Gestion de movimientos",    
+    "0": VOLVER_AL_MENU
+}
+
+submenu_movimientos = {
+    "1": "Registrar entrada de stock",
+    "2": "Registrar salida de stock",
+    "3": "Consultar movimiento por ID",
+    "4": "Ver historial de movimientos",
     "0": VOLVER_AL_MENU
 }
