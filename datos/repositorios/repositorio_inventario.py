@@ -17,6 +17,9 @@ def guardar_inventario(inventario:Inventario):
 
     return False    
 
+def obtener_inventario_id(id_inventario):
+    return Inventario.get_or_none(Inventario.id_inventario == id_inventario)
+
 
 # buscar un producto en un almacen especifico
 def obtener_inventario(id_producto, id_almacen):

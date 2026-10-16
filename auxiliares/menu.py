@@ -73,7 +73,8 @@ submenu_inventario = {
 submenu_movimientos = {
     "1": "Registrar entrada de stock",
     "2": "Registrar salida de stock",
-    "3": "Consultar movimiento por ID",
-    "4": "Ver historial de movimientos",
-    "0": VOLVER_AL_MENU
+    "3": "Consultar movimientos (ENTRADA/SALIDA)",
+    "4": "Consultar movimientos por rango de fecha",    
+    "5": "Ver historial de movimientos",
+    "0": "Volver al menu anterior"
 }

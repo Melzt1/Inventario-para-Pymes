@@ -1,4 +1,4 @@
-from datos.repositorios.repositorio_categorias import listado_categorias, guardar_categorias, obtener_categoria_por_id
+from datos.repositorios.repositorio_categoria import listado_categorias, guardar_categorias, obtener_categoria_por_id
 from datos.modelos.categoria import Categoria
 
 # Metodo READ
