@@ -97,10 +97,12 @@ def actualizar_proveedor(id_proveedor, correo, telefono):
     if proveedor is None:
         return False
 
-    if correo_en_uso(correo):
+    # Excluimos este proveedor para que pueda conservar su correo actual.
+    if correo_en_uso(correo, id_proveedor):
         return False
 
-    if telefono_en_uso(telefono):
+    # Excluimos este proveedor para que pueda conservar su telefono actual.
+    if telefono_en_uso(telefono, id_proveedor):
         return False
     
     proveedor.correo = correo

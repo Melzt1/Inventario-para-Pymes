@@ -1,4 +1,4 @@
-from datos.repositorios.repositorio_inventario import (guardar_inventario, obtener_inventario, lista_inventario_almacen,lista_stock_critico)
+from datos.repositorios.repositorio_inventario import (guardar_inventario, obtener_inventario, lista_inventario_almacen,lista_stock_critico, lista_inventario_producto)
 from negocio.negocio_producto import obtener_producto
 from negocio.negocio_almacen import obtener_almacen
 
@@ -34,3 +34,6 @@ def lista_inventario(id_almacen):
 
 def lista_productos_stock_critico():
     return lista_stock_critico()
+
+def lista_producto_inventario(id_producto):
+    return lista_inventario_producto(id_producto)

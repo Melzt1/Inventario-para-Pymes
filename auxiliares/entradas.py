@@ -45,8 +45,11 @@ def forzar_fecha(mensaje, obligatorio=False):
     fecha_valida = False
     while not fecha_valida:
         texto = input(mensaje).strip()
-        if obligatorio and texto == "":
-            return
+        if texto == "":
+            if obligatorio:
+                print("La fecha es obligatoria.")
+                continue
+            return None
         try: 
             fecha = datetime.strptime(texto, "%d-%m-%Y").date()
             fecha_valida = True

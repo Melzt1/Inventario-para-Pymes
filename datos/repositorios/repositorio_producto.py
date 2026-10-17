@@ -33,3 +33,6 @@ def existe_sku(sku, id_producto = None):
         consulta = consulta.where(Producto.id_producto != id_producto)
 
     return consulta.exists()    
+
+def obtener_producto_por_sku(sku):
+    return Producto.get_or_none(Producto.sku == sku)

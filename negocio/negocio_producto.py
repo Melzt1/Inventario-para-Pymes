@@ -1,4 +1,4 @@
-from datos.repositorios.repositorio_producto import listado_productos, guardar_productos, obtener_producto_por_id, existe_sku
+from datos.repositorios.repositorio_producto import listado_productos, guardar_productos, obtener_producto_por_id, existe_sku, obtener_producto_por_sku
 from datos.modelos.producto import Producto
 
 # Metodo READ
@@ -21,6 +21,8 @@ def validar_precio_venta(precio_costo, precio_venta):
 
 # Metodo CREATE
 def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, id_categoria):
+    if sku_en_uso(sku):
+        return False
 
     if not validar_precio_costo_negativo(precio_costo):
         return False
@@ -49,7 +51,6 @@ def sku_en_uso(sku, id_producto=None):
 # Metodo para obtener el objeto por su id
 def obtener_producto(id_producto):
     return obtener_producto_por_id(id_producto)
-
 
 # Metodo UPDATE
 def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion):
@@ -101,3 +102,6 @@ def activar_producto(id_producto):
 
     producto.estado = True
     return guardar_productos(producto)
+
+def obtener_producto_sku(sku):
+    return obtener_producto_por_sku(sku)

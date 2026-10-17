@@ -35,3 +35,7 @@ def lista_inventario_almacen(id_almacen):
 # listar productos bajo stock critico
 def lista_stock_critico():
     return Inventario.select().where(Inventario.stock_actual <= Inventario.stock_minimo)
+
+# Metodo de ayuda que servira para Movimiento
+def lista_inventario_producto(id_producto):
+    return Inventario.select().where(Inventario.id_producto == id_producto)
