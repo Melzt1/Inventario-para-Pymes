@@ -1,5 +1,5 @@
 from datos.modelos.proveedor import Proveedor
-from datos.repositorios.repositorio_proveedor import listado_proveedores, guardar_proveedores, obtener_proveedor_por_id, existe_correo, existe_telefono, existe_rut
+from datos.repositorios.repositorio_proveedor import listado_proveedores, guardar_proveedores, obtener_proveedor_por_id, existe_correo, existe_telefono, existe_rut, obtener_proveedor_por_nombre
 from datos.repositorios.repositorio_direccion import guardar_direcciones
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
@@ -139,3 +139,7 @@ def habilitar_proveedor(id_proveedor):
 
 def obtener_proveedor(id_almacen):
     return obtener_proveedor_por_id(id_almacen)
+
+
+def buscar_proveedor_por_nombre(nombre):
+    return obtener_proveedor_por_nombre(nombre)

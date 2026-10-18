@@ -1,7 +1,8 @@
-from negocio.negocio_movimiento import registrar_entrada, registrar_salida, lista_movimientos, validar_stock_salida, lista_movimientos_entrada, lista_movimientos_salida, lista_movimientos_rango_fecha
+from negocio.negocio_movimiento import registrar_entrada, registrar_salida, lista_movimientos, lista_movimientos_entrada, lista_movimientos_salida, lista_movimientos_rango_fecha
 from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero, forzar_fecha
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_inventario import lista_producto_inventario
+from auxiliares.mensajes import NO_HAY_MOVIMIENTOS
 from prettytable import PrettyTable
 
 """
@@ -35,23 +36,20 @@ def solicitar_registrar_entrada():
     
     print(f"Producto encontrado: {producto.nombre}")
     print("Almacenes con inventario para este producto:")
-    # creo una lista para almacenar los objetos y luego compararlo con la respuesta "seleccion"
-    opciones = []
 
-    # dado que mi lista almacenara la cantidad de objetos (0,1,2,3,4......) usare enumerate
-    # OJO: estoy almacenando el objeto NO el id_inventario
+    # dado que mi lista contiene la cantidad de objetos (0,1,2,3,4......) usare enumerate
+    # OJO: tiene almacenando el objeto, NO el id_inventario
     for i, inventario in enumerate(lista_inventario, start=1):
         almacen = inventario.id_almacen
         print(f"[{i}] - {almacen.nombre} - Stock: {inventario.stock_actual}")
-        opciones.append(inventario) 
 
     seleccion = forzar_entero("\nSeleccione el Almacen: ")
 
-    if 1 <= seleccion <= len(opciones):
-        inventario = opciones[seleccion-1]
+    if 1 <= seleccion <= len(lista_inventario):
+        inventario = lista_inventario[seleccion-1]
         id_inventario = inventario.id_inventario
     else:
-        print("Opcion fuera de rango.")
+        print(f"Opcion fuera de rango (1-{len(lista_inventario)}).")
         return False
     
     descripcion = campo_obligatorio("Ingrese la descripcion: ")
@@ -61,7 +59,6 @@ def solicitar_registrar_entrada():
     resultado = registrar_entrada(descripcion, cantidad, fecha, id_inventario)
     print("Entrada registrada con exito.") if resultado else print("No se pudo realizar el movimiento")
         
-
 def solicitar_registrar_salida():
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
 
@@ -121,7 +118,7 @@ def solicitar_consultar_movimiento():
         return
 
     if not movimientos:
-        print("No hay movimientos registrados.")
+        print(NO_HAY_MOVIMIENTOS)
         return False
 
     tabla_movimiento = PrettyTable()
@@ -152,7 +149,7 @@ def mostrar_movimientos_rango_fecha():
     
     movimientos = lista_movimientos_rango_fecha(fecha_inicio, fecha_termino)
     if not movimientos:
-        print("No hay movimientos registrados.")
+        print(NO_HAY_MOVIMIENTOS)
         return False
 
     tabla_movimiento = PrettyTable()
@@ -177,7 +174,7 @@ def mostrar_historial_movimientos():
     movimientos = lista_movimientos()
 
     if not movimientos:
-        print("No hay movimientos registrados.")
+        print(NO_HAY_MOVIMIENTOS)
         return False
 
     tabla_movimiento = PrettyTable()

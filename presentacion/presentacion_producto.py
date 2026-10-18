@@ -1,8 +1,32 @@
-from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto, lista_productos, lista_productos_por_nombre
+from negocio.negocio_producto import registrar_producto, sku_en_uso, actualizar_producto, desactivar_producto, activar_producto, lista_productos, lista_nombre_productos
 from negocio.negocio_categoria import obtener_categoria
-from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE, SOLICITUD_ID_PRODUCTO
+from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo, forzar_fecha
 from prettytable import PrettyTable
+
+# Metodo auxiliar 
+def solicitar_seleccion_producto():
+    nombre = campo_obligatorio("Busque el producto por su nombre: ")
+
+    productos = lista_nombre_productos(nombre)
+
+    if not productos:
+        print("No hay productos con ese nombre.")
+        return None
+
+    for i, producto in enumerate(productos, start=1):
+        print(f"[{i}] - {producto.nombre} ({producto.sku})")
+
+    opcion_valida = False
+
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el producto: ")  
+        if 1 <= seleccion <= len(productos):
+            producto = productos[seleccion-1]
+            opcion_valida = True
+            return producto
+        
+        print(f"Opcion fuera de rango (1-{len(productos)}).")
 
 def mostrar_productos():
     productos = lista_productos()
@@ -60,30 +84,7 @@ def solicitar_datos_producto():
 
     resultado = registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, categoria)
     print("Producto registado con exito.") if resultado else print("No se pudo registrar el producto.")
-
-def solicitar_seleccion_producto():
-    nombre = campo_obligatorio("Busque el producto por su nombre: ")
-
-    productos = lista_productos_por_nombre(nombre)
-
-    if not productos:
-        print("No hay productos con ese nombre.")
-        return None
-
-    for i, producto in enumerate(productos, start=1):
-        print(f"[{i}] - {producto.nombre} ({producto.sku})")
-
-    opcion_valida = False
-
-    while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el producto: ")  
-        if 1 <= seleccion <= len(productos):
-            producto = productos[seleccion-1]
-            opcion_valida = True
-            return producto
-        
-        print(f"Opcion fuera de rango (1-{len(productos)}).")
-                 
+              
 def solicitar_consultar_producto():
     producto = solicitar_seleccion_producto()
 
@@ -142,7 +143,6 @@ def solicitar_actualizar_producto():
 
     resultado =  actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion)
     print("Producto actualizado con exito.") if resultado else print("No se pudo actualizar el producto.")
-
 
 # FALTA VALIDAR QUE NO SE PUEDAN DESACTIVAR PRODUCTOS CON STOCK > 0    
 def solicitar_desactivar_producto():

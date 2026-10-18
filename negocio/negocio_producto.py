@@ -1,4 +1,4 @@
-from datos.repositorios.repositorio_producto import listado_productos, guardar_productos, obtener_producto_por_id, existe_sku, obtener_producto_por_sku, obtener_producto_por_nombre
+from datos.repositorios.repositorio_producto import listado_productos, guardar_productos, obtener_producto_por_id, existe_sku, obtener_producto_por_sku, obtener_nombre_productos, obtener_nombre_productos_desactivados
 from datos.modelos.producto import Producto
 
 # Metodo READ
@@ -106,5 +106,8 @@ def activar_producto(id_producto):
 def obtener_producto_sku(sku):
     return obtener_producto_por_sku(sku)
 
-def lista_productos_por_nombre(nombre):
-    return obtener_producto_por_nombre( nombre)
+def lista_nombre_productos(nombre):
+    return obtener_nombre_productos(nombre)
+
+def lista_productos_deasctivados():
+    return obtener_nombre_productos_desactivados

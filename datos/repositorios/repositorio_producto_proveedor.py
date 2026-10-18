@@ -36,11 +36,21 @@ def obtener_proveedor_principal(id_producto):
 
 # busca todos los proveedores asociados a 1 producto en especifico
 def listado_proveedores_producto(id_producto):
-    return (ProductoProveedor
-                .select(ProductoProveedor, Proveedor)
-                .join(Proveedor)
-                .where(ProductoProveedor.id_producto == id_producto))
-    
+    return (ProductoProveedor.select(ProductoProveedor, Proveedor).join(Proveedor).where(ProductoProveedor.id_producto == id_producto))
+
+
+# Proveedores ACTIVOS que aun no estan asociados a ese producto.
+# CONSULTA GENERADA POR DEEPSEEK (IA). YO NO PUDE RESOLVERLA :C
+def listado_proveedores_disponibles(id_producto):
+    ids_asociados = (ProductoProveedor
+                     .select(ProductoProveedor.id_proveedor)
+                     .where(ProductoProveedor.id_producto == id_producto))
+
+    return (Proveedor
+            .select()
+            .where((Proveedor.estado == True) &
+                   (~Proveedor.id_proveedor.in_(ids_asociados)))
+            .order_by(Proveedor.nombre))    
 
 # borrado fisico para eliminar la relacion de proveedor principal y asignar otra
 def quitar_relacion(relacion):

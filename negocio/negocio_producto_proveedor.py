@@ -1,8 +1,6 @@
-from datos.repositorios.repositorio_producto_proveedor import crear_relacion, obtener_relacion, quitar_relacion, listado_proveedores_asociados, obtener_proveedor_principal, listado_proveedores_producto
+from datos.repositorios.repositorio_producto_proveedor import crear_relacion, obtener_relacion, quitar_relacion, listado_proveedores_asociados, obtener_proveedor_principal, listado_proveedores_producto, listado_proveedores_disponibles
 from negocio.negocio_producto import obtener_producto
 from negocio.negocio_proveedor import obtener_proveedor
-from datos.modelos.producto_proveedor import ProductoProveedor
-from datos.modelos.proveedor import Proveedor
 
 def lista_proveedores_asociados():
     return listado_proveedores_asociados()
@@ -13,7 +11,10 @@ def lista_proveedores_de_producto(id_producto):
 def proveedor_principal_de_producto(id_producto):
     return obtener_proveedor_principal(id_producto)
 
-# Metodo Create/Update
+def lista_proveedores_disponibles(id_producto):
+    return listado_proveedores_disponibles(id_producto)
+
+# Metodo Create
 """             regla de negocio:
 el producto solo puede tener 1 proveedor principal, y no
 se reemplaza si ya existe uno, hay que quitar esa relacion primero."""

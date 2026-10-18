@@ -12,7 +12,7 @@ menu_superior = {
 submenu_categoria = {
     "1": "Listar categorías",
     "2": "Guardar cateogria",
-    "3": "Consultar categoria por ID",
+    "3": "Consultar categoria",
     "4": "Actualizar categoria",
     '5': "Desactivar categoria",
     '6': "Activar categoria",
@@ -22,7 +22,7 @@ submenu_categoria = {
 submenu_proveedor = {
     "1": "Listar proveedores",
     "2": "Registrar proveedor",
-    "3": "Consultar proveedor por ID",
+    "3": "Consultar proveedor",
     "4": "Actualizar proveedor",
     "5": "Actualizar direccion proveedor",
     '6': "Desactivar proveedor",
@@ -33,7 +33,7 @@ submenu_proveedor = {
 submenu_almacen = {
     "1": "Listar almacenes",
     "2": "Registrar almacen",
-    "3": "Consultar almacen por ID",
+    "3": "Consultar almacen",
     "4": "Actualizar almacen",
     "5": "Actualizar direccion almacen",
     '6': "Desactivar almacen",

@@ -37,5 +37,8 @@ def existe_sku(sku, id_producto = None):
 def obtener_producto_por_sku(sku):
     return Producto.get_or_none(Producto.sku == sku)
 
-def obtener_producto_por_nombre(nombre):
+def obtener_nombre_productos(nombre):
     return Producto.select().where(Producto.nombre.contains(nombre))
+
+def obtener_nombre_productos_desactivados():
+    return Producto.select().where(Producto.estado == False)

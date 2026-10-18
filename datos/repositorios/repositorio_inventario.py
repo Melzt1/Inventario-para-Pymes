@@ -1,4 +1,6 @@
 from datos.modelos.inventario import Inventario
+from datos.modelos.producto import Producto
+from datos.modelos.almacen import Almacen
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 def guardar_inventario(inventario:Inventario):
@@ -28,14 +30,16 @@ def obtener_inventario(id_producto, id_almacen):
         (Inventario.id_almacen == id_almacen)
     )
 
-# listar el inventario de un almacen especifico
+# obtiene el inventario de un almacen junto con los datos de sus productos
 def lista_inventario_almacen(id_almacen):
-    return Inventario.select().where(Inventario.id_almacen == id_almacen)    
+    return Inventario.select(Inventario, Producto).join(Producto).where(Inventario.id_almacen == id_almacen)    
 
-# listar productos bajo stock critico
+# lista de productos bajo stock critico
 def lista_stock_critico():
     return Inventario.select().where(Inventario.stock_actual <= Inventario.stock_minimo)
 
-# Metodo de ayuda que servira para Movimiento
+# Funcion de ayuda para presentacion_inventario y presentacion_movimiento
+# Lista todos los inventario que tienen un producto especifico (id_producto)
 def lista_inventario_producto(id_producto):
-    return Inventario.select().where(Inventario.id_producto == id_producto)
+    return Inventario.select(Inventario, Almacen).join(Almacen).where(Inventario.id_producto == id_producto).order_by(Almacen.nombre)
+

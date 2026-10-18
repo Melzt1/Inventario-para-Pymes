@@ -3,6 +3,28 @@ from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
 
+# Metodo auxiliar
+def solicitar_seleccion_almacen():
+    almacenes = list(lista_almacenes())
+
+    if not almacenes:
+        print("No hay almacenes activos registrados.")
+        return None
+
+    print("\nAlmacenes disponibles:")
+    for i, almacen in enumerate(almacenes, start=1):
+        print(f"[{i}] - {almacen.nombre}")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el almacen: ")
+
+        if 1 <= seleccion <= len(almacenes):
+            opcion_valida = True
+            return almacenes[seleccion - 1]
+
+        print(f"Opcion fuera de rango (1-{len(almacenes)}).")
+
 def mostrar_almacenes():
     almacenes = lista_almacenes()
 
@@ -41,49 +63,40 @@ def solicitar_datos_almacen():
     print("Almacen registrado con exito.") if resultado else print("No se pudo registrar el almacen.")   
 
 def solicitar_consultar_almacen():
-    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
-
-    almacen = obtener_almacen(id_almacen)
+    almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return
 
     # La FK entrega el objeto Direccion
     direccion = almacen.id_direccion
 
     estado = "Habilitado" if almacen.estado else "Deshabilitado"
 
-    print("\n=== Almacen encontrado ===")
-    print(f"{'ID':<16}: {almacen.id_almacen}")
+    print("\n=== Informacion Almacen ===")
+    #print(f"{'ID':<16}: {almacen.id_almacen}")
     print(f"{'Nombre':<16}: {almacen.nombre}")
     print(f"{'Encargado':<16}: {almacen.encargado}")
     print(f"{'Estado':<16}: {estado}")
-    print(f"{'Direccion':<16}  : {direccion.calle} {direccion.numero or '_'}, {direccion.comuna}, {direccion.ciudad}\n")
+    print(f"{'Direccion':<16}: {direccion.calle} {direccion.numero or '_'}, {direccion.comuna}, {direccion.ciudad}\n")
 
 def solicitar_actualizar_almacen():
-    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
-
-    almacen = obtener_almacen(id_almacen)
+    almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return
 
     nombre = campo_opcional("Ingrese el nuevo nombre", almacen.nombre)
     encargado = campo_opcional("Ingrese el nuevo encargado", almacen.encargado)    
 
-    resultado = actualizar_almacen(id_almacen, nombre, encargado)
+    resultado = actualizar_almacen(almacen.id_almacen, nombre, encargado)
     print("Almacen actualizado con exito.") if resultado else print("No se pudo actualizar el almacen.")         
 
 def solicitar_actualizar_direccion_almacen():
-    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
-
-    almacen = obtener_almacen(id_almacen)
+    almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return
     
     # La FK entrega el objeto Direccion
     direccion = almacen.id_direccion
@@ -92,21 +105,19 @@ def solicitar_actualizar_direccion_almacen():
     comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
     ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
 
-    resultado = actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad)
+    resultado = actualizar_direccion_almacen(almacen.id_almacen, calle, numero, comuna, ciudad)
     print("Direccion actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")
 
 def solicitar_inhabilitar_almacen():
-    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
-
-    almacen = obtener_almacen(id_almacen)
+    almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return
 
-    resultado = inhabilitar_almacen(id_almacen)
+    resultado = inhabilitar_almacen(almacen.id_almacen)
     print(f"Almacen: {almacen.nombre} inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el almacen.")
 
+# Falta mostrar solo los almacacenes desactivados
 def solicitar_habilitar_almacen():
     id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 

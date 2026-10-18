@@ -1,7 +1,37 @@
-from negocio.negocio_proveedor import lista_proveedores, registrar_proveedor, obtener_proveedor, validar_rut, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor, rut_en_uso, correo_en_uso, telefono_en_uso
+from negocio.negocio_proveedor import lista_proveedores, registrar_proveedor, obtener_proveedor, validar_rut, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor, rut_en_uso, correo_en_uso, telefono_en_uso, buscar_proveedor_por_nombre
 from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
+
+# Metodo auxiliar que se reciclara para mostrar proveedores por nombre
+# NO ES PARTE DEL MENU
+def solicitar_seleccion_proveedor():
+    nombre = campo_obligatorio("Busque el proveedor por nombre: ")
+
+    proveedores = list(buscar_proveedor_por_nombre(nombre))
+
+    if not proveedores:
+        print("No hay proveedores activos con ese nombre.")
+        return None
+
+    # Si hay una sola coincidencia retorno directo el proveedor, seria absurdo hacer elegir si solo hay una opcion
+    if len(proveedores) == 1:
+        print(f"Proveedor encontrado: {proveedores[0].nombre} ({proveedores[0].rut})")
+        return proveedores[0]
+
+    print(f"\n{len(proveedores)} proveedores encontrados:")
+    for i, proveedor in enumerate(proveedores, start=1):
+        print(f"[{i}] {proveedor.nombre} ({proveedor.rut})")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el proveedor: ")
+
+        if 1 <= seleccion <= len(proveedores):
+            opcion_valida = True
+            return proveedores[seleccion - 1]
+
+        print(f"Opcion fuera de rango (1-{len(proveedores)}).")
 
 def mostrar_proveedores():
     proveedores = lista_proveedores()
@@ -62,21 +92,18 @@ def solicitar_datos_proveedor():
     print("Proveedor registrado con exito.") if resultado else print("No se pudo registrar el proveedor.")
 
 def solicitar_consultar_proveedor():
-    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
-
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = solicitar_seleccion_proveedor()
 
     if proveedor is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return
 
-    # La FK entrega el objeto Direccion, no el ID
+    # La FK entrega el objeto Direccion
     direccion = proveedor.id_direccion
 
     estado = "Habilitado" if proveedor.estado else "Deshabilitado"
 
-    print("\n=== Proveedor encontrado ===")
-    print(f"{'ID':<16}: {proveedor.id_proveedor}")
+    print("\n=== Datos Proveedor ===")
+    #print(f"{'ID':<16}: {proveedor.id_proveedor}")
     print(f"{'RUT':<16}: {proveedor.rut}")
     print(f"{'Nombre':<16}: {proveedor.nombre}")
     print(f"{'Correo':<16}: {proveedor.correo}")
@@ -85,13 +112,12 @@ def solicitar_consultar_proveedor():
     print(f"{'Direccion':<16}: {direccion.calle} {direccion.numero or '_'}, {direccion.comuna}, {direccion.ciudad}\n")
 
 def solicitar_actualizar_proveedor():
-    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
-    proveedor = obtener_proveedor(id_proveedor)
+    proveedor = solicitar_seleccion_proveedor()
 
     if proveedor is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return
 
+    id_proveedor = proveedor.id_proveedor
     correo = campo_opcional("Ingrese el nuevo correo", proveedor.correo)
 
     if correo_en_uso(correo, id_proveedor):
@@ -108,14 +134,14 @@ def solicitar_actualizar_proveedor():
     print("Proveedor actualizado con exito.") if resultado else print("No se pudo actualizar el proveedor.")
 
 def solicitar_actualizar_direccion_proveedor():
-    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
-    proveedor = obtener_proveedor(id_proveedor)   
+    proveedor = solicitar_seleccion_proveedor()
 
     if proveedor is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return
     
+    id_proveedor = proveedor.id_proveedor
     direccion = proveedor.id_direccion
+
     calle = campo_opcional("Ingrese el nombre de la calle", direccion.calle)
     numero = campo_opcional("Ingrese el numero de la direccion", direccion.numero)
     comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
@@ -125,17 +151,17 @@ def solicitar_actualizar_direccion_proveedor():
     print("Direccion de proveedor actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")
 
 def solicitar_inhabilitar_proveedor():
-    id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
-
-    proveedor = obtener_proveedor(id_proveedor)   
+    proveedor = solicitar_seleccion_proveedor()
 
     if proveedor is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return
+
+    id_proveedor = proveedor.id_proveedor
 
     resultado = inhabilitar_proveedor(id_proveedor)
     print("Prveedor inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el proveedor.")
 
+# Falta mostrar una lista de proveedores con estado 'Deshabilitado'
 def solicitar_habilitar_proveedor():
     id_proveedor = forzar_entero(SOLICITUD_ID_PROVEEDOR)
 

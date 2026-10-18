@@ -3,6 +3,28 @@ from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_NO_EXISTE, OP
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
 
+# Metodo auxiliar
+def solicitar_seleccion_categoria():
+    categorias = list(lista_categorias())
+
+    if not categorias:
+        print("No hay categorias activas registradas.")
+        return None
+
+    print("\nCategorias disponibles:")
+    for i, categoria in enumerate(categorias, start=1):
+        print(f"[{i}] - {categoria.nombre}")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione la categoria: ")
+
+        if 1 <= seleccion <= len(categorias):
+            opcion_valida = True
+            return categorias[seleccion - 1]
+
+        print(f"Opcion fuera de rango (1-{len(categorias)}).")
+
 def mostrar_categorias():
     categorias = lista_categorias()
 
@@ -23,7 +45,6 @@ def mostrar_categorias():
 
     print(tabla_categorias)
 
-
 def solicitar_datos_categoria():
     nombre = campo_obligatorio("Ingrese el nombre de la categoria: ")
     descripcion = campo_obligatorio("Ingrese la descripion de la categoria: ")
@@ -32,58 +53,48 @@ def solicitar_datos_categoria():
     print("Categoria creada con exito.") if resultado else print("No se pudo crear la categoria.")
 
 def solicitar_consultar_categoria():
-    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
-
-    categoria = obtener_categoria(id_categoria)
+    categoria = solicitar_seleccion_categoria()
 
     if categoria is None:
-        print(MENSAJE_ID_NO_EXISTE)
-        return False
+        return 
 
     estado = "Habilitado" if categoria.estado else "Deshabilitado"
 
-    print("\n=== Categoria encontrada ===")
+    print("\n=== Informacion Categoria ===")
     print(f"{'ID':<16}: {categoria.id_categoria}")
     print(f"{'Nombre':<16}: {categoria.nombre}")
     print(f"{'Descripcion':<16}: {categoria.descripcion}")
     print(f"{'Estado':<16}: {estado}\n")
 
 def solicitar_actualizar_categoria():
-    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
+    categoria = solicitar_seleccion_categoria()
 
-    # Buscamos la categoria por su ID
-    # Si existe, obtenemos el objeto Categoria y si no existe obtenemos None
-    categoria = obtener_categoria(id_categoria)
-
-    # Si no encontro la categoria se detiene la funcion actual
     if categoria is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return 
-
+    
     nombre = campo_opcional("Ingrese el nuevo nombre", categoria.nombre)   
     descripcion = campo_opcional("Ingrese la nueva descripion", categoria.descripcion)
 
-    resultado = actualizar_categoria(id_categoria, nombre, descripcion)
+    resultado = actualizar_categoria(categoria.id_categoria, nombre, descripcion)
     print("Categoria actualizada con exito.") if resultado else print("No se pudo actualizar la categoria.")    
 
+# Falta validar que no se pueda desactivar categorias con productos que tengan stock > 0
 def solicitar_desactivar_categoria():
-    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
-
-    categoria = obtener_categoria(id_categoria)
+    categoria = solicitar_seleccion_categoria()
 
     if categoria is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return 
 
     confirmar = input(f"Estas seguro de desactivar la categoria: {categoria.nombre}? (S/N): ").strip().upper()
     if confirmar == "S":
-        resultado = desactivar_categoria(id_categoria)
+        resultado = desactivar_categoria(categoria.id_categoria)
         print(f"Categoria: {categoria.nombre} desactivada con exito.") if resultado else print("No se pudo desactivar la categoria.") 
     elif confirmar == "N":
         print("Opcion Cancelada.")
     else:
         print(OPCION_INVALIDA) 
 
+# Falta mostrar la lista de las categorias Desactivadas
 def solicitar_activar_categoria():
     id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
 
