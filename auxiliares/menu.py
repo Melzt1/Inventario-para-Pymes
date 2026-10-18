@@ -44,7 +44,7 @@ submenu_almacen = {
 submenu_producto = {
     "1": "Listar productos",
     "2": "Registrar producto",
-    "3": "Consultar producto por ID",
+    "3": "Consultar producto por nombre",
     "4": "Actualizar producto",
     "5": "Desactivar producto",
     '6': "Activar producto",  

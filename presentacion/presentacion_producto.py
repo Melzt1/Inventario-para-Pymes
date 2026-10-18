@@ -1,8 +1,7 @@
-from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto, lista_productos
+from negocio.negocio_producto import registrar_producto, sku_en_uso, obtener_producto, actualizar_producto, desactivar_producto, activar_producto, lista_productos, lista_productos_por_nombre
 from negocio.negocio_categoria import obtener_categoria
 from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE, SOLICITUD_ID_PRODUCTO
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo, forzar_fecha
-from datetime import datetime
 from prettytable import PrettyTable
 
 def mostrar_productos():
@@ -62,16 +61,36 @@ def solicitar_datos_producto():
     resultado = registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, categoria)
     print("Producto registado con exito.") if resultado else print("No se pudo registrar el producto.")
 
-def solicitar_consultar_producto():
-    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
+def solicitar_seleccion_producto():
+    nombre = campo_obligatorio("Busque el producto por su nombre: ")
 
-    producto = obtener_producto(id_producto)
+    productos = lista_productos_por_nombre(nombre)
+
+    if not productos:
+        print("No hay productos con ese nombre.")
+        return None
+
+    for i, producto in enumerate(productos, start=1):
+        print(f"[{i}] - {producto.nombre} ({producto.sku})")
+
+    opcion_valida = False
+
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el producto: ")  
+        if 1 <= seleccion <= len(productos):
+            producto = productos[seleccion-1]
+            opcion_valida = True
+            return producto
+        
+        print(f"Opcion fuera de rango (1-{len(productos)}).")
+                 
+def solicitar_consultar_producto():
+    producto = solicitar_seleccion_producto()
 
     if producto is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return False
-
-    # La FK entrega el objeto Categoria, no el ID
+    
+    # La FK entrega el objeto Categoria
     categoria = producto.id_categoria
 
     estado = "Habilitado" if producto.estado else "Deshabilitado"
@@ -92,12 +111,12 @@ def solicitar_consultar_producto():
     print(f"{'Categoria':<18}: {categoria.nombre}\n")
 
 def solicitar_actualizar_producto():
-    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
-    producto = obtener_producto(id_producto)
+    producto = solicitar_seleccion_producto()
 
     if producto is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return False
+
+    id_producto = producto.id_producto
 
     nombre = campo_opcional("Ingrese el nuevo nombre", producto.nombre)
     sku = campo_opcional("Ingrese el nuevo SKU", producto.sku)
@@ -107,14 +126,12 @@ def solicitar_actualizar_producto():
         print(f"El SKU '{sku}' ya se encuentra registrado.")
         return False
 
-    # hacklife para recibir un String vacio en una variable INT
     precio_costo = input("Ingrese el nuevo precio de costo (ENTER para mantener): ")
     if precio_costo == "":
         precio_costo = producto.precio_costo
     else:
         precio_costo = int(precio_costo)    
-    
-    # hacklife para recibir un String vacio en una variable INT
+
     precio_venta = input("Ingrese el nuevo precio de venta (ENTER para mantener): ")
     if precio_venta == "":
         precio_venta = producto.precio_venta
@@ -125,25 +142,28 @@ def solicitar_actualizar_producto():
 
     resultado =  actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion)
     print("Producto actualizado con exito.") if resultado else print("No se pudo actualizar el producto.")
-    
-def solicitar_desactivar_producto():
-    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
-    producto = obtener_producto(id_producto)
 
-    if not producto:
-        print(MENSAJE_ID_NO_EXISTE)
+
+# FALTA VALIDAR QUE NO SE PUEDAN DESACTIVAR PRODUCTOS CON STOCK > 0    
+def solicitar_desactivar_producto():
+    producto = solicitar_seleccion_producto()
+
+    if producto is None:
         return False
+
+    id_producto = producto.id_producto
 
     resultado = desactivar_producto(id_producto)
     print("Producto desactivado con exito.") if resultado else print("No se pudo desactivar el producto.")
 
+# FALTA FILTRAR LA BUSQUEDA SOLO POR PRODUCTO CON ESTADO DESACTIVADO
 def solicitar_activar_producto():
-    id_producto = forzar_entero(SOLICITUD_ID_PRODUCTO)
-    producto = obtener_producto(id_producto)
+    producto = solicitar_seleccion_producto()
 
-    if not producto:
-        print(MENSAJE_ID_NO_EXISTE)
+    if producto is None:
         return False
+
+    id_producto = producto.id_producto
 
     resultado = activar_producto(id_producto)
     print(f"Producto: {producto.nombre} Activado con exito") if resultado else print("No se pudo activar el producto.")

@@ -71,29 +71,25 @@ def solicitar_registrar_salida():
         return False
 
     id_producto = producto.id_producto 
-    lista_inventario = lista_producto_inventario(id_producto)
+    inventarios = lista_producto_inventario(id_producto)
 
-    if not lista_inventario:
+    if not inventarios:
         print("El producto no esta asociado a ningun almacen.")
         return False
     
     print(f"Producto encontrado: {producto.nombre}")
     print("Almacenes con inventario para este producto:")
 
-    opciones = []
-
-    for i, inventario in enumerate(lista_inventario, start=1):
+    for i, inventario in enumerate(inventarios, start=1):
         almacen = inventario.id_almacen
         print(f"[{i}] - {almacen.nombre} - Stock: {inventario.stock_actual}")
-        opciones.append(inventario) 
 
     seleccion = forzar_entero("\nSeleccione el Almacen: ")
 
-    if 1 <= seleccion <= len(opciones):
-        inventario = opciones[seleccion-1]
-        id_inventario = inventario.id_inventario
+    if 1 <= seleccion <= len(inventarios):
+        id_inventario = inventarios[seleccion-1]
     else:
-        print("Opcion fuera de rango.")
+        print(f"Opcion fuera de rango (1-{len(inventarios)}).")
         return False
 
     if inventario.stock_actual == 0:
@@ -102,14 +98,14 @@ def solicitar_registrar_salida():
         
     descripcion = campo_obligatorio("Ingrese la descripcion: ")
     cantidad = forzar_positivo("Ingrese la cantidad: ")
-    fecha = forzar_fecha("Ingrese la fecha (DD-MM-YYYY): ", obligatorio=True)
 
-    if not validar_stock_salida(id_inventario, cantidad):
+    if cantidad > inventario.stock_actual:
         print("El stock es insuficiente para esa salida.")
         return False
+
+    fecha = forzar_fecha("Ingrese la fecha (DD-MM-YYYY): ", obligatorio=True)
     
     resultado = registrar_salida(descripcion, cantidad, fecha, id_inventario)
-
     print("Salida registrada con exito.") if resultado else print("No se pudo realizar el movimiento")
 
 def solicitar_consultar_movimiento():
