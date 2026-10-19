@@ -1,9 +1,19 @@
-from datos.modelos.almacen import Almacen
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_almacenes():
-    return Almacen.select().where(Almacen.estado == True) #para ocultar las de borrado logico
+from datos.modelos.almacen import Almacen
 
+# ------------ Lectura ------------
+
+def listar_almacenes():
+    return Almacen.select().where(Almacen.estado == True) 
+
+# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)
+def obtener_almacen_por_id(id_almacen):
+    return Almacen.get_or_none(Almacen.id_almacen == id_almacen)
+
+# ------------ Escritura ------------
+
+# .save() sirve para CREATE y UPDATE 
 def guardar_almacen(almacen:Almacen):
     try:
         return almacen.save()
@@ -18,8 +28,3 @@ def guardar_almacen(almacen:Almacen):
         print(f"Error general de Peewee: {e}")
 
     return False
-
-# obtener el objeto almacen por su ID 
-# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)
-def obtener_almacen_por_id(id_almacen):
-    return Almacen.get_or_none(Almacen.id_almacen == id_almacen)

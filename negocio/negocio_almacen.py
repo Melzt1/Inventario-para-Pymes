@@ -1,29 +1,46 @@
+from peewee import PeeweeException
+
+from datos.modelos.models import database
 from datos.modelos.almacen import Almacen
-from datos.repositorios.repositorio_almacen import listado_almacenes, guardar_almacen, obtener_almacen_por_id
-from datos.repositorios.repositorio_direccion import guardar_direcciones
+from datos.repositorios.repositorio_almacen import (
+    listar_almacenes, 
+    guardar_almacen, 
+    obtener_almacen_por_id
+)
+from datos.repositorios.repositorio_direccion import guardar_direccion
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
-def lista_almacenes():
-    return listado_almacenes()      
-    
-def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
-    nuevo_almacen = Almacen()
-    nuevo_almacen.nombre = nombre
-    nuevo_almacen.encargado = encargado
 
-    # asociar direccion (relacion entre entidades)
-    nueva_direccion = crear_direccion(calle, numero, comuna, ciudad)
+# ------------ Lectura ------------
 
-    # Si no puede guardar direccion, devuelve False asi no intenta crear un proveedor sin direccion
-    if not guardar_direcciones(nueva_direccion):
-        return False
-
-    # asignar al almacen el objeto Direccion
-    nuevo_almacen.id_direccion = nueva_direccion
-    return guardar_almacen(nuevo_almacen)
+def listar_almacenes_activos():
+    return listar_almacenes()      
 
 def obtener_almacen(id_almacen):
-    return obtener_almacen_por_id(id_almacen)    
+    return obtener_almacen_por_id(id_almacen)   
+
+# ------------ Escritura ------------
+
+def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
+    try:
+        # atomic() si falla el almacen, se revierte la direccion, asi no queda huerfana)
+        with database.atomic():
+            nueva_direccion = crear_direccion(calle, numero, comuna, ciudad)
+            guardar_direccion(nueva_direccion)
+
+            nuevo_almacen = Almacen()
+            nuevo_almacen.nombre = nombre
+            nuevo_almacen.encargado = encargado
+            # Peewee acepta el objeto relacionado y usa su PK como valor de la FK
+            # Internamente hace esto (nueva_direccion.id_direccion)
+            nuevo_almacen.id_direccion = nueva_direccion
+
+            guardar_almacen(nuevo_almacen)
+
+        return True
+
+    except PeeweeException:
+        return False      
 
 def actualizar_almacen(id_almacen, nombre, encagado):
     almacen = obtener_almacen_por_id(id_almacen)
@@ -45,16 +62,18 @@ def actualizar_direccion_almacen(id_almacen, calle, numero, comuna, ciudad):
     direccion = almacen.id_direccion
     return actualizar_direccion(direccion, calle, numero, comuna, ciudad)
 
-def inhabilitar_almacen(id_almacen):
+# ------------ Borrado logico ------------
+def desactivar_almacen(id_almacen):
     almacen = obtener_almacen(id_almacen)
 
     if almacen is None:
         return False
 
+    # estado es un booleano, basta cambiarlo a False
     almacen.estado = False
     return guardar_almacen(almacen)
 
-def habilitar_almacen(id_almacen):
+def activar_almacen(id_almacen):
     almacen = obtener_almacen(id_almacen)
 
     if almacen is None:

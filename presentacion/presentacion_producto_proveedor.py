@@ -1,7 +1,15 @@
-from negocio.negocio_producto_proveedor import asignar_proveedor_principal, lista_proveedores_de_producto,asignar_proveedor_secundario, eliminar_relacion, proveedor_principal_de_producto, obtener_relacion, lista_proveedores_disponibles
 from prettytable import PrettyTable
-from presentacion.presentacion_producto import solicitar_seleccion_producto
+
 from auxiliares.entradas import forzar_entero   
+from presentacion.presentacion_producto import solicitar_seleccion_producto
+from negocio.negocio_producto_proveedor import (
+    asignar_proveedor_principal, 
+    listar_relaciones_de_producto,
+    asignar_proveedor_secundario, 
+    quitar_proveedor_de_producto, 
+    obtener_proveedor_principal, 
+    listar_proveedores_disponibles
+)
 
 def solicitar_asignar_proveedor_principal():
     print("\n=== Asignar proveedor principal ===")
@@ -10,13 +18,13 @@ def solicitar_asignar_proveedor_principal():
     if producto is None:
         return
 
-    principal = proveedor_principal_de_producto(producto.id_producto)
+    principal = obtener_proveedor_principal(producto.id_producto)
 
     if principal is not None:
         print(f"El producto ya tiene como proveedor principal a {principal.id_proveedor.nombre}")
         return
 
-    disponibles = list(lista_proveedores_disponibles(producto.id_producto))
+    disponibles = list(listar_proveedores_disponibles(producto.id_producto))
 
     if not disponibles:
         print("Todos los proveedores activos ya estan asociados a este producto.")
@@ -47,7 +55,7 @@ def solicitar_asignar_proveedor_secundario():
     if producto is None:
         return
 
-    disponibles = list(lista_proveedores_disponibles(producto.id_producto))
+    disponibles = list(listar_proveedores_disponibles(producto.id_producto))
 
     if not disponibles:
         print("Todos los proveedores activos ya estan asociados a este producto.")
@@ -70,7 +78,6 @@ def solicitar_asignar_proveedor_secundario():
     resultado = asignar_proveedor_secundario(producto.id_producto, proveedor.id_proveedor)
     print(f"Proveedor {proveedor.nombre} asginado como secundario.") if resultado else print("No se pudo asignar el proveedor.")
         
-
 def solicitar_quitar_proveedor():
     print("\n=== Quitar proveedor al producto ===")
 
@@ -78,7 +85,7 @@ def solicitar_quitar_proveedor():
     if producto is None:
         return
 
-    relaciones = list(lista_proveedores_de_producto(producto.id_producto))
+    relaciones = list(listar_relaciones_de_producto(producto.id_producto))
     if not relaciones:
         print(f"El producto '{producto.nombre}' no tiene proveedores asociados.")
         return    
@@ -105,7 +112,7 @@ def solicitar_quitar_proveedor():
         print("Operacion cancelada.")
         return    
     
-    resultado = eliminar_relacion(producto.id_producto, proveedor.id_proveedor)
+    resultado = quitar_proveedor_de_producto(producto.id_producto, proveedor.id_proveedor)
     print(f"El proveedor {proveedor.nombre} se quitó del producto {producto.nombre}.") if resultado else print("No se pudo disolver la relacion producto-proveedor.")                 
 
 def mostrar_proveedores_producto():
@@ -115,7 +122,7 @@ def mostrar_proveedores_producto():
     if producto is None:
         return
 
-    relaciones = list(lista_proveedores_de_producto(producto.id_producto))
+    relaciones = list(listar_relaciones_de_producto(producto.id_producto))
 
     if not relaciones:
         print(f"El producto '{producto.nombre}' no tiene proveedores asociados.")

@@ -1,13 +1,32 @@
-from datos.modelos.producto import Producto
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_productos():
-    return Producto.select().where(Producto.estado == True) #para ocultar las de borrado logico
+from datos.modelos.producto import Producto
 
+# ------------ Lectura ------------
 
-def guardar_productos(prodcuto:Producto):
+# Todos los productos activos
+def listar_productos():
+    return Producto.select().where(Producto.estado == True)
+
+# Productos desactivados, para poder reactivarlos
+def listar_productos_desactivados():
+    return Producto.select().where(Producto.estado == False)
+
+def obtener_producto_por_id(id_producto):
+    return Producto.get_or_none(Producto.id_producto == id_producto)
+
+def obtener_producto_por_sku(sku):
+    return Producto.get_or_none(Producto.sku == sku)
+
+def buscar_productos_por_nombre(nombre):
+    return Producto.select().where(Producto.nombre.contains(nombre))
+
+# ------------ Escritura ------------
+
+def guardar_producto(prodcuto:Producto):
     try:
-        return prodcuto.save()
+        prodcuto.save()
+        return True
 
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
@@ -20,12 +39,12 @@ def guardar_productos(prodcuto:Producto):
 
     return False
 
-# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)     
-def obtener_producto_por_id(id_producto):
-    return Producto.get_or_none(Producto.id_producto == id_producto)
+# ------------ Validaciones UNIQUE ------------
 
-# Granito de arena by CHATGPT (La clave para al momento de hacer un update mantener el sku(unique))
-# La consulta pregunta si otro producto tiene ese SKU, excluyendo el ID del producto actual.
+# CONSULTA GENERADA POR DEEPSEEK (IA). YO NO PUDE RESOLVERLA :C 
+# Al momento de hacer un UPDATE y mantener el SKU, se vuelve a setear el mismo SKU y da error por el UNIQUE
+
+# La consulta pregunta si otro producto tiene ese SKU, excluyendo el SKU del producto actual.
 def existe_sku(sku, id_producto = None):
     consulta = Producto.select().where(Producto.sku == sku)
 
@@ -34,11 +53,3 @@ def existe_sku(sku, id_producto = None):
 
     return consulta.exists()    
 
-def obtener_producto_por_sku(sku):
-    return Producto.get_or_none(Producto.sku == sku)
-
-def obtener_nombre_productos(nombre):
-    return Producto.select().where(Producto.nombre.contains(nombre))
-
-def obtener_nombre_productos_desactivados():
-    return Producto.select().where(Producto.estado == False)

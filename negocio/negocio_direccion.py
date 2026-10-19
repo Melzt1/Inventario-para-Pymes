@@ -1,8 +1,8 @@
 from datos.modelos.direccion import Direccion
-from datos.repositorios.repositorio_direccion import guardar_direcciones
+from datos.repositorios.repositorio_direccion import guardar_direccion
 
 # Metodo para crear y devolver el objeto Direccion sin guardar
-# para asociarlo a un proveedor o alamcen y guardarlo despues
+# Se usa para asociarlo a un proveedor o almacen y guardarlo despues.
 def crear_direccion(calle, numero, comuna, ciudad):
     nueva_direccion = Direccion()
     nueva_direccion.calle = calle
@@ -11,10 +11,9 @@ def crear_direccion(calle, numero, comuna, ciudad):
     nueva_direccion.ciudad = ciudad
     return nueva_direccion
 
-# Actualiza los datos del objeto Direccion recibido y guarda los cambios
 def actualizar_direccion(direccion, calle, numero, comuna, ciudad):
     direccion.calle = calle
     direccion.numero = numero
     direccion.comuna = comuna
     direccion.ciudad = ciudad    
-    return guardar_direcciones(direccion)
+    return guardar_direccion(direccion)

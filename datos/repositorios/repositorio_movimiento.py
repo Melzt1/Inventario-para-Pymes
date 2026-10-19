@@ -1,17 +1,41 @@
-from datos.modelos.movimiento import Movimiento
-from datos.modelos.inventario import Inventario
 from peewee import IntegrityError, PeeweeException, OperationalError, DataError
 
+from datos.modelos.movimiento import Movimiento
+from datos.modelos.inventario import Inventario
+
+# ------------ Lectura ------------
+
+def listar_movimientos():
+    return Movimiento.select()
+
+def listar_movimientos_de_entrada():
+    return Movimiento.select().where(Movimiento.tipo == "ENTRADA")
+
+def listar_movimientos_de_salida():
+    return Movimiento.select().where(Movimiento.tipo == "SALIDA")
+
+def listar_movimientos_entre_fechas(fecha_inicio, fecha_termino):
+    return Movimiento.select().where(Movimiento.fecha.between(fecha_inicio, fecha_termino))
+
+# ------------ Escritura ------------
+
 def sumar_stock(id_inventario, cantidad):
-    return Inventario.update(stock_actual=Inventario.stock_actual + cantidad).where(Inventario.id_inventario == id_inventario).execute()
+    return (Inventario
+            .update(stock_actual=Inventario.stock_actual + cantidad)
+            .where(Inventario.id_inventario == id_inventario)
+            .execute())
 
 def restar_stock(id_inventario, cantidad):
-    return (Inventario.update(stock_actual=Inventario.stock_actual - cantidad).where((Inventario.id_inventario == id_inventario) & 
-                                                                                     (Inventario.stock_actual >= cantidad)).execute())
+    return (Inventario
+            .update(stock_actual=Inventario.stock_actual - cantidad)
+            .where((Inventario.id_inventario == id_inventario) & 
+                   (Inventario.stock_actual >= cantidad))
+            .execute())
 
-def registrar_movimiento(movimiento: Movimiento):
+def guardar_movimiento(movimiento: Movimiento):
     try:
-        return movimiento.save()
+        movimiento.save()
+        return True
     
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
@@ -24,14 +48,3 @@ def registrar_movimiento(movimiento: Movimiento):
         
     return False
 
-def listado_movimientos():
-    return Movimiento.select()
-
-def obtener_movimiento_entrada():
-    return Movimiento.select().where(Movimiento.tipo == "ENTRADA")
-
-def obtener_movimiento_salida():
-    return Movimiento.select().where(Movimiento.tipo == "SALIDA")
-
-def obtener_movimiento_rango_fecha(fecha_inicio, fecha_termino):
-    return Movimiento.select().where(Movimiento.fecha.between(fecha_inicio, fecha_termino))

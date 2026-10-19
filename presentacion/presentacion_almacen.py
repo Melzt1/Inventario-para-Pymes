@@ -1,11 +1,22 @@
-from negocio.negocio_almacen import crear_almacen, actualizar_almacen, actualizar_direccion_almacen, habilitar_almacen, obtener_almacen, inhabilitar_almacen, lista_almacenes
-from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
 
-# Metodo auxiliar
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
+from negocio.negocio_almacen import (
+    crear_almacen, 
+    actualizar_almacen, 
+    actualizar_direccion_almacen, 
+    activar_almacen, 
+    obtener_almacen, 
+    desactivar_almacen, 
+    listar_almacenes_activos
+)
+
+# ------------ Funcion Auxiliar ------------
+
 def solicitar_seleccion_almacen():
-    almacenes = list(lista_almacenes())
+    # Muestra los almacenes activos y devuelve el elegido o None
+    almacenes = list(listar_almacenes_activos())
 
     if not almacenes:
         print("No hay almacenes activos registrados.")
@@ -26,7 +37,7 @@ def solicitar_seleccion_almacen():
         print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
 def mostrar_almacenes():
-    almacenes = lista_almacenes()
+    almacenes = listar_almacenes_activos()
 
     if not almacenes:
         print("No hay almacenes registrados.")
@@ -108,17 +119,17 @@ def solicitar_actualizar_direccion_almacen():
     resultado = actualizar_direccion_almacen(almacen.id_almacen, calle, numero, comuna, ciudad)
     print("Direccion actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")
 
-def solicitar_inhabilitar_almacen():
+def solicitar_desactivar_almacen():
     almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
         return
 
-    resultado = inhabilitar_almacen(almacen.id_almacen)
+    resultado = desactivar_almacen(almacen.id_almacen)
     print(f"Almacen: {almacen.nombre} inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el almacen.")
 
 # Falta mostrar solo los almacacenes desactivados
-def solicitar_habilitar_almacen():
+def solicitar_activar_almacen():
     id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
 
     almacen = obtener_almacen(id_almacen)
@@ -127,5 +138,5 @@ def solicitar_habilitar_almacen():
         print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    resultado = habilitar_almacen(id_almacen)  
+    resultado = activar_almacen(id_almacen)  
     print(f"Almacen: {almacen.nombre} habilitado con exito.") if resultado else print("No se pudo habilitar el almacen.")      

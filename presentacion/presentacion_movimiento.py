@@ -1,9 +1,16 @@
-from negocio.negocio_movimiento import registrar_entrada, registrar_salida, lista_movimientos, lista_movimientos_entrada, lista_movimientos_salida, lista_movimientos_rango_fecha
-from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero, forzar_fecha
-from negocio.negocio_producto import obtener_producto_sku
-from negocio.negocio_inventario import lista_producto_inventario
-from auxiliares.mensajes import NO_HAY_MOVIMIENTOS
 from prettytable import PrettyTable
+
+from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero, forzar_fecha
+from auxiliares.mensajes import NO_HAY_MOVIMIENTOS
+from negocio.negocio_producto import obtener_producto_sku
+from negocio.negocio_inventario import listar_inventario_por_producto
+from negocio.negocio_movimiento import (
+    registrar_entrada, registrar_salida, 
+    listar_historial_movimientos, 
+    listar_movimientos_de_entrada, 
+    listar_movimientos_de_salida, 
+    listar_movimientos_por_rango_fecha
+)
 
 """
 Para registrar un movimiento, pedire el SKU del producto y el almacen donde se realizara. 
@@ -11,7 +18,7 @@ Con esos datos obtendre los objetos Producto y Almacen, y buscare el Inventario 
 si existe, usare el id_inventario (FK) para guardar el movimiento,
 asi el usuario no necesita conocer ni digitar el id_inventario, lo cual es cero intuitivo usando la terminal.
 
-TODA ESTA LOGICA OCURRIRA GRACIAS A LOS METODOS DE LA CAPA DE NEGOCIO Y LOS OBJETOS CAPTURADOS, PD: TODAVIA LA EXTRANO :c
+PD: TODAVIA LA EXTRANO :c
 """
 
 def solicitar_registrar_entrada():
@@ -28,7 +35,7 @@ def solicitar_registrar_entrada():
 
     # este metodo devuelve todos los inventarios con dicho producto
     # teniendo acceso al objeto Inventareio, tengo acceso al id_almacen (objeto Almacen)
-    lista_inventario = lista_producto_inventario(id_producto)
+    lista_inventario = listar_inventario_por_producto(id_producto)
 
     if not lista_inventario:
         print("El producto no esta asociado a ningun almacen.")
@@ -68,7 +75,7 @@ def solicitar_registrar_salida():
         return False
 
     id_producto = producto.id_producto 
-    inventarios = lista_producto_inventario(id_producto)
+    inventarios = listar_inventario_por_producto(id_producto)
 
     if not inventarios:
         print("El producto no esta asociado a ningun almacen.")
@@ -110,9 +117,9 @@ def solicitar_consultar_movimiento():
     opcion = campo_obligatorio("Ingrese el tipo de movimiento (ENTRADA/SALIDA): ").strip().upper()
 
     if opcion == "ENTRADA":
-        movimientos = lista_movimientos_entrada()
+        movimientos = listar_movimientos_de_entrada()
     elif opcion == "SALIDA":
-        movimientos = lista_movimientos_salida()
+        movimientos = listar_movimientos_de_salida()
     else:
         print("Opción invaida. Por favor, escribe ENTRADA o SALIDA.\n")
         return
@@ -147,7 +154,7 @@ def mostrar_movimientos_rango_fecha():
         print("La fecha de inicio no puede ser posterior a la fecha de termino.")
         return False
     
-    movimientos = lista_movimientos_rango_fecha(fecha_inicio, fecha_termino)
+    movimientos = listar_movimientos_por_rango_fecha(fecha_inicio, fecha_termino)
     if not movimientos:
         print(NO_HAY_MOVIMIENTOS)
         return False
@@ -171,7 +178,7 @@ def mostrar_movimientos_rango_fecha():
     print(tabla_movimiento)        
 
 def mostrar_historial_movimientos():
-    movimientos = lista_movimientos()
+    movimientos = listar_historial_movimientos()
 
     if not movimientos:
         print(NO_HAY_MOVIMIENTOS)

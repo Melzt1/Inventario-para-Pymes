@@ -1,14 +1,26 @@
-from negocio.negocio_proveedor import lista_proveedores, registrar_proveedor, obtener_proveedor, validar_rut, actualizar_proveedor, actualizar_direccion_proveedor, inhabilitar_proveedor, habilitar_proveedor, rut_en_uso, correo_en_uso, telefono_en_uso, buscar_proveedor_por_nombre
-from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_NO_EXISTE
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.mensajes import SOLICITUD_ID_PROVEEDOR, MENSAJE_ID_NO_EXISTE
+from negocio.negocio_proveedor import (
+    listar_proveedores_activos, 
+    registrar_proveedor, 
+    obtener_proveedor, 
+    validar_rut, 
+    actualizar_proveedor, 
+    actualizar_direccion_proveedor, 
+    desactivar_proveedor, 
+    activar_proveedor, 
+    rut_en_uso, correo_en_uso, 
+    telefono_en_uso, 
+    buscar_proveedores
+)
 
 # Metodo auxiliar que se reciclara para mostrar proveedores por nombre
 # NO ES PARTE DEL MENU
 def solicitar_seleccion_proveedor():
     nombre = campo_obligatorio("Busque el proveedor por nombre: ")
 
-    proveedores = list(buscar_proveedor_por_nombre(nombre))
+    proveedores = list(buscar_proveedores(nombre))
 
     if not proveedores:
         print("No hay proveedores activos con ese nombre.")
@@ -34,7 +46,7 @@ def solicitar_seleccion_proveedor():
         print(f"Opcion fuera de rango (1-{len(proveedores)}).")
 
 def mostrar_proveedores():
-    proveedores = lista_proveedores()
+    proveedores = listar_proveedores_activos()
 
     if not proveedores:
         print("No hay proveedores registrados.")
@@ -158,7 +170,7 @@ def solicitar_inhabilitar_proveedor():
 
     id_proveedor = proveedor.id_proveedor
 
-    resultado = inhabilitar_proveedor(id_proveedor)
+    resultado = desactivar_proveedor(id_proveedor)
     print("Prveedor inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el proveedor.")
 
 # Falta mostrar una lista de proveedores con estado 'Deshabilitado'
@@ -171,5 +183,5 @@ def solicitar_habilitar_proveedor():
         print(MENSAJE_ID_NO_EXISTE)
         return
 
-    resultado = habilitar_proveedor(id_proveedor)     
+    resultado = activar_proveedor(id_proveedor)     
     print("Prveedor habilitado con exito.") if resultado else print("No se pudo habilitar el proveedor.")

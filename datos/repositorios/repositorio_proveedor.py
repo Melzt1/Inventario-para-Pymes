@@ -1,10 +1,23 @@
-from datos.modelos.proveedor import Proveedor
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
-def listado_proveedores():
-    return Proveedor.select().where(Proveedor.estado == True) #para ocultar las de borrado logico
+from datos.modelos.proveedor import Proveedor
 
-def guardar_proveedores(proveedor:Proveedor):
+# ------------ Lectura ------------
+
+def listar_proveedores():
+    return Proveedor.select().where(Proveedor.estado == True)
+
+def obtener_proveedor_por_id(id_proveedor):
+    return Proveedor.get_or_none(Proveedor.id_proveedor == id_proveedor)
+
+def buscar_proveedores_por_nombre(nombre):
+    return (Proveedor.select()
+            .where(Proveedor.nombre.contains(nombre) & Proveedor.estado == True)
+            .order_by(Proveedor.nombre))
+
+# ------------ Escritura ------------
+
+def guardar_proveedor(proveedor:Proveedor):
     try:
         return proveedor.save()
 
@@ -19,26 +32,22 @@ def guardar_proveedores(proveedor:Proveedor):
 
     return False
 
-
-# get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)   
-def obtener_proveedor_por_id(id_proveedor):
-    return Proveedor.get_or_none(Proveedor.id_proveedor == id_proveedor)
-
-def obtener_proveedor_por_nombre(nombre):
-    return Proveedor.select().where(Proveedor.nombre.contains(nombre) & Proveedor.estado == True).order_by(Proveedor.nombre)
+# ------------ Validaciones UNIQUE ------------
 
 def existe_rut(rut):
     return Proveedor.select().where(Proveedor.rut == rut).exists()
 
-# Consultar si el correo y telefono ingresado ya existen en la db ignorando al objeto Proveedor actual
+# Excluye el proveedor indicado para que conserve su correo actual al hacer un UPDATE
 def existe_correo(correo, id_proveedor=None):
     consulta = Proveedor.select().where(Proveedor.correo == correo)
+
     if id_proveedor is not None:
         consulta = consulta.where(Proveedor.id_proveedor != id_proveedor)
     return consulta.exists()
 
 def existe_telefono(telefono, id_proveedor=None):
     consulta = Proveedor.select().where(Proveedor.telefono == telefono)
+
     if id_proveedor is not None:
         consulta = consulta.where(Proveedor.id_proveedor != id_proveedor)
     return consulta.exists()

@@ -1,11 +1,20 @@
-from negocio.negocio_categoria import crear_categoria, actualizar_categoria, obtener_categoria, desactivar_categoria, activar_categoria, lista_categorias
-from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_NO_EXISTE, OPCION_INVALIDA
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
 from prettytable import PrettyTable
 
-# Metodo auxiliar
+from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_NO_EXISTE, OPCION_INVALIDA
+from negocio.negocio_categoria import (
+    crear_categoria, 
+    actualizar_categoria, 
+    obtener_categoria, 
+    desactivar_categoria, 
+    activar_categoria, 
+    listar_categorias_activas
+)
+
+# ------------ Funcion Auxiliar ------------
+
 def solicitar_seleccion_categoria():
-    categorias = list(lista_categorias())
+    categorias = list(listar_categorias_activas())
 
     if not categorias:
         print("No hay categorias activas registradas.")
@@ -26,7 +35,7 @@ def solicitar_seleccion_categoria():
         print(f"Opcion fuera de rango (1-{len(categorias)}).")
 
 def mostrar_categorias():
-    categorias = lista_categorias()
+    categorias = listar_categorias_activas()
 
     if not categorias:
         print("No hay categorias registradas.")

@@ -1,14 +1,29 @@
-from negocio.negocio_producto import registrar_producto, sku_en_uso, actualizar_producto, desactivar_producto, activar_producto, lista_productos, lista_nombre_productos
-from negocio.negocio_categoria import obtener_categoria
-from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional, forzar_positivo, forzar_fecha
 from prettytable import PrettyTable
+
+from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE
+from auxiliares.entradas import (
+    forzar_entero, 
+    campo_obligatorio, 
+    campo_opcional, 
+    forzar_positivo, 
+    forzar_fecha
+)
+from negocio.negocio_categoria import obtener_categoria
+from negocio.negocio_producto import (
+    registrar_producto, 
+    sku_en_uso, 
+    actualizar_producto, 
+    desactivar_producto, 
+    activar_producto, 
+    listar_productos_activos, 
+    buscar_productos
+)
 
 # Metodo auxiliar 
 def solicitar_seleccion_producto():
     nombre = campo_obligatorio("Busque el producto por su nombre: ")
 
-    productos = lista_nombre_productos(nombre)
+    productos = buscar_productos(nombre)
 
     if not productos:
         print("No hay productos con ese nombre.")
@@ -29,7 +44,7 @@ def solicitar_seleccion_producto():
         print(f"Opcion fuera de rango (1-{len(productos)}).")
 
 def mostrar_productos():
-    productos = lista_productos()
+    productos = listar_productos_activos()
 
     if not productos:
         print("No hay productos registrados.")
