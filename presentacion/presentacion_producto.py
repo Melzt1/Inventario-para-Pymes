@@ -70,12 +70,19 @@ def mostrar_productos():
     print(tabla_productos)
 
 def solicitar_datos_producto():
-    nombre = campo_obligatorio("Ingrese el nombre del producto: ")
-    sku = campo_obligatorio("Ingrese el SKU del producto: ")
+    print("\n=== Registrar Producto ===")
 
-    if sku_en_uso(sku):
-        print(f"El SKU: '{sku}' ya fue registrado.")
-        return False
+    nombre = campo_obligatorio("Ingrese el nombre del producto: ")
+
+    sku_valido = False
+    while not sku_valido:
+        sku = campo_obligatorio("Ingrese el SKU del producto: ")
+
+        if sku_en_uso(sku):
+            print(f"El SKU: '{sku}' ya fue registrado. Ingrese otro.")
+            continue
+
+        sku_valido = True
 
     precio_costo = forzar_positivo("Ingrese el precio costo del producto: ")
     precio_venta = forzar_positivo("Ingrese el precio venta del producto: ")

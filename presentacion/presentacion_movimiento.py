@@ -22,6 +22,8 @@ PD: TODAVIA LA EXTRANO :c
 """
 
 def solicitar_registrar_entrada():
+    print("\n=== Registrar Entrada ===")
+
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
 
     # aca obtengo el objeto Producto por su sku
@@ -67,6 +69,8 @@ def solicitar_registrar_entrada():
     print("Entrada registrada con exito.") if resultado else print("No se pudo realizar el movimiento")
         
 def solicitar_registrar_salida():
+    print("\n=== Registrar Salida ===")
+
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
 
     producto = obtener_producto_sku(sku)

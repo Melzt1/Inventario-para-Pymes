@@ -5,7 +5,8 @@ from datos.modelos.almacen import Almacen
 from datos.repositorios.repositorio_almacen import (
     listar_almacenes, 
     guardar_almacen, 
-    obtener_almacen_por_id
+    obtener_almacen_por_id,
+    listar_almacenes_desactivados
 )
 from datos.repositorios.repositorio_direccion import guardar_direccion
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
@@ -14,7 +15,10 @@ from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 # ------------ Lectura ------------
 
 def listar_almacenes_activos():
-    return listar_almacenes()      
+    return listar_almacenes()   
+   
+def listar_almacenes_inactivos():
+    return listar_almacenes_desactivados()      
 
 def obtener_almacen(id_almacen):
     return obtener_almacen_por_id(id_almacen)   

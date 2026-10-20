@@ -2,13 +2,17 @@ from datos.modelos.categoria import Categoria
 from datos.repositorios.repositorio_categoria import (
     listar_categoria, 
     guardar_categoria, 
-    obtener_categoria_por_id
+    obtener_categoria_por_id,
+    listar_categoria_desactivada
 )
 
 # ------------ Lectura ------------
 
 def listar_categorias_activas():
     return listar_categoria()
+
+def listar_categorias_desactivadas():
+    return listar_categoria_desactivada()
 
 def obtener_categoria(id_categoria):
     return obtener_categoria_por_id(id_categoria)

@@ -69,29 +69,48 @@ def mostrar_proveedores():
     print(tabla_proveedores)
 
 def solicitar_datos_proveedor():
-    print("\n=== Datos del proveedor ===")
-    rut = campo_obligatorio("Ingrese el RUT del proveedor. Ej (12.345.678-5) : ")
+    print("\n=== Registrar proveedor ===")
 
-    if not validar_rut(rut):
-        print("El rut ingresado no es valido.")
-        return False
-    
-    if rut_en_uso(rut):
-        print("El rut ya fue registrado")
-        return False
+    rut_valido = False
+    while not rut_valido:
+        rut = campo_obligatorio("Ingrese el RUT del proveedor. Ej (12.345.678-5): ")
+
+        if not validar_rut(rut):
+            print("El RUT ingresado no es valido. Intente nuevamente.")
+            continue
+
+        if rut_en_uso(rut):
+            print("El RUT ya fue registrado. Ingrese otro.")
+            continue
+
+        rut_valido = True
 
     nombre = campo_obligatorio("Ingrese el nombre o razon social: ")
-    correo = campo_obligatorio("Ingrese el correo: ")
 
-    if correo_en_uso(correo):
-        print("El correo ya fue registrado.")
-        return False
+    correo_valido = False
+    while not correo_valido:
+        correo = campo_obligatorio("Ingrese el correo: ")
 
-    telefono = campo_obligatorio("Ingrese el numero: ")
+        if correo_en_uso(correo):
+            print("El correo ya fue registrado. Ingrese otro.")
+            continue
 
-    if telefono_en_uso(telefono):
-        print("El telefono ya fue registrado.")
-        return False
+        correo_valido = True
+
+    telefono_valido = False
+    while not telefono_valido:
+        telefono = campo_obligatorio("Ingrese el numero incluyendo el 9 (9 digitos): ")
+
+        # Comprobar que sean 9 digitos (Falta comprobar que el primer digito sea un 9)
+        if not telefono.isdigit() or len(telefono) != 9:
+            print("El teléfono debe contener exactamente 9 dígitos.")
+            continue
+
+        if telefono_en_uso(telefono):
+            print("El teléfono ya fue registrado. Ingrese otro.")
+            continue
+
+        telefono_valido = True
     
     print("\n=== Direccion del proveedor ===")
     calle = campo_obligatorio("Ingrese el nombre de la calle: ")
@@ -101,7 +120,7 @@ def solicitar_datos_proveedor():
 
     resultado = registrar_proveedor(rut, nombre, correo, telefono, 
         calle, numero, comuna, ciudad)
-    print("Proveedor registrado con exito.") if resultado else print("No se pudo registrar el proveedor.")
+    print(f"Proveedor(a) '{nombre}' registrado con exito.") if resultado else print("No se pudo registrar el proveedor.")
 
 def solicitar_consultar_proveedor():
     proveedor = solicitar_seleccion_proveedor()

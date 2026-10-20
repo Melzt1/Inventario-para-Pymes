@@ -19,7 +19,8 @@ def buscar_proveedores_por_nombre(nombre):
 
 def guardar_proveedor(proveedor:Proveedor):
     try:
-        return proveedor.save()
+        proveedor.save()
+        return True
 
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")

@@ -34,7 +34,6 @@ def solicitar_almacen():
 
         print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
-
 def solicitar_asociar_producto_almacen():
     print("\n=== Asociar producto a un almacen ===")
 

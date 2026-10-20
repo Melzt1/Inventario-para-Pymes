@@ -7,6 +7,9 @@ from datos.modelos.categoria import Categoria
 def listar_categoria():
     return Categoria.select().where(Categoria.estado == True)
 
+def listar_categoria_desactivada():
+    return Categoria.select().where(Categoria.estado == False)
+
 def obtener_categoria_por_id(id_categoria):
     return Categoria.get_or_none(Categoria.id_categoria == id_categoria)
 

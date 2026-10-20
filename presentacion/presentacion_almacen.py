@@ -7,16 +7,16 @@ from negocio.negocio_almacen import (
     actualizar_almacen, 
     actualizar_direccion_almacen, 
     activar_almacen, 
-    obtener_almacen, 
     desactivar_almacen, 
-    listar_almacenes_activos
+    listar_almacenes_activos,
+    listar_almacenes_desactivados
 )
 
 # ------------ Funcion Auxiliar ------------
 
 def solicitar_seleccion_almacen():
     # Muestra los almacenes activos y devuelve el elegido o None
-    almacenes = list(listar_almacenes_activos())
+    almacenes = list(listar_almacenes_activos()) # Lista de objetos
 
     if not almacenes:
         print("No hay almacenes activos registrados.")
@@ -32,7 +32,7 @@ def solicitar_seleccion_almacen():
 
         if 1 <= seleccion <= len(almacenes):
             opcion_valida = True
-            return almacenes[seleccion - 1]
+            return almacenes[seleccion - 1] # Devuelve el objeto almacen
 
         print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
@@ -58,7 +58,7 @@ def mostrar_almacenes():
     print(tabla_almacenes)
 
 def solicitar_datos_almacen():
-    print("\n=== Datos del almacen ===")
+    print("\n=== Registrar almacen ===")
 
     nombre = campo_obligatorio("Ingrese el nombre del almacen: ")
     encargado = campo_obligatorio("Ingrese el nombre del encargado: ")
@@ -128,15 +128,29 @@ def solicitar_desactivar_almacen():
     resultado = desactivar_almacen(almacen.id_almacen)
     print(f"Almacen: {almacen.nombre} inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el almacen.")
 
-# Falta mostrar solo los almacacenes desactivados
 def solicitar_activar_almacen():
-    id_almacen = forzar_entero(SOLICITUD_ID_ALMACEN)
+    almacenes = list(listar_almacenes_desactivados()) # Lista de objetos
 
-    almacen = obtener_almacen(id_almacen)
+    if not almacenes:
+        print("No hay almacenes desactivados.")
+        return None
+
+    print("\nAlmacenes Desactivados:")
+    for i, almacen in enumerate(almacenes, start=1):
+        print(f"[{i}] - {almacen.nombre}")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el almacen: ")
+
+        if 1 <= seleccion <= len(almacenes):
+            opcion_valida = True
+            almacen = almacenes[seleccion - 1] # Devuelve el objeto almacen
+        else:
+            print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
     if almacen is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return False
 
-    resultado = activar_almacen(id_almacen)  
+    resultado = activar_almacen(almacen.id_almacen)  
     print(f"Almacen: {almacen.nombre} habilitado con exito.") if resultado else print("No se pudo habilitar el almacen.")      

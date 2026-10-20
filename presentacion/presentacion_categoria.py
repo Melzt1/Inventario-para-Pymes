@@ -5,10 +5,10 @@ from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_NO_EXISTE, OP
 from negocio.negocio_categoria import (
     crear_categoria, 
     actualizar_categoria, 
-    obtener_categoria, 
     desactivar_categoria, 
     activar_categoria, 
-    listar_categorias_activas
+    listar_categorias_activas,
+    listar_categorias_desactivadas
 )
 
 # ------------ Funcion Auxiliar ------------
@@ -55,6 +55,8 @@ def mostrar_categorias():
     print(tabla_categorias)
 
 def solicitar_datos_categoria():
+    print("\n=== Registrar Categoria ===")
+
     nombre = campo_obligatorio("Ingrese el nombre de la categoria: ")
     descripcion = campo_obligatorio("Ingrese la descripion de la categoria: ")
 
@@ -103,16 +105,30 @@ def solicitar_desactivar_categoria():
     else:
         print(OPCION_INVALIDA) 
 
-# Falta mostrar la lista de las categorias Desactivadas
 def solicitar_activar_categoria():
-    id_categoria = forzar_entero(SOLICITUD_ID_CATEGORIA)
+    categorias = list(listar_categorias_desactivadas()) # Lista de objetos
 
-    categoria = obtener_categoria(id_categoria)
+    if not categorias:
+        print("No hay categorias desactivadas.")
+        return None
+
+    print("\nCategorias Desactivadas:")
+    for i, categoria in enumerate(categorias, start=1):
+        print(f"[{i}] - {categoria.nombre}")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione la categoria: ")
+
+        if 1 <= seleccion <= len(categorias):
+            opcion_valida = True
+            categoria = categorias[seleccion - 1] # Objeto Categoria
+        else:
+            print(f"Opcion fuera de rango (1-{len(categorias)}).")    
 
     if categoria is None:
-        print(MENSAJE_ID_NO_EXISTE)
         return 
 
-    resultado = activar_categoria(id_categoria)
+    resultado = activar_categoria(categoria.id_categoria)
     print(f"Categoria: {categoria.nombre} activada con exito.") if resultado else print("No se pudo activar la categoria.")    
                     
