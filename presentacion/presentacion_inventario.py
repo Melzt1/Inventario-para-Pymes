@@ -14,7 +14,7 @@ from negocio.negocio_inventario import (
 
 def solicitar_almacen():
     # Muestra los almacenes activos y devuelve el elegido o None
-    almacenes = list(listar_almacenes_activos())
+    almacenes = listar_almacenes_activos()
 
     if not almacenes:
         print("No hay almacenes registrados.")
@@ -52,7 +52,7 @@ def solicitar_asociar_producto_almacen():
     stock_actual = forzar_positivo("Ingrese la cantidad inicial: ")
     stock_minimo = forzar_positivo("Ingrese el stock minimo: ")
 
-    resultado = asociar_producto_a_almacen(producto.id_producto, almacen.id_almacen, stock_actual, stock_minimo)
+    resultado = asociar_producto_a_almacen(producto, almacen, stock_actual, stock_minimo)
     print(f"Producto '{producto.nombre}' asociado a '{almacen.nombre}'.") if resultado else print("No se pudo asociar.")
 
 def consultar_inventario_producto():
@@ -99,7 +99,7 @@ def mostrar_inventario_de_almacen():
     if almacen is None:
         return
 
-    inventarios = list(listar_inventario_por_almacen(almacen.id_almacen))
+    inventarios = listar_inventario_por_almacen(almacen.id_almacen)
 
     if not inventarios:
         print("No hay productos registrados en el almacen.")
@@ -119,7 +119,7 @@ def mostrar_inventario_de_almacen():
     print(tabla_inventario)        
 
 def mostrar_productos_stock_critico():
-    inventarios = list(listar_productos_stock_critico())
+    inventarios = listar_productos_stock_critico()
 
     if not inventarios:
         print("No hay productos bajo el stock minimo.")

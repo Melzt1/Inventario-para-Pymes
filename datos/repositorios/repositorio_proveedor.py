@@ -10,6 +10,9 @@ def listar_proveedores():
 def obtener_proveedor_por_id(id_proveedor):
     return Proveedor.get_or_none(Proveedor.id_proveedor == id_proveedor)
 
+def listar_proveedores_desactivados_repo():
+    return Proveedor.select().where(Proveedor.estado == False)
+
 def buscar_proveedores_por_nombre(nombre):
     return (Proveedor.select()
             .where(Proveedor.nombre.contains(nombre) & Proveedor.estado == True)

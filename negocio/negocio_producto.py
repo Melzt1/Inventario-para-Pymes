@@ -1,3 +1,5 @@
+from peewee import PeeweeException
+
 from datos.modelos.producto import Producto
 from datos.repositorios.repositorio_producto import (
     listar_productos, 
@@ -65,17 +67,18 @@ def registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fec
     nuevo_producto.fecha_elaboracion = fecha_elaboracion
     nuevo_producto.fecha_vencimiento = fecha_vencimiento
     nuevo_producto.id_categoria = id_categoria
-    return guardar_producto(nuevo_producto)
 
-def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion):
-    producto = obtener_producto(id_producto)
+    try:
+        return guardar_producto(nuevo_producto)
+    except PeeweeException:
+        return False
 
-    # Si no encuentra el ID, no se actualiza
+def actualizar_producto(producto: Producto, nombre, sku, precio_costo, precio_venta, descripcion):
     if producto is None:
         return False
 
     # Verificamos que otro producto no tenga el nuevo SKU
-    if sku != producto.sku and sku_en_uso(sku, id_producto):    
+    if sku != producto.sku and sku_en_uso(sku, producto.id_producto):    
         return False
 
     if not precio_costo_valido(precio_costo):
@@ -92,26 +95,34 @@ def actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, de
     producto.precio_costo = precio_costo
     producto.precio_venta = precio_venta
     producto.descripcion = descripcion
-    return guardar_producto(producto)
+
+    try:
+        return guardar_producto(producto)
+    except PeeweeException:
+        return False
 
 
 # ------------ Borrado logico ------------
 
-def desactivar_producto(id_producto):
-    producto = obtener_producto(id_producto)
-
+def desactivar_producto(producto: Producto):
     if producto is None:
         return False
 
     producto.estado = False
-    return guardar_producto(producto)
 
-def activar_producto(id_producto):
-    producto = obtener_producto(id_producto)
+    try:
+        return guardar_producto(producto)
+    except PeeweeException:
+        return False
 
+def activar_producto(producto: Producto):
     if producto is None:
         return False
 
     producto.estado = True
-    return guardar_producto(producto)
+
+    try:
+        return guardar_producto(producto)
+    except PeeweeException:
+        return False
 

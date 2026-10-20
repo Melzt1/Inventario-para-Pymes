@@ -1,3 +1,5 @@
+from peewee import PeeweeException
+
 from datos.modelos.direccion import Direccion
 from datos.repositorios.repositorio_direccion import guardar_direccion
 
@@ -16,4 +18,9 @@ def actualizar_direccion(direccion, calle, numero, comuna, ciudad):
     direccion.numero = numero
     direccion.comuna = comuna
     direccion.ciudad = ciudad    
-    return guardar_direccion(direccion)
+
+    try:
+        return guardar_direccion(direccion)
+    except PeeweeException:
+        return False
+

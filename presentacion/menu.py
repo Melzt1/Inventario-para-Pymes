@@ -22,9 +22,9 @@ from presentacion.presentacion_proveedor import (
     solicitar_datos_proveedor, 
     solicitar_actualizar_proveedor, 
     solicitar_actualizar_direccion_proveedor, 
-    solicitar_inhabilitar_proveedor, 
+    solicitar_desactivar_proveedor, 
     solicitar_consultar_proveedor, 
-    solicitar_habilitar_proveedor, 
+    solicitar_activar_proveedor, 
     mostrar_proveedores
 )
 from presentacion.presentacion_almacen import (
@@ -139,9 +139,9 @@ def menu_proveedor():
         elif opcion == "5":
             solicitar_actualizar_direccion_proveedor()   
         elif opcion == "6":
-            solicitar_inhabilitar_proveedor()   
+            solicitar_desactivar_proveedor()   
         elif opcion == "7":
-            solicitar_habilitar_proveedor()                                                                               
+            solicitar_activar_proveedor()                                                                               
         elif opcion != "0":
             print(OPCION_INVALIDA)
 

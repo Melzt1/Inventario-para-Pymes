@@ -35,7 +35,7 @@ def solicitar_registrar_entrada():
     # obtengo el id_producto del objeto Producto conseguido anteriormente
     id_producto = producto.id_producto 
 
-    # este metodo devuelve todos los inventarios con dicho producto
+    # este funcion devuelve una lista de todos los inventarios con dicho producto
     # teniendo acceso al objeto Inventareio, tengo acceso al id_almacen (objeto Almacen)
     lista_inventario = listar_inventario_por_producto(id_producto)
 
@@ -46,8 +46,6 @@ def solicitar_registrar_entrada():
     print(f"Producto encontrado: {producto.nombre}")
     print("Almacenes con inventario para este producto:")
 
-    # dado que mi lista contiene la cantidad de objetos (0,1,2,3,4......) usare enumerate
-    # OJO: tiene almacenando el objeto, NO el id_inventario
     for i, inventario in enumerate(lista_inventario, start=1):
         almacen = inventario.id_almacen
         print(f"[{i}] - {almacen.nombre} - Stock: {inventario.stock_actual}")
@@ -55,8 +53,7 @@ def solicitar_registrar_entrada():
     seleccion = forzar_entero("\nSeleccione el Almacen: ")
 
     if 1 <= seleccion <= len(lista_inventario):
-        inventario = lista_inventario[seleccion-1]
-        id_inventario = inventario.id_inventario
+        inventario = lista_inventario[seleccion-1] # Guardamos el objeto
     else:
         print(f"Opcion fuera de rango (1-{len(lista_inventario)}).")
         return False
@@ -65,7 +62,7 @@ def solicitar_registrar_entrada():
     cantidad = forzar_positivo("Ingrese la cantidad: ")
     fecha = forzar_fecha("Ingrese la fecha (DD-MM-YYYY): ", obligatorio=True)
 
-    resultado = registrar_entrada(descripcion, cantidad, fecha, id_inventario)
+    resultado = registrar_entrada(descripcion, cantidad, fecha, inventario)
     print("Entrada registrada con exito.") if resultado else print("No se pudo realizar el movimiento")
         
 def solicitar_registrar_salida():
@@ -95,7 +92,7 @@ def solicitar_registrar_salida():
     seleccion = forzar_entero("\nSeleccione el Almacen: ")
 
     if 1 <= seleccion <= len(inventarios):
-        id_inventario = inventarios[seleccion-1]
+        inventario = inventarios[seleccion-1]
     else:
         print(f"Opcion fuera de rango (1-{len(inventarios)}).")
         return False
@@ -113,7 +110,7 @@ def solicitar_registrar_salida():
 
     fecha = forzar_fecha("Ingrese la fecha (DD-MM-YYYY): ", obligatorio=True)
     
-    resultado = registrar_salida(descripcion, cantidad, fecha, id_inventario)
+    resultado = registrar_salida(descripcion, cantidad, fecha, inventario)
     print("Salida registrada con exito.") if resultado else print("No se pudo realizar el movimiento")
 
 def solicitar_consultar_movimiento():

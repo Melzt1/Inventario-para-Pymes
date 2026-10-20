@@ -10,7 +10,7 @@ def listar_relaciones():
     return ProductoProveedor.select()
 
 # obtiene las relaciones de un producto con el proveedor
-def listar_relaciones_de_producto(id_producto):
+def listar_relaciones_de_producto_repo(id_producto):
     return (ProductoProveedor
             .select(ProductoProveedor, Proveedor)
             .join(Proveedor)

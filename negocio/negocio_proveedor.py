@@ -9,7 +9,9 @@ from datos.repositorios.repositorio_proveedor import (
     obtener_proveedor_por_id, 
     existe_correo, existe_telefono, 
     existe_rut, 
-    buscar_proveedores_por_nombre)
+    buscar_proveedores_por_nombre,
+    listar_proveedores_desactivados_repo
+)
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
 # ------------ Validaciones ------------
@@ -70,6 +72,9 @@ def telefono_en_uso(telefono, id_proveedor=None):
 def listar_proveedores_activos():
     return listar_proveedores()
 
+def listar_proveedores_desactivados():
+    return listar_proveedores_desactivados_repo()
+
 def buscar_proveedores(nombre):
     return buscar_proveedores_por_nombre(nombre)
 
@@ -114,27 +119,27 @@ def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ci
         return False
 
 
-def actualizar_proveedor(id_proveedor, correo, telefono):
-    proveedor = obtener_proveedor_por_id(id_proveedor)
-
+def actualizar_proveedor(proveedor: Proveedor, correo, telefono):   
     if proveedor is None:
         return False
 
     # Excluimos este proveedor para que pueda conservar su correo actual.
-    if correo_en_uso(correo, id_proveedor):
+    if correo_en_uso(correo, proveedor.id_proveedor):
         return False
 
     # Excluimos este proveedor para que pueda conservar su telefono actual.
-    if telefono_en_uso(telefono, id_proveedor):
+    if telefono_en_uso(telefono, proveedor.id_proveedor):
         return False
     
     proveedor.correo = correo
     proveedor.telefono = telefono
-    return guardar_proveedor(proveedor)    
 
-def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
-    proveedor = obtener_proveedor_por_id(id_proveedor)
+    try:
+        return guardar_proveedor(proveedor)
+    except PeeweeException:
+        return False  
 
+def actualizar_direccion_proveedor(proveedor: Proveedor, calle, numero, comuna, ciudad):
     if proveedor is None:
         return False
 
@@ -144,20 +149,25 @@ def actualizar_direccion_proveedor(id_proveedor, calle, numero, comuna, ciudad):
 
 # ------------ Borrado logico ------------
 
-def desactivar_proveedor(id_proveedor):
-    proveedor = obtener_proveedor_por_id(id_proveedor)
-
+def desactivar_proveedor(proveedor: Proveedor):
     if proveedor is None:
         return False
 
     proveedor.estado = False
-    return guardar_proveedor(proveedor)
 
-def activar_proveedor(id_proveedor):
-    proveedor = obtener_proveedor_por_id(id_proveedor)
+    try:
+        return guardar_proveedor(proveedor)
+    except PeeweeException:
+        return False
 
+def activar_proveedor(proveedor: Proveedor):
     if proveedor is None:
         return False
 
     proveedor.estado = True
-    return guardar_proveedor(proveedor)
+
+    try:
+        return guardar_proveedor(proveedor)
+    except PeeweeException:
+        return False
+

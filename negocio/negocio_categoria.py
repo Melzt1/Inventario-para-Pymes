@@ -1,3 +1,5 @@
+from peewee import PeeweeException
+
 from datos.modelos.categoria import Categoria
 from datos.repositorios.repositorio_categoria import (
     listar_categoria, 
@@ -23,10 +25,13 @@ def crear_categoria(nombre, descripcion):
     nueva_categoria = Categoria()
     nueva_categoria.nombre = nombre
     nueva_categoria.descripcion = descripcion
-    return guardar_categoria(nueva_categoria)
+    
+    try:
+        return guardar_categoria(nueva_categoria)
+    except PeeweeException:
+        return False
 
-def actualizar_categoria(id_categoria, nombre, descripcion):
-    categoria = obtener_categoria(id_categoria)
+def actualizar_categoria(categoria: Categoria, nombre, descripcion):
 
     # Si no existe, no se actualiza
     if categoria is None:
@@ -34,25 +39,33 @@ def actualizar_categoria(id_categoria, nombre, descripcion):
 
     categoria.nombre = nombre
     categoria.descripcion = descripcion
-    return guardar_categoria(categoria)
+
+    try:
+        return guardar_categoria(categoria)
+    except PeeweeException:
+        return False
 
 # ------------ Borrado logico ------------
 
-def desactivar_categoria(id_categoria):
-    categoria = obtener_categoria(id_categoria)
-
+def desactivar_categoria(categoria: Categoria):
     if categoria is None:
         return False
 
     categoria.estado = False
-    return guardar_categoria(categoria)
+
+    try:
+        return guardar_categoria(categoria)
+    except PeeweeException:
+        return False
 
 # Metodo para activar Categoria
-def activar_categoria(id_categoria):
-    categoria = obtener_categoria(id_categoria)
-
+def activar_categoria(categoria: Categoria):
     if categoria is None:
         return False
 
     categoria.estado = True
-    return guardar_categoria(categoria)
+
+    try:
+        return guardar_categoria(categoria)
+    except PeeweeException:
+        return False

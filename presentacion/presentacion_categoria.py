@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
-from auxiliares.mensajes import SOLICITUD_ID_CATEGORIA, MENSAJE_ID_NO_EXISTE, OPCION_INVALIDA
+from auxiliares.mensajes import OPCION_INVALIDA
 from negocio.negocio_categoria import (
     crear_categoria, 
     actualizar_categoria, 
@@ -14,7 +14,7 @@ from negocio.negocio_categoria import (
 # ------------ Funcion Auxiliar ------------
 
 def solicitar_seleccion_categoria():
-    categorias = list(listar_categorias_activas())
+    categorias = listar_categorias_activas()
 
     if not categorias:
         print("No hay categorias activas registradas.")
@@ -86,7 +86,7 @@ def solicitar_actualizar_categoria():
     nombre = campo_opcional("Ingrese el nuevo nombre", categoria.nombre)   
     descripcion = campo_opcional("Ingrese la nueva descripion", categoria.descripcion)
 
-    resultado = actualizar_categoria(categoria.id_categoria, nombre, descripcion)
+    resultado = actualizar_categoria(categoria, nombre, descripcion)
     print("Categoria actualizada con exito.") if resultado else print("No se pudo actualizar la categoria.")    
 
 # Falta validar que no se pueda desactivar categorias con productos que tengan stock > 0
@@ -98,7 +98,7 @@ def solicitar_desactivar_categoria():
 
     confirmar = input(f"Estas seguro de desactivar la categoria: {categoria.nombre}? (S/N): ").strip().upper()
     if confirmar == "S":
-        resultado = desactivar_categoria(categoria.id_categoria)
+        resultado = desactivar_categoria(categoria)
         print(f"Categoria: {categoria.nombre} desactivada con exito.") if resultado else print("No se pudo desactivar la categoria.") 
     elif confirmar == "N":
         print("Opcion Cancelada.")
@@ -106,7 +106,7 @@ def solicitar_desactivar_categoria():
         print(OPCION_INVALIDA) 
 
 def solicitar_activar_categoria():
-    categorias = list(listar_categorias_desactivadas()) # Lista de objetos
+    categorias = listar_categorias_desactivadas() # Lista de objetos
 
     if not categorias:
         print("No hay categorias desactivadas.")
@@ -129,6 +129,6 @@ def solicitar_activar_categoria():
     if categoria is None:
         return 
 
-    resultado = activar_categoria(categoria.id_categoria)
+    resultado = activar_categoria(categoria)
     print(f"Categoria: {categoria.nombre} activada con exito.") if resultado else print("No se pudo activar la categoria.")    
                     

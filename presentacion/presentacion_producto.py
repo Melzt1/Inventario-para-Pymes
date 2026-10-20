@@ -16,6 +16,7 @@ from negocio.negocio_producto import (
     desactivar_producto, 
     activar_producto, 
     listar_productos_activos, 
+    listar_productos_inactivos,
     buscar_productos
 )
 
@@ -163,7 +164,7 @@ def solicitar_actualizar_producto():
 
     descripcion = campo_opcional("Ingrese la nueva descripcion", producto.descripcion) 
 
-    resultado =  actualizar_producto(id_producto, nombre, sku, precio_costo, precio_venta, descripcion)
+    resultado =  actualizar_producto(producto, nombre, sku, precio_costo, precio_venta, descripcion)
     print("Producto actualizado con exito.") if resultado else print("No se pudo actualizar el producto.")
 
 # FALTA VALIDAR QUE NO SE PUEDAN DESACTIVAR PRODUCTOS CON STOCK > 0    
@@ -173,21 +174,31 @@ def solicitar_desactivar_producto():
     if producto is None:
         return False
 
-    id_producto = producto.id_producto
-
-    resultado = desactivar_producto(id_producto)
+    resultado = desactivar_producto(producto)
     print("Producto desactivado con exito.") if resultado else print("No se pudo desactivar el producto.")
 
-# FALTA FILTRAR LA BUSQUEDA SOLO POR PRODUCTO CON ESTADO DESACTIVADO
 def solicitar_activar_producto():
-    producto = solicitar_seleccion_producto()
+    productos = listar_productos_inactivos()
 
-    if producto is None:
-        return False
+    if not productos:
+        print("No hay productos desactivados.")
+        return
 
-    id_producto = producto.id_producto
+    print("\nProductos desactivados:")
+    for i, producto in enumerate(productos, start=1):
+        print(f"[{i}] - {producto.nombre} ({producto.sku})")
 
-    resultado = activar_producto(id_producto)
-    print(f"Producto: {producto.nombre} Activado con exito") if resultado else print("No se pudo activar el producto.")
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("\nSeleccione el producto: ")
+
+        if 1 <= seleccion <= len(productos):
+            opcion_valida = True
+            producto = productos[seleccion - 1]
+        else:
+            print(f"Opcion fuera de rango (1-{len(productos)}).")
+
+    resultado = activar_producto(producto)
+    print(f"Producto '{producto.nombre}' activado.") if resultado else print("No se pudo activar el producto.")
     
 

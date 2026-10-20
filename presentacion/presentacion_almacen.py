@@ -1,7 +1,6 @@
 from prettytable import PrettyTable
 
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
-from auxiliares.mensajes import SOLICITUD_ID_ALMACEN, MENSAJE_ID_NO_EXISTE
 from negocio.negocio_almacen import (
     crear_almacen, 
     actualizar_almacen, 
@@ -9,14 +8,14 @@ from negocio.negocio_almacen import (
     activar_almacen, 
     desactivar_almacen, 
     listar_almacenes_activos,
-    listar_almacenes_desactivados
+    listar_almacenes_desactivados_repo
 )
 
 # ------------ Funcion Auxiliar ------------
 
 def solicitar_seleccion_almacen():
     # Muestra los almacenes activos y devuelve el elegido o None
-    almacenes = list(listar_almacenes_activos()) # Lista de objetos
+    almacenes = listar_almacenes_activos() # Lista de objetos
 
     if not almacenes:
         print("No hay almacenes activos registrados.")
@@ -100,7 +99,7 @@ def solicitar_actualizar_almacen():
     nombre = campo_opcional("Ingrese el nuevo nombre", almacen.nombre)
     encargado = campo_opcional("Ingrese el nuevo encargado", almacen.encargado)    
 
-    resultado = actualizar_almacen(almacen.id_almacen, nombre, encargado)
+    resultado = actualizar_almacen(almacen, nombre, encargado)
     print("Almacen actualizado con exito.") if resultado else print("No se pudo actualizar el almacen.")         
 
 def solicitar_actualizar_direccion_almacen():
@@ -116,7 +115,7 @@ def solicitar_actualizar_direccion_almacen():
     comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
     ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
 
-    resultado = actualizar_direccion_almacen(almacen.id_almacen, calle, numero, comuna, ciudad)
+    resultado = actualizar_direccion_almacen(almacen, calle, numero, comuna, ciudad)
     print("Direccion actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")
 
 def solicitar_desactivar_almacen():
@@ -125,11 +124,11 @@ def solicitar_desactivar_almacen():
     if almacen is None:
         return
 
-    resultado = desactivar_almacen(almacen.id_almacen)
+    resultado = desactivar_almacen(almacen)
     print(f"Almacen: {almacen.nombre} inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el almacen.")
 
 def solicitar_activar_almacen():
-    almacenes = list(listar_almacenes_desactivados()) # Lista de objetos
+    almacenes = listar_almacenes_desactivados_repo() # Lista de objetos
 
     if not almacenes:
         print("No hay almacenes desactivados.")
@@ -149,8 +148,5 @@ def solicitar_activar_almacen():
         else:
             print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
-    if almacen is None:
-        return False
-
-    resultado = activar_almacen(almacen.id_almacen)  
+    resultado = activar_almacen(almacen)  
     print(f"Almacen: {almacen.nombre} habilitado con exito.") if resultado else print("No se pudo habilitar el almacen.")      

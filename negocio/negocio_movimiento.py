@@ -2,7 +2,7 @@ from peewee import PeeweeException
 
 from datos.modelos.models import database
 from datos.modelos.movimiento import Movimiento
-from datos.repositorios.repositorio_inventario import obtener_inventario_por_id
+from datos.modelos.inventario import Inventario
 from datos.repositorios.repositorio_movimiento import (
     guardar_movimiento, 
     listar_movimientos, 
@@ -29,13 +29,11 @@ def listar_movimientos_por_rango_fecha(fecha_inicio, fecha_termino):
 
 # ------------ Validaciones ------------
 
-def validar_stock_salida(id_inventario, cantidad):
-    if cantidad <= 0:
-        return False
-    
-    inventario = obtener_inventario_por_id(id_inventario)
-
+def validar_stock_salida(inventario: Inventario, cantidad):
     if inventario is None:
+        return False
+
+    if cantidad <= 0:
         return False
     
     if cantidad > inventario.stock_actual:
