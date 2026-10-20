@@ -6,14 +6,13 @@ conectado a MySQL mediante el ORM Peewee.
 
 ## Arquitectura
 
-Cuatro capas, cada una con una única responsabilidad:
+Tres capas, cada una con una única responsabilidad:
 
 | Capa | Carpeta | Responsabilidad |
 |---|---|---|
 | Presentación | `presentacion/` | Menús y entrada por teclado |
 | Negocio | `negocio/` | Reglas, validaciones y transacciones |
-| Repositorios | `datos/repositorios/` | Consultas a la base de datos |
-| Modelos | `datos/modelos/` | Tablas mapeadas con Peewee |
+| Datos | `datos/` | Persistencia en MySQL |
 
 La presentación nunca escribe SQL ni pide IDs internos: busca por nombre o SKU y
 elige de una lista. El borrado es lógico mediante la columna `estado`.
