@@ -8,7 +8,7 @@ from auxiliares.entradas import (
     forzar_positivo, 
     forzar_fecha
 )
-from negocio.negocio_categoria import obtener_categoria
+from presentacion.presentacion_categoria import solicitar_seleccion_categoria
 from negocio.negocio_producto import (
     registrar_producto, 
     sku_en_uso, 
@@ -98,11 +98,10 @@ def solicitar_datos_producto():
     fecha_vencimiento = forzar_fecha("Ingrese la fecha de vencimiento 'DD-MM-YYYY' (ENTER si no aplica): ", obligatorio=False)
     
     # Obtener el objeto Categoria por su ID para hacer la relacion
-    id_categoria = forzar_entero("Ingrese la categoria (Ingrasar por ID):")
-    categoria = obtener_categoria(id_categoria)
+    categoria = solicitar_seleccion_categoria()
 
     if categoria is None:
-        print(MENSAJE_ID_NO_EXISTE)
+        print("Objeto no encontrado.")
         return False
 
     resultado = registrar_producto(nombre, sku, precio_costo, precio_venta, descripcion, fecha_elaboracion, fecha_vencimiento, categoria)
