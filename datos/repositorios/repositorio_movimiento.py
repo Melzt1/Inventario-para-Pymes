@@ -8,10 +8,10 @@ from datos.modelos.inventario import Inventario
 def listar_movimientos():
     return Movimiento.select()
 
-def listar_movimientos_de_entrada():
+def listar_movimientos_de_entrada_repo():
     return Movimiento.select().where(Movimiento.tipo == "ENTRADA")
 
-def listar_movimientos_de_salida():
+def listar_movimientos_de_salida_repo():
     return Movimiento.select().where(Movimiento.tipo == "SALIDA")
 
 def listar_movimientos_entre_fechas(fecha_inicio, fecha_termino):

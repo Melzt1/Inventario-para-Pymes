@@ -6,13 +6,16 @@ from datos.repositorios.repositorio_almacen import (
     listar_almacenes, 
     guardar_almacen, 
     obtener_almacen_por_id,
-    listar_almacenes_desactivados_repo
+    listar_almacenes_desactivados as listar_almacenes_desactivados_repo
 )
 from datos.repositorios.repositorio_direccion import guardar_direccion
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
 
 # ------------ Lectura ------------
+
+# La presentacion NO debe conocer la capa de datos: solo importa de aqui.
+# Si una consulta necesita una regla, se agrega aqui y la presentacion no se toca.
 
 def listar_almacenes_activos():
     return listar_almacenes()   

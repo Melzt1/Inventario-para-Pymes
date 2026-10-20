@@ -2,7 +2,6 @@ from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 from datos.modelos.direccion import Direccion
 
-
 def guardar_direccion(direccion: Direccion):
     try:
         direccion.save()

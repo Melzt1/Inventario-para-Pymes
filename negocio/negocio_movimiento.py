@@ -6,8 +6,8 @@ from datos.modelos.inventario import Inventario
 from datos.repositorios.repositorio_movimiento import (
     guardar_movimiento, 
     listar_movimientos, 
-    listar_movimientos_de_entrada, 
-    listar_movimientos_de_salida, 
+    listar_movimientos_de_entrada_repo, 
+    listar_movimientos_de_salida_repo, 
     listar_movimientos_entre_fechas,
     restar_stock,
     sumar_stock
@@ -19,10 +19,10 @@ def listar_historial_movimientos():
     return listar_movimientos()
 
 def listar_movimientos_de_entrada():
-    return listar_movimientos_de_entrada()
+    return listar_movimientos_de_entrada_repo()
 
 def listar_movimientos_de_salida():
-    return listar_movimientos_de_salida()
+    return listar_movimientos_de_salida_repo()
 
 def listar_movimientos_por_rango_fecha(fecha_inicio, fecha_termino):
     return listar_movimientos_entre_fechas(fecha_inicio, fecha_termino)

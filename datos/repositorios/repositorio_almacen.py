@@ -7,7 +7,7 @@ from datos.modelos.almacen import Almacen
 def listar_almacenes():
     return Almacen.select().where(Almacen.estado == True) 
 
-def listar_almacenes_desactivados_repo():
+def listar_almacenes_desactivados():
     return Almacen.select().where(Almacen.estado == False) 
 
 # get_or_none me ahorra el try except DoesNotExist y si no encuentra el ID retorna None (es un todo en uno)

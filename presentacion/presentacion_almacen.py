@@ -8,7 +8,7 @@ from negocio.negocio_almacen import (
     activar_almacen, 
     desactivar_almacen, 
     listar_almacenes_activos,
-    listar_almacenes_desactivados_repo
+    listar_almacenes_desactivados
 )
 
 # ------------ Funcion Auxiliar ------------
@@ -128,7 +128,7 @@ def solicitar_desactivar_almacen():
     print(f"Almacen: {almacen.nombre} inhabilitado con exito.") if resultado else print("No se pudo inhabilitar el almacen.")
 
 def solicitar_activar_almacen():
-    almacenes = listar_almacenes_desactivados_repo() # Lista de objetos
+    almacenes = listar_almacenes_desactivados() # Lista de objetos
 
     if not almacenes:
         print("No hay almacenes desactivados.")
