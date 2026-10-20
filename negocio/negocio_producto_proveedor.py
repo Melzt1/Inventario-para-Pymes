@@ -45,7 +45,7 @@ def asignar_proveedor_principal(producto: Producto, proveedor: Proveedor):
         return False
 
     try:
-        return crear_relacion(producto.id_producto, producto.id_proveedor, es_principal=True)
+        return crear_relacion(producto.id_producto, proveedor.id_proveedor, es_principal=True)
     except PeeweeException:
         return False   
 
