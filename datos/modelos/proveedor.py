@@ -3,6 +3,8 @@ from datos.modelos.direccion import Direccion
 from auxiliares.mensajes import defecto
 from datos.modelos.models import BaseModel
 
+from datos.modelos.usuario import Usuario
+
 class Proveedor(BaseModel):
     id_proveedor = AutoField()
     rut = CharField(max_length=12, unique=True)
@@ -16,5 +18,10 @@ class Proveedor(BaseModel):
         column_name="id_direccion"
     )
 
+    id_usuario = ForeignKeyField(
+        Usuario,
+        field=Direccion.id_usuario,
+        column_name="id_usuario"
+    )
     class Meta:
         table_name = 'proveedores'        
