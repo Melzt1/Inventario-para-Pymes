@@ -18,7 +18,7 @@ class Almacen(BaseModel):
     # Se usa "DeferredForeignKey" por la dependencia circular entre las tablas
     id_encargado = DeferredForeignKey(
         Usuario,
-        field=Direccion.id_usuario,
+        field=Usuario.id_usuario,
         column_name="id_encargado"
     )
 
