@@ -6,6 +6,9 @@ from datos.modelos.usuario import Usuario
 def listar_usuarios():
     return Usuario.select().where(Usuario.estado == True).order_by(Usuario.nombre)
 
+def obtener_usuario_por_nombre(usuario):
+    return Usuario.get_or_none(Usuario.usuario == usuario)
+
 # ------------ Escritura ------------
 
 # .save() sirve para CREATE y UPDATE 
@@ -24,3 +27,5 @@ def guardar_usuario(usuario:Usuario):
         print(f"Error general de Peewee: {e}")
 
     return False
+
+
