@@ -19,11 +19,11 @@ def autenticar(nombre_usuario, contrasena):
     usuario = obtener_usuario_por_nombre(nombre_usuario)
 
     if usuario is None:
-        return False
+        return None 
 
     # Verificamos que la contrasena del Usuario coincida con la contrasena ingresada
-    if not validar_contrasena(contrasena):
-        return False
+    if contrasena != usuario.contrasena:
+        return None
 
     # si todo esta correcto retornamos el objeto (ira a la Clase "Sesion" para logear)
     return usuario

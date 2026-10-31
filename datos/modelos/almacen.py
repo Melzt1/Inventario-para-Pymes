@@ -3,8 +3,6 @@ from auxiliares.mensajes import defecto
 from datos.modelos.direccion import Direccion
 from datos.modelos.models import BaseModel
 
-from datos.modelos.usuario import Usuario
-
 class Almacen(BaseModel):
     id_almacen = AutoField()
     nombre = CharField(max_length=50)
@@ -17,9 +15,10 @@ class Almacen(BaseModel):
 
     # Se usa "DeferredForeignKey" por la dependencia circular entre las tablas
     id_encargado = DeferredForeignKey(
-        Usuario,
-        field=Usuario.id_usuario,
-        column_name="id_encargado"
+        "Usuario",
+        field="id_usuario",
+        column_name="id_encargado",
+        null=True
     )
 
     class Meta:
