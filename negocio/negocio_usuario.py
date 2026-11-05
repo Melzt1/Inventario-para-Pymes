@@ -9,10 +9,7 @@ from datos.repositorios.repositorio_usuario import (
 
 # ------------ Autenticacion ------------
 
-""" FALTAN METODOS PARA HASHEAR Y VALIDAR CONTRASENA """
-
-def validar_contrasena(contrasena):
-    pass
+""" FALTAN METODOS PARA HASHEAR CONTRASENA """
 
 def autenticar(nombre_usuario, contrasena):
     # Devuelve el objeto Usuario si el nombre de usuario existe

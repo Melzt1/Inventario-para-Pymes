@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
-from auxiliares.validaciones import validar_rut
+from auxiliares.validaciones import validar_rut, validar_correo, validar_telefono
 from negocio.negocio_proveedor import (
     listar_proveedores_activos, 
     registrar_proveedor, 
@@ -90,6 +90,10 @@ def solicitar_datos_proveedor():
     while not correo_valido:
         correo = campo_obligatorio("Ingrese el correo: ")
 
+        if not validar_correo(correo):
+            print("El correo ingresado no es valido. Intente nuevamente.")
+            continue
+
         if correo_en_uso(correo):
             print("El correo ya fue registrado. Ingrese otro.")
             continue
@@ -101,7 +105,7 @@ def solicitar_datos_proveedor():
         telefono = campo_obligatorio("Ingrese el numero incluyendo el 9 (9 digitos): ")
 
         # Comprobar que sean 9 digitos (Falta comprobar que el primer digito sea un 9)
-        if not telefono.isdigit() or len(telefono) != 9:
+        if not validar_telefono(telefono):
             print("El teléfono debe contener exactamente 9 dígitos.")
             continue
 

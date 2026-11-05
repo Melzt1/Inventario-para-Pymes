@@ -1,4 +1,5 @@
 from auxiliares.entradas import campo_obligatorio
+from auxiliares.validaciones import validar_contrasena
 from negocio.negocio_usuario import autenticar
 from negocio.negocio_sesion import Sesion
 
