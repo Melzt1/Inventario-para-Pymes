@@ -4,6 +4,7 @@ from datetime import datetime
 """ En este repositorio somos hater del while True!
     Si eres partidario del while True por favor sal de este repositorio """
 
+# EntradaS de INT
 def forzar_entero(mensaje):
     valido = False
     while not valido:
@@ -14,6 +15,7 @@ def forzar_entero(mensaje):
             print(MENSAJE_ID_ENTERO)
     return numero
 
+# EntradaS de INT positivo
 def forzar_positivo(mensaje):
     valido = False
     while not valido:
@@ -24,6 +26,7 @@ def forzar_positivo(mensaje):
             print("Debes ingresar un valor mayor que cero")
     return numero
 
+# EntradaS NOT NULL
 def campo_obligatorio(mensaje):
     valido = False
     while not valido:
@@ -34,6 +37,7 @@ def campo_obligatorio(mensaje):
         valido = True
     return texto        
 
+# ENTRADAS NULL
 def campo_opcional(mensaje, valor_actual):
     valor_nuevo = input(f"{mensaje} (ENTER para mantener): ").strip()
 
@@ -41,6 +45,7 @@ def campo_opcional(mensaje, valor_actual):
         return valor_actual
     return valor_nuevo
 
+# ENTRADAS DATE
 def forzar_fecha(mensaje, obligatorio=False):
     fecha_valida = False
     while not fecha_valida:

@@ -1,9 +1,9 @@
 from prettytable import PrettyTable
 from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.validaciones import validar_rut
 from negocio.negocio_proveedor import (
     listar_proveedores_activos, 
     registrar_proveedor, 
-    validar_rut, 
     actualizar_proveedor, 
     actualizar_direccion_proveedor, 
     desactivar_proveedor, 
