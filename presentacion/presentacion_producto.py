@@ -4,9 +4,10 @@ from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import (
     forzar_entero, 
     campo_obligatorio, 
-    campo_opcional, 
+    actualizar_mantener_campo_texto, 
     forzar_positivo, 
-    forzar_fecha
+    forzar_fecha,
+    actualizar_mantener_campo_entero
 )
 from negocio.negocio_categoria import obtener_categoria
 from negocio.negocio_producto import (
@@ -142,27 +143,20 @@ def solicitar_actualizar_producto():
 
     id_producto = producto.id_producto
 
-    nombre = campo_opcional("Ingrese el nuevo nombre", producto.nombre)
-    sku = campo_opcional("Ingrese el nuevo SKU", producto.sku)
+    # la funcion actualizar_mantener_campo_textp al pulasr ENTER devuelve el valor actual (NO setea ningún atributo)
+    nombre = actualizar_mantener_campo_texto("Ingrese el nuevo nombre", producto.nombre)
+    sku = actualizar_mantener_campo_texto("Ingrese el nuevo SKU", producto.sku)
 
-    # POR ALGUNA RAZON ESTA ESTUPIDEZ FUNCIONA XD
     if sku != producto.sku and sku_en_uso(sku, id_producto):
         print(f"El SKU '{sku}' ya se encuentra registrado.")
         return False
 
-    precio_costo = input("Ingrese el nuevo precio de costo (ENTER para mantener): ")
-    if precio_costo == "":
-        precio_costo = producto.precio_costo
-    else:
-        precio_costo = int(precio_costo)    
+    # la funcion actualizar_mantener_campo_entero al pulasr ENTER devuelve el valor (NO setea ningún atributo)
+    precio_costo = actualizar_mantener_campo_entero("Ingrese el nuevo precio de costo", producto.precio_costo)
 
-    precio_venta = input("Ingrese el nuevo precio de venta (ENTER para mantener): ")
-    if precio_venta == "":
-        precio_venta = producto.precio_venta
-    else:
-        precio_venta = int(precio_venta)        
+    precio_venta = actualizar_mantener_campo_entero("Ingrese el nuevo precio de venta", producto.precio_venta)      
 
-    descripcion = campo_opcional("Ingrese la nueva descripcion", producto.descripcion) 
+    descripcion = actualizar_mantener_campo_texto("Ingrese la nueva descripcion", producto.descripcion) 
 
     resultado =  actualizar_producto(producto, nombre, sku, precio_costo, precio_venta, descripcion)
     print("Producto actualizado con exito.") if resultado else print("No se pudo actualizar el producto.")

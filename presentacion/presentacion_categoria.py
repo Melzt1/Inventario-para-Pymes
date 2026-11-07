@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.entradas import forzar_entero, campo_obligatorio, actualizar_mantener_campo_texto
 from auxiliares.mensajes import OPCION_INVALIDA
 from negocio.negocio_categoria import (
     crear_categoria, 
@@ -83,8 +83,8 @@ def solicitar_actualizar_categoria():
     if categoria is None:
         return 
     
-    nombre = campo_opcional("Ingrese el nuevo nombre", categoria.nombre)   
-    descripcion = campo_opcional("Ingrese la nueva descripion", categoria.descripcion)
+    nombre = actualizar_mantener_campo_texto("Ingrese el nuevo nombre", categoria.nombre)   
+    descripcion = actualizar_mantener_campo_texto("Ingrese la nueva descripion", categoria.descripcion)
 
     resultado = actualizar_categoria(categoria, nombre, descripcion)
     print("Categoria actualizada con exito.") if resultado else print("No se pudo actualizar la categoria.")    

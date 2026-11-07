@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.entradas import forzar_entero, campo_obligatorio, actualizar_mantener_campo_texto
 from negocio.negocio_almacen import (
     crear_almacen, 
     actualizar_almacen, 
@@ -96,8 +96,8 @@ def solicitar_actualizar_almacen():
     if almacen is None:
         return
 
-    nombre = campo_opcional("Ingrese el nuevo nombre", almacen.nombre)
-    encargado = campo_opcional("Ingrese el nuevo encargado", almacen.encargado)    
+    nombre = actualizar_mantener_campo_texto("Ingrese el nuevo nombre", almacen.nombre)
+    encargado = actualizar_mantener_campo_texto("Ingrese el nuevo encargado", almacen.encargado)    
 
     resultado = actualizar_almacen(almacen, nombre, encargado)
     print("Almacen actualizado con exito.") if resultado else print("No se pudo actualizar el almacen.")         
@@ -110,10 +110,12 @@ def solicitar_actualizar_direccion_almacen():
     
     # La FK entrega el objeto Direccion
     direccion = almacen.id_direccion
-    calle = campo_opcional("Ingrese el nombre de la calle", direccion.calle)
-    numero = campo_opcional("Ingrese el numero de la direccion", direccion.numero)
-    comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
-    ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
+
+    # la funcion actualizar_mantener_campo_texto al pulasr ENTER devuelve el valor actual (NO setea ningún atributo)
+    calle = actualizar_mantener_campo_texto("Ingrese el nombre de la calle", direccion.calle)
+    numero = actualizar_mantener_campo_texto("Ingrese el numero de la direccion", direccion.numero)
+    comuna = actualizar_mantener_campo_texto("Ingrese la comuna", direccion.comuna)
+    ciudad = actualizar_mantener_campo_texto("Ingrese la ciudad", direccion.ciudad)
 
     resultado = actualizar_direccion_almacen(almacen, calle, numero, comuna, ciudad)
     print("Direccion actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")

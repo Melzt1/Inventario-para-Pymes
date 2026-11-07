@@ -1,5 +1,5 @@
 from prettytable import PrettyTable
-from auxiliares.entradas import forzar_entero, campo_obligatorio, campo_opcional
+from auxiliares.entradas import forzar_entero, campo_obligatorio, actualizar_mantener_campo_texto
 from auxiliares.validaciones import validar_rut, validar_correo, validar_telefono
 from negocio.negocio_proveedor import (
     listar_proveedores_activos, 
@@ -152,13 +152,13 @@ def solicitar_actualizar_proveedor():
         return
 
     id_proveedor = proveedor.id_proveedor
-    correo = campo_opcional("Ingrese el nuevo correo", proveedor.correo)
+    correo = actualizar_mantener_campo_texto("Ingrese el nuevo correo", proveedor.correo)
 
     if correo_en_uso(correo, id_proveedor):
         print("El correo ya fue registrado")
         return False
     
-    telefono = campo_opcional("Ingrese el nuevo telefono", proveedor.telefono)
+    telefono = actualizar_mantener_campo_texto("Ingrese el nuevo telefono", proveedor.telefono)
 
     if telefono_en_uso(telefono, id_proveedor):
         print("El telefono ya fue registrado")
@@ -175,10 +175,10 @@ def solicitar_actualizar_direccion_proveedor():
     
     direccion = proveedor.id_direccion
 
-    calle = campo_opcional("Ingrese el nombre de la calle", direccion.calle)
-    numero = campo_opcional("Ingrese el numero de la direccion", direccion.numero)
-    comuna = campo_opcional("Ingrese la comuna", direccion.comuna)
-    ciudad = campo_opcional("Ingrese la ciudad", direccion.ciudad)
+    calle = actualizar_mantener_campo_texto("Ingrese el nombre de la calle", direccion.calle)
+    numero = actualizar_mantener_campo_texto("Ingrese el numero de la direccion", direccion.numero)
+    comuna = actualizar_mantener_campo_texto("Ingrese la comuna", direccion.comuna)
+    ciudad = actualizar_mantener_campo_texto("Ingrese la ciudad", direccion.ciudad)
 
     resultado = actualizar_direccion_proveedor(proveedor, calle, numero, comuna, ciudad)  
     print("Direccion de proveedor actualizada con exito.") if resultado else print("No se pudo actualizar la direccion.")

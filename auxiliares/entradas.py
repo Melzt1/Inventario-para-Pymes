@@ -38,12 +38,30 @@ def campo_obligatorio(mensaje):
     return texto        
 
 # ENTRADAS NULL
-def campo_opcional(mensaje, valor_actual):
+def actualizar_mantener_campo_texto(mensaje, valor_actual):
     valor_nuevo = input(f"{mensaje} (ENTER para mantener): ").strip()
 
     if valor_nuevo == "":
         return valor_actual
     return valor_nuevo
+
+def actualizar_mantener_campo_entero(mensaje, valor_actual):
+    valido = False
+    numero = valor_actual
+
+    while not valido:
+        texto = input(f"{mensaje} (ENTER para mantener): ").strip()
+
+        if texto == "":
+            valido = True
+        else:
+            try:
+                numero = int(texto)
+                valido = True
+            except ValueError:
+                print("Debe ingresar un número entero.")
+
+    return numero
 
 # ENTRADAS DATE
 def forzar_fecha(mensaje, obligatorio=False):
