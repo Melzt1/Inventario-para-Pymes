@@ -4,8 +4,8 @@ from datos.modelos.seccion import Seccion
 
 # ------------ Lectura ------------
 
-def listar_secciones():
-    return Seccion.select().where(Seccion.estado == True)
+def listar_secciones_de_almacen(id_almacen):
+    return Seccion.select().where(Seccion.id_almacen == id_almacen)
 
 # ------------ Escritura ------------
 
