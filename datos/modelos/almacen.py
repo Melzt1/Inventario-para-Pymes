@@ -13,13 +13,5 @@ class Almacen(BaseModel):
         column_name="id_direccion"
     )
 
-    # Se usa "DeferredForeignKey" por la dependencia circular entre las tablas
-    id_encargado = DeferredForeignKey(
-        "Usuario",
-        field="id_usuario",
-        column_name="id_encargado",
-        null=True
-    )
-
     class Meta:
         table_name = 'almacenes'    

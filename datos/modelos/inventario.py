@@ -8,7 +8,7 @@ class Inventario(BaseModel):
     id_almacen = ForeignKeyField(Almacen, field=Almacen.id_almacen, column_name="id_almacen")
     id_producto = ForeignKeyField(Producto, field=Producto.id_producto, column_name="id_producto")
     stock_actual = IntegerField()
-    stock_minimo = IntegerField()
+
     class Meta:
         table_name = 'inventarios'
         indexes = (

@@ -5,10 +5,10 @@ from datos.modelos.models import BaseModel
 
 class Proveedor(BaseModel):
     id_proveedor = AutoField()
-    rut = CharField(max_length=12, unique=True)
+    rut = CharField(max_length=12, unique=True, null=True)
     nombre = CharField(max_length=50)
-    correo = CharField(max_length=100, null=True, unique=True)
-    telefono = CharField(max_length=9, unique=True)
+    correo = CharField(max_length=100, unique=True)
+    telefono = CharField(max_length=15, unique=True, null=True)
     estado = BooleanField(constraints=[SQL(defecto)])
     id_direccion = ForeignKeyField(
         Direccion,

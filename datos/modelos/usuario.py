@@ -22,8 +22,7 @@ class Usuario(BaseModel):
     id_almacen = ForeignKeyField(
         Almacen,
         field=Almacen.id_almacen,
-        column_name="id_almacen",
-        null=True
+        column_name="id_almacen"
     )
     
     class Meta:
