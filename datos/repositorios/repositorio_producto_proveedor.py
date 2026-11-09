@@ -66,7 +66,7 @@ def crear_relacion(id_producto, id_proveedor, es_principal=False):
     return False
 
 # borrado fisico para eliminar la relacion de proveedor principal y asignar otra
-def quitar_relacion(relacion):
+def quitar_relacion(relacion: ProductoProveedor):
     try:
         return relacion.delete_instance() 
     
