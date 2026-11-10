@@ -4,8 +4,13 @@ from datos.modelos.seccion import Seccion
 
 # ------------ Lectura ------------
 
+# Listar secciones habilitadas
 def listar_secciones_de_almacen(id_almacen):
-    return Seccion.select().where(Seccion.id_almacen == id_almacen)
+    return Seccion.select().where((Seccion.id_almacen == id_almacen) & (Seccion.estado == True))
+
+# Listar secciones deshabilitadas
+def listar_secciones_desactivadas(id_almacen):
+    return Seccion.select().where((Seccion.id_almacen == id_almacen) & (Seccion.estado == False))
 
 # ------------ Escritura ------------
 

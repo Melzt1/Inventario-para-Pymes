@@ -1,6 +1,7 @@
 from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 from datos.modelos.usuario import Usuario
+from datos.modelos.rol import Rol
 
 # ------------ Lectura ------------
 def listar_usuarios():
@@ -8,6 +9,14 @@ def listar_usuarios():
 
 def obtener_usuario_por_nombre(usuario):
     return Usuario.get_or_none(Usuario.usuario == usuario)
+
+# Metodo para preguntar si el usuario tiene algun rol, para poder logearse
+def existe_usuario_con_rol(rol):
+    return (Usuario
+            .select()
+            .join(Rol)
+            .where(rol.nombre == rol)
+            .exists())
 
 # ------------ Escritura ------------
 

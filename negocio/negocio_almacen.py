@@ -45,6 +45,9 @@ def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
             # Internamente hace esto (nueva_direccion.id_direccion)
             nuevo_almacen.id_direccion = nueva_direccion
 
+            if not guardar_almacen(nuevo_almacen):
+                return False
+                    
             # REGLA DE NEGOCIO: 
             # Al momento de crear un almacen DEBE nacer con una seccion principal
             seccion_principal = Seccion()
@@ -52,14 +55,8 @@ def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
             seccion_principal.codigo = "1-P"
             seccion_principal.descripcion = "Seccion Principal"
             seccion_principal.id_almacen = nuevo_almacen
-            """ POR PROBAR, PUEDE QUE DE ERROR PQ SE ESTA CREANDO ANTES DE CREAR EL ALMACEN
-                Y PUEDE FALLAR POR CULPA DE LA FK, SI ESTO NO FUNCIONA CREA UN METODO EN LA
-                CAPA DE NEGOCIO DE SECCION, ALGO COMO CREAR_SECCION_PRINCIPAL Y LISTO"""
         
             if not guardar_seccion(seccion_principal):
-                return False
-
-            if not guardar_almacen(nuevo_almacen):
                 return False
 
         return True
