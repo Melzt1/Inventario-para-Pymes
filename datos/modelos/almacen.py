@@ -5,9 +5,9 @@ from datos.modelos.models import BaseModel
 
 class Almacen(BaseModel):
     id_almacen = AutoField()
-    nombre = CharField(max_length=50)
-    encargado = CharField(max_length=50)
+    nombre = CharField(max_length=50, unique=True)
     estado = BooleanField(constraints=[SQL(defecto)])
+    
     id_direccion = ForeignKeyField(
         Direccion,
         field=Direccion.id_direccion,

@@ -4,7 +4,7 @@ from datos.modelos.models import BaseModel
 
 class Categoria(BaseModel):
     id_categoria = AutoField()
-    nombre = CharField(max_length=50)
+    nombre = CharField(max_length=50, unique=True)
     descripcion = CharField(max_length=255)
     estado = BooleanField(constraints=[SQL(defecto)])
 

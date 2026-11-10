@@ -4,8 +4,16 @@ from datos.modelos.proveedor import Proveedor
 from datos.modelos.models import BaseModel
 
 class ProductoProveedor(BaseModel):
-    id_producto = ForeignKeyField(Producto, field=Producto.id_producto, column_name="id_producto")
-    id_proveedor = ForeignKeyField(Proveedor, field=Proveedor.id_proveedor, column_name="id_proveedor")
+    id_producto = ForeignKeyField(
+        Producto, 
+        field=Producto.id_producto, 
+        column_name="id_producto"
+    )
+    id_proveedor = ForeignKeyField(
+        Proveedor, 
+        field=Proveedor.id_proveedor, 
+        column_name="id_proveedor"
+    )
     es_principal = BooleanField(constraints=[SQL("DEFAULT 0")])
 
     class Meta:
