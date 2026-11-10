@@ -3,10 +3,17 @@ from peewee import PeeweeException
 from datos.modelos.seccion import Seccion
 from datos.modelos.seccion import Almacen
 from datos.repositorios.repositorio_seccion import guardar_seccion
-from datos.repositorios.repositorio_seccion import listar_secciones_de_almacen
+from datos.repositorios.repositorio_seccion import listar_secciones_de_almacen, listar_secciones_de_almacen_desactivadas
 
-def listar_secciones():
-    return listar_secciones_de_almacen()   
+def listar_secciones(almacen: Almacen):
+    if almacen is None:
+        return False
+    return listar_secciones_de_almacen(almacen.id_almacen) 
+
+def listar_secciones_desactivadas(almacen: Almacen):
+    if almacen is None:
+        return False
+    return listar_secciones_de_almacen_desactivadas(almacen.id_almacen)
 
 def crear_seccion(almacen: Almacen, nombre, descripcion):
     if almacen is None:

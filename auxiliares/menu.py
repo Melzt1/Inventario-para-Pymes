@@ -38,6 +38,7 @@ submenu_almacen = {
     "5": "Actualizar direccion almacen",
     '6': "Desactivar almacen",
     '7': "Activar almacen",    
+    '8': "Gestión de secciones",    
     "0": VOLVER_AL_MENU
 }
 
@@ -66,6 +67,15 @@ submenu_inventario = {
     "3": "Listar inventario de un almacen",
     "4": "Listar productos bajo stock minimo",
     "5": "Gestion de movimientos",    
+    "0": VOLVER_AL_MENU
+}
+
+submenu_seccion = {
+    "1": "Listar secciones",
+    "2": "Registrar sección",
+    "3": "Actualizar sección",
+    "4": "Desactivar sección",
+    "5": "Activar sección",
     "0": VOLVER_AL_MENU
 }
 
