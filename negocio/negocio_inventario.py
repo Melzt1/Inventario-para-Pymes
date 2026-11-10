@@ -23,6 +23,8 @@ def listar_inventario_por_producto(id_producto):
 def obtener_inventario_producto_almacen(id_producto, id_almacen):
     return obtener_inventario(id_producto, id_almacen)
 
+def listar_productos_stock_critico():
+    return []
 
 # ------------ Escritura ------------
 

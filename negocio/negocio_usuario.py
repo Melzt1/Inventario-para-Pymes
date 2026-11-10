@@ -50,16 +50,7 @@ def actualizar_usuario(usuario:Usuario, nombre, username):
     if usuario is None:
         return False
 
-    # Metodo que busca si el username existe
-    """Nota para Ale: 
-    Verifica si el nombre de usuario ya existe usa la misma logica que aplicamos en existe_sku().
-
-    Segun el asistente no es necesario el atomic() pq se utiliza 
-    cuando hay dos o mas operaciones de escritura que deben ser todo-o-nada
-    Por ejemplo en Almacen, estamos creando un objeto Almacen, un objeto Direccion y 
-    un objeto Seccion al mismo tiempo, entonces el atomic() actua cuando 1 de las 3 falla y
-    revierte los cambios, en este caso solo estamos creando UN solo objeto por lo que no es necesario."""
-
+    # Metodo que busca si el username existe para no replicarlo
     if existe_usuario(username, usuario.id_usuario):
         return False
     

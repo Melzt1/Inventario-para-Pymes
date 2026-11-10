@@ -7,9 +7,9 @@ class Producto(BaseModel):
     id_producto = AutoField()
     nombre = CharField(max_length=50)
     sku = CharField(max_length=100, unique=True)
-    precio_costo = DecimalField()
-    precio_venta = DecimalField()
-    descripcion = CharField()
+    precio_costo = DecimalField(max_digits=12, decimal_places=4)
+    precio_venta = DecimalField(max_digits=12, decimal_places=2)
+    descripcion = CharField(max_length=255)
     fecha_elaboracion = DateField(null=True)
     fecha_vencimiento = DateField(null=True)
     estado = BooleanField(constraints=[SQL(defecto)])
@@ -21,4 +21,4 @@ class Producto(BaseModel):
     )
 
     class Meta:
-        table_name = 'productos'        
+        table_name = 'productos'

@@ -1,14 +1,14 @@
-from peewee import IntegerField, CharField, DateTimeField, AutoField, SQL, ForeignKeyField
+from peewee import IntegerField, CharField, DateTimeField, AutoField, SQL, ForeignKeyField, Check
 from datos.modelos.inventario import Inventario
 from datos.modelos.models import BaseModel
 from datos.modelos.usuario import Usuario
 
 class Movimiento(BaseModel):
     id_movimiento = AutoField()
-    descripcion = CharField(null=True)
+    descripcion = CharField(max_length=255)
     cantidad = IntegerField()
-    tipo = CharField()
-    fecha = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")], null=True)
+    tipo = CharField(max_length=7)
+    fecha = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
     
     id_inventario = ForeignKeyField(
         Inventario,

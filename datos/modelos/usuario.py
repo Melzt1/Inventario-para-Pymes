@@ -3,7 +3,6 @@ from auxiliares.mensajes import defecto
 from datos.modelos.models import BaseModel
 
 from datos.modelos.rol import Rol
-from datos.modelos.almacen import Almacen
 
 class Usuario(BaseModel):
     id_usuario = AutoField()
@@ -19,11 +18,5 @@ class Usuario(BaseModel):
         column_name="id_rol"
     )
 
-    id_almacen = ForeignKeyField(
-        Almacen,
-        field=Almacen.id_almacen,
-        column_name="id_almacen"
-    )
-    
     class Meta:
         table_name = 'usuarios'    
