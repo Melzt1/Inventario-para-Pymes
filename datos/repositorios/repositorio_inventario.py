@@ -3,10 +3,11 @@ from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 from datos.modelos.inventario import Inventario
 from datos.modelos.producto import Producto
 from datos.modelos.almacen import Almacen
+from datos.modelos.seccion import Seccion
 
 # ------------ Lectura ------------
 
-# obtiene el inventario de un almacen con los datos de sus productos
+# Obtiene todos los productos registrados en un Almacen (Buscar por almacen)
 def listar_inventario_de_almacen(id_almacen):       
     return (Inventario
             .select(Inventario, Producto)
@@ -14,17 +15,20 @@ def listar_inventario_de_almacen(id_almacen):
             .where(Inventario.id_almacen == id_almacen)
             .order_by(Producto.nombre))  
 
-# obtiene el inventario de un producto con el almacen ya cargado
+# Obtiene todos los almacenes donde esta registrado un producto (Buscar por producto)
 def listar_inventario_de_producto(id_producto):
     return (Inventario
             .select(Inventario, Almacen)
             .join(Almacen)
             .where(Inventario.id_producto == id_producto)
-            .order_by(Almacen.nombre))
+            .order_by(Almacen.nombre))  
 
-def listar_inventario_stock_critico():
-    return (Inventario.select()
-            .where(Inventario.stock_actual <= Inventario.stock_minimo))
+# Obtiene todas las secciones donde esta registrado un producto dentro de un almacen especifico
+def listar_inventario_producto_almacen(id_producto, id_almacen):
+    return (Inventario
+            .select(Inventario, Seccion)
+            .join(Seccion)
+            .where((Inventario.id_producto == id_producto) & (Seccion.id_almacen == id_almacen)))
 
 def obtener_inventario_por_id(id_inventario):
     return Inventario.get_or_none(Inventario.id_inventario == id_inventario)

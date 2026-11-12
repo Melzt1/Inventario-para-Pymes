@@ -7,8 +7,8 @@ from datos.repositorios.repositorio_inventario import (
     guardar_inventario, 
     obtener_inventario, 
     listar_inventario_de_almacen,
-    listar_inventario_stock_critico, 
-    listar_inventario_de_producto
+    listar_inventario_de_producto,
+    listar_inventario_producto_almacen
 )
 
 # ------------ Lectura ------------
@@ -19,12 +19,17 @@ def listar_inventario_por_almacen(id_almacen):
 def listar_inventario_por_producto(id_producto):
     return listar_inventario_de_producto(id_producto)
 
-def listar_productos_stock_critico():
-    return listar_inventario_stock_critico()
-
 def obtener_inventario_producto_almacen(id_producto, id_almacen):
     return obtener_inventario(id_producto, id_almacen)
 
+def consultar_stock_total(producto: Producto, almacen: Almacen):
+    if producto is None or almacen is None:
+        return False
+
+    inventarios = listar_inventario_producto_almacen(producto.id_producto, almacen.id_almacen)
+
+    # expresion generadora, un for que recorre la lista inventarios y va sumando el stock_acutal por cada iteracion
+    return sum(inventario.stock_actual for inventario in inventarios)
 
 # ------------ Escritura ------------
 

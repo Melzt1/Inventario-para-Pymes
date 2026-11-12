@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 
 from auxiliares.mensajes import NO_HAY_SECCIONES
-from auxiliares.entradas import campo_obligatorio, forzar_entero
+from auxiliares.entradas import campo_obligatorio, forzar_entero, campo_opcional
 from negocio.negocio_seccion import (
     activar_seccion,
     actualizar_seccion,
@@ -22,13 +22,15 @@ def seleccionar_seccion(secciones):
     for i, seccion in enumerate(secciones, start=1):
         print(f"[{i}] - {seccion.nombre}")
 
-    seleccion = forzar_entero("Seleccione la seccion: ")
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero("Seleccione la seccion: ")
 
-    if not 1 <= seleccion <= len(secciones):
+        if 1 <= seleccion <= len(secciones):
+            opcion_valida = True
+            return secciones[seleccion - 1] 
+        
         print(f"Opción fuera de rango (1-{len(secciones)}).")
-        return None
-    
-    return secciones[seleccion - 1]
         
 def mostrar_secciones_de_un_almacen():
     almacen = solicitar_seleccion_almacen()
@@ -56,7 +58,6 @@ def solicitar_crear_seccion():
     almacen = solicitar_seleccion_almacen()
 
     if almacen is None:
-        print("Primero debes registrar un Almacen")
         return
 
     nombre = campo_obligatorio("Nombre de la seccion: ")
@@ -75,17 +76,16 @@ def solicitar_actualizar_seccion():
     seccion = seleccionar_seccion(listar_secciones(almacen))
 
     if seccion is None:
-        print(NO_HAY_SECCIONES)
         return
 
-    nombre = input("Nuevo nombre de la seccion: ").title()
+    nombre = campo_opcional("Ingrese el nuevo nombre", seccion.nombre).capitalize()
 
     while nombre == "Principal" or nombre == "PRINCIPAL":
         print("El nombre 'Principal' esta reservado por el sistema. Ingresa otro.")
         nombre = input("Nuevo nombre de la seccion: ").title()
 
     descripcion = input("Nueva descripcion: ").strip()
-    resultado = actualizar_seccion(almacen, nombre, descripcion)
+    resultado = actualizar_seccion(seccion, nombre, descripcion)
     print("Seccion actualizada con exito." if resultado else "No se pudo actualizar la seccion.")
 
 def solicitar_desactivar_seccion():
@@ -97,8 +97,11 @@ def solicitar_desactivar_seccion():
     seccion = seleccionar_seccion(listar_secciones(almacen))
 
     if seccion is None:
-        print(NO_HAY_SECCIONES)
         return
+
+    if seccion.nombre == "Principal":
+        print("La seccion 'Principal' no se puede desactivar")
+        return False
     
     resultado = desactivar_seccion(seccion)
     print("Seccion desactivada con exito." if resultado else "No se pudo desactivar la seccion.")    
@@ -112,7 +115,6 @@ def solicitar_activar_seccion():
     seccion = seleccionar_seccion(listar_secciones_desactivadas(almacen))
 
     if seccion is None:
-        print("No hay secciones desactivadas.")
         return
     
     resultado = activar_seccion(seccion)
