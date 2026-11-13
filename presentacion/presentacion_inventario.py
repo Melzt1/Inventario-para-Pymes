@@ -1,9 +1,10 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero
+from auxiliares.entradas import campo_obligatorio, forzar_entero
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_almacen import listar_almacenes_activos
-from negocio.negocio_minimo_almacen import listar_stock_critico
+from negocio.negocio_seccion import listar_secciones
+from negocio.negocio_minimo_almacen import listar_stock_critico, obtener_minimo
 from negocio.negocio_inventario import (
     asociar_producto_a_almacen, 
     listar_inventario_por_almacen,
@@ -34,25 +35,45 @@ def solicitar_almacen():
 
         print(f"Opcion fuera de rango (1-{len(almacenes)}).")
 
+def solicitar_seccion(almacen):
+    secciones = list(listar_secciones(almacen))
+
+    if not secciones:
+        print("El almacén no tiene secciones activas.")
+        return None
+    
+    for indice, seccion in enumerate(secciones, start=1):
+        print(f"[{indice}] {seccion.nombre}")
+
+    seleccion = forzar_entero("Seleccione la sección: ")
+
+    if not 1 <= seleccion <= len(secciones):
+        print(f"Opción fuera de rango (1-{len(secciones)}).")
+        return None
+    
+    return secciones[seleccion - 1]        
+
 def solicitar_asociar_producto_almacen():
-    print("\n=== Asociar producto a un almacen ===")
+    print("\n=== Registrar producto a un almacen ===")
 
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
     producto = obtener_producto_sku(sku)
 
     if producto is None:
-        print("No existe el producto con ese SKU.")
-        return False
+        print("No existe el producto con ese SKU.")     
+        return
 
     almacen = solicitar_almacen()
 
     if almacen is None:
-        return          
+        return         
     
-    stock_actual = forzar_positivo("Ingrese la cantidad inicial: ")
-    stock_minimo = forzar_positivo("Ingrese el stock minimo: ")
+    seccion = solicitar_seccion(almacen)
 
-    resultado = asociar_producto_a_almacen(producto, almacen, stock_actual, stock_minimo)
+    if seccion is None:
+        return
+    
+    resultado = asociar_producto_a_almacen(producto, seccion)
     print(f"Producto '{producto.nombre}' asociado a '{almacen.nombre}'.") if resultado else print("No se pudo asociar.")
 
 def consultar_inventario_producto():
@@ -63,35 +84,26 @@ def consultar_inventario_producto():
 
     if producto is None:
         print("No existe un producto con ese SKU.")
-        return False
+        return 
 
-    inventarios = list(listar_inventario_por_producto(producto.id_producto))
+    inventarios = listar_inventario_por_producto(producto.id_producto)
 
     if not inventarios:
         print(f"El producto '{producto.nombre}' no está asociado a ningún almacén.")
-        return False
+        return 
 
-    print(f"\nSKU: {producto.sku}")
-    print("Almacenes donde se encuentra:")
-    for i, inventario in enumerate(inventarios, start=1):
-        print(f"[{i}] - {inventario.id_almacen.nombre}")
+    tabla = PrettyTable()
+    tabla.field_names = ["Almacen", "Seccinn", "Stock actual"]
 
-    opcion_valida = False
+    for inventario in inventarios:
+        seccion = inventario.id_seccion
+        tabla.add_row([
+            seccion.id_almacen.nombre, 
+            seccion.nombre, 
+            inventario.stock_actual
+        ])
+    print(tabla)
 
-    while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el almacén: ")
-
-        if 1 <= seleccion <= len(inventarios):
-            inventario = inventarios[seleccion - 1]
-            opcion_valida = True
-        else:
-            print(f"Opción fuera de rango (1-{len(inventarios)}).")
-
-    print("\n=== Inventario del producto ===")   
-    print(f"Producto: {producto.nombre}")
-    print(f"Almacen: {inventario.id_almacen.nombre}")
-    print(f"Stock Actual: {inventario.stock_actual}")
-    print(f"Stock Minimo: {inventario.stock_minimo}")
 
 def mostrar_inventario_de_almacen():
     almacen = solicitar_almacen()
@@ -106,14 +118,19 @@ def mostrar_inventario_de_almacen():
         return
 
     tabla_inventario = PrettyTable()
-    tabla_inventario.field_names = ['Producto', 'SKU', 'Stock Actual', 'Stock Minimo']
+    tabla_inventario.field_names = ['Seccion', 'Producto', 'SKU', 'Stock Actual', 'Stock Minimo']
+
     for inventario in inventarios:
         producto = inventario.id_producto
+        seccion = inventario.id_seccion
+        minimo = obtener_minimo(producto.id_producto, almacen.id_almacen)
+        
         tabla_inventario.add_row([
+            seccion.nombre,
             producto.nombre,
             producto.sku,
             inventario.stock_actual,
-            inventario.stock_minimo,
+            minimo.stock_minimo
         ])
     print(f"=== Inventario de {almacen.nombre} ===")        
     print(tabla_inventario)        

@@ -7,21 +7,25 @@ from datos.modelos.seccion import Seccion
 
 # ------------ Lectura ------------
 
-# Obtiene todos los productos registrados en un Almacen (Buscar por almacen)
+# Obtiene todas las secciones con sus productos registrados en un Almacen
 def listar_inventario_de_almacen(id_almacen):       
     return (Inventario
-            .select(Inventario, Producto)
+            .select(Inventario, Producto, Seccion, Almacen)
             .join(Producto)
-            .where(Inventario.id_almacen == id_almacen)
-            .order_by(Producto.nombre))  
+            .switch(Inventario)
+            .join(Seccion)
+            .join(Almacen)
+            .where(Seccion.id_almacen == id_almacen)
+            .order_by(Seccion.nombre, Producto.nombre))  
 
-# Obtiene todos los almacenes donde esta registrado un producto (Buscar por producto)
+# Obtiene todos los almacenes y secciones donde esta registrado un producto 
 def listar_inventario_de_producto(id_producto):
     return (Inventario
-            .select(Inventario, Almacen)
+            .select(Inventario, Seccion, Almacen)
+            .join(Seccion)
             .join(Almacen)
             .where(Inventario.id_producto == id_producto)
-            .order_by(Almacen.nombre))  
+            .order_by(Almacen.nombre, Seccion.nombre))
 
 # Obtiene todas las secciones donde esta registrado un producto dentro de un almacen especifico
 def listar_inventario_producto_almacen(id_producto, id_almacen):
@@ -33,11 +37,11 @@ def listar_inventario_producto_almacen(id_producto, id_almacen):
 def obtener_inventario_por_id(id_inventario):
     return Inventario.get_or_none(Inventario.id_inventario == id_inventario)
 
-# buscar un producto en un almacen especifico
-def obtener_inventario(id_producto, id_almacen):
+# buscar un producto en una seccion especifico
+def obtener_inventario(id_producto, id_seccion):
     return Inventario.get_or_none(
         (Inventario.id_producto == id_producto) &
-        (Inventario.id_almacen == id_almacen))
+        (Inventario.id_seccion == id_seccion))
 
 
 # ------------ Escritura ------------
