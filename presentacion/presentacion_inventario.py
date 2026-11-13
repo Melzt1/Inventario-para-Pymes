@@ -3,11 +3,11 @@ from prettytable import PrettyTable
 from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_almacen import listar_almacenes_activos
-from negocio.negocio_inventario import listar_inventario_por_producto
+from negocio.negocio_minimo_almacen import listar_stock_critico
 from negocio.negocio_inventario import (
     asociar_producto_a_almacen, 
-    listar_inventario_por_almacen, 
-    listar_productos_stock_critico
+    listar_inventario_por_almacen,
+    listar_inventario_por_producto
 )
 
 # ------------ Funcion Auxiliar ------------
@@ -119,25 +119,25 @@ def mostrar_inventario_de_almacen():
     print(tabla_inventario)        
 
 def mostrar_productos_stock_critico():
-    inventarios = listar_productos_stock_critico()
+    almacen = solicitar_almacen()
+
+    if almacen is None:
+        return    
+    
+    inventarios = listar_stock_critico(almacen)
 
     if not inventarios:
         print("No hay productos bajo el stock minimo.")
         return
     
     tabla_stock_critico = PrettyTable()
-    tabla_stock_critico.field_names = ['ID Producto', 'Producto', 'Stock Actual', 'Stock Minimo', 'Almacen']
+    tabla_stock_critico.field_names = ['Producto', 'Stock Actual', 'Stock Minimo']
     
-    for stock in inventarios:
-        producto = stock.id_producto
-        almacen = stock.id_almacen
-
+    for producto, stock_actual, stock_minimo in inventarios:
         tabla_stock_critico.add_row([
-            producto.id_producto,
             producto.nombre,
-            stock.stock_actual,
-            stock.stock_minimo,
-            almacen.nombre,
+            stock_actual,
+            stock_minimo,
         ])
     print("=== Productos bajo stock minimo ===")        
     print(tabla_stock_critico)   

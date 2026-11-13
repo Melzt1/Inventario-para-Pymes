@@ -1,4 +1,4 @@
-from peewee import IntegrityError, OperationalError, DataError, PeeweeException, fn
+from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 
 from datos.modelos.minimo_almacen import MinimoAlmacen
 from datos.modelos.producto import Producto
@@ -11,8 +11,9 @@ def obtener_stock_minimo(id_producto, id_almacen):
         (MinimoAlmacen.id_producto == id_producto) &
         (MinimoAlmacen.id_almacen == id_almacen)
     )
-def listar_stock_critico():
-    pass
+
+def listar_minimo_almacen(id_almacen):
+    return MinimoAlmacen.select().where(MinimoAlmacen.id_almacen == id_almacen)
 
 # ------------ Escritura ------------
 

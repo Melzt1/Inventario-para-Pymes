@@ -1,15 +1,12 @@
-from peewee import PeeweeException
-
-from datos.modelos.minimo_almacen import MinimoAlmacen
 from datos.modelos.producto import Producto
 from datos.modelos.almacen import Almacen
-from datos.modelos.inventario import Inventario
 
-from datos.repositorios.repositorio_inventario import listar_inventario_producto_almacen
+from negocio.negocio_inventario import consultar_stock_total
 from datos.repositorios.repositorio_minimo_almacen import (
     crear_minimo,
     guardar_minimo,
-    obtener_stock_minimo
+    obtener_stock_minimo,
+    listar_minimo_almacen
 )
 
 def obtener_minimo(id_producto, id_almacen):
@@ -27,10 +24,8 @@ def definir_minimo(producto: Producto, almacen: Almacen, stock_minimo):
     if obtener_minimo(producto.id_producto, almacen.id_almacen) is not None:
         return False
 
-    try:
-        return crear_minimo(producto, almacen, producto, stock_minimo)
-    except PeeweeException:
-        return False
+    return crear_minimo(producto, almacen, stock_minimo)
+
 
 def actualizar_minimo(producto: Producto, almacen: Almacen, stock_minimo):
     if producto is None or almacen is None:
@@ -47,8 +42,27 @@ def actualizar_minimo(producto: Producto, almacen: Almacen, stock_minimo):
 
     minimo.stock_minimo = stock_minimo
 
-    try:
-        return guardar_minimo(minimo)
-    except PeeweeException:
-        return False        
+    return guardar_minimo(minimo)
+   
 
+def listar_stock_critico(almacen: Almacen):
+    if almacen is None:
+        return []
+
+    stock_critico = []
+
+    minimos = listar_minimo_almacen(almacen.id_almacen)
+
+    for minimo in minimos:
+        producto = minimo.id_producto
+
+        # si encuentra un producto deshabilitado lo salta
+        if not producto.estado:
+            continue 
+
+        stock_actual = consultar_stock_total(producto, almacen)
+
+        if stock_actual is not None and stock_actual < minimo.stock_minimo:
+            stock_critico.append((producto, stock_actual, minimo.stock_minimo))
+
+    return stock_critico
