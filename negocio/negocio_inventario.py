@@ -4,6 +4,7 @@ from datos.modelos.inventario import Inventario
 from datos.modelos.producto import Producto
 from datos.modelos.almacen import Almacen
 from datos.modelos.seccion import Seccion
+from datos.modelos.models import database
 from datos.repositorios.repositorio_inventario import (
     guardar_inventario, 
     obtener_inventario, 
@@ -34,7 +35,10 @@ def consultar_stock_total(producto: Producto, almacen: Almacen):
 
 # ------------ Escritura ------------
 
-def asociar_producto_a_almacen(producto: Producto, seccion: Seccion):
+def asociar_producto_a_almacen(producto: Producto, seccion: Seccion, stock_minimo):
+    # FIX para el error de peewee: circular import
+    from negocio.negocio_minimo_almacen import obtener_minimo, definir_minimo
+
     if producto is None or seccion is None:
         return False
 
@@ -42,11 +46,27 @@ def asociar_producto_a_almacen(producto: Producto, seccion: Seccion):
     if obtener_inventario(producto.id_producto, seccion.id_seccion) is not None:
         return False
 
-    inventario = Inventario()
-    inventario.id_producto = producto
-    inventario.id_seccion = seccion
-    inventario.stock_actual = 0
+    # Al momento de registrar un producot al inventario se debe definir el stock_minimo
 
-    return guardar_inventario(inventario)   
+    try:
+        with database.atomic():
+            minimo = obtener_minimo(producto.id_producto, seccion.id_almacen)
+            almacen = seccion.id_almacen
+
+            # El stock minimo solo se define cuando el producto es nuevo (None)
+            if minimo is None:
+                if not definir_minimo(producto, almacen, stock_minimo):
+                    raise ValueError ("No se pudo definir el mi nimo.")
+                
+            inventario = Inventario()
+            inventario.id_producto = producto
+            inventario.id_seccion = seccion
+            inventario.stock_actual = 0
+            guardar_inventario(inventario)   
+
+        return True
+    
+    except (PeeweeException, ValueError):
+        return False            
 
 

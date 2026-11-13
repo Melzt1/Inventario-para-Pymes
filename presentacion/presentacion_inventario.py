@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import campo_obligatorio, forzar_entero
+from auxiliares.entradas import campo_obligatorio, forzar_entero, forzar_positivo
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_almacen import listar_almacenes_activos
 from negocio.negocio_seccion import listar_secciones
@@ -41,7 +41,8 @@ def solicitar_seccion(almacen):
     if not secciones:
         print("El almacén no tiene secciones activas.")
         return None
-    
+
+    print("\nSecciones disponibles:")
     for indice, seccion in enumerate(secciones, start=1):
         print(f"[{indice}] {seccion.nombre}")
 
@@ -72,9 +73,16 @@ def solicitar_asociar_producto_almacen():
 
     if seccion is None:
         return
-    
-    resultado = asociar_producto_a_almacen(producto, seccion)
-    print(f"Producto '{producto.nombre}' asociado a '{almacen.nombre}'.") if resultado else print("No se pudo asociar.")
+
+    minimo = obtener_minimo(producto, almacen)
+
+    if minimo is None:
+        stock_minimo = forzar_positivo("Stock mínimo para este almacén: ")
+    else:
+        stock_minimo = minimo.stock_minimo
+        
+    resultado = asociar_producto_a_almacen(producto, seccion, stock_minimo)
+    print(f"Producto '{producto.nombre}' asociado a '{almacen.nombre} / {seccion.nombre}'.") if resultado else print("No se pudo asociar.")
 
 def consultar_inventario_producto():
     print("\n=== Consultar inventario de un producto ===")
