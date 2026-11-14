@@ -84,6 +84,8 @@ def solicitar_quitar_proveedor():
 
     
     relaciones = listar_relaciones_de_producto(producto.id_producto)
+    # Comprension de listas: convierto la lista de relaciones (ProductoProvedor) en una lista de Proveedores
+    # para poder reutilizar el metodo auxiliar y no crear otro metodo de seleccion
     proveedores = [relacion.id_proveedor for relacion in relaciones]
     proveedor = seleccionar_proveedor(proveedores)
 

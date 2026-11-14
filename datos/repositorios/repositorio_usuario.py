@@ -12,11 +12,18 @@ def obtener_usuario_por_nombre(usuario):
 
 # Metodo para preguntar si el usuario tiene algun rol, para poder logearse
 def existe_usuario_con_rol(rol):
-    return (Usuario
-            .select()
+    return (Usuario.select()
             .join(Rol)
             .where(rol.nombre == rol)
             .exists())
+
+def usuario_en_uso(username, id_usuario = None):
+    consulta = Usuario.select().where(Usuario.usuario == username)
+
+    if id_usuario is not None:
+        consulta = consulta.where(Usuario.id_usuario != id_usuario)
+
+    return consulta.exists()  
 
 # ------------ Escritura ------------
 

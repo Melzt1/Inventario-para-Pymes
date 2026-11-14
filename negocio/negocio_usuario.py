@@ -4,7 +4,8 @@ from datos.modelos.usuario import Usuario
 from datos.repositorios.repositorio_usuario import (
     guardar_usuario,
     listar_usuarios,
-    obtener_usuario_por_nombre
+    obtener_usuario_por_nombre,
+    usuario_en_uso
 )
 
 # ------------ Autenticacion ------------
@@ -31,6 +32,9 @@ def autenticar(nombre_usuario, contrasena):
 def listar_usuarios_activos():
     return listar_usuarios()
 
+def existe_nombre_usuario(username, id_usuario = None):
+    return usuario_en_uso(username, id_usuario)
+
 # ------------ Escritura ------------
 
 def registrar_usuario(nombre, usuario, contrasena, id_rol, id_almacen):
@@ -51,7 +55,7 @@ def actualizar_usuario(usuario:Usuario, nombre, username):
         return False
 
     # Metodo que busca si el username existe para no replicarlo
-    if existe_usuario(username, usuario.id_usuario):
+    if existe_nombre_usuario(username, usuario.id_usuario):
         return False
     
     usuario.nombre = nombre
