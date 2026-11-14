@@ -30,6 +30,21 @@ def listado_proveedores_disponibles(id_producto):
                    (~Proveedor.id_proveedor.in_(ids_asociados)))
             .order_by(Proveedor.nombre))    
 
+# para asignar o reemplazar el principal (Muestra todos menos el que ya es principal)
+def listado_proveedores_para_principal(id_producto):
+    principal = (ProductoProveedor
+                 .select(ProductoProveedor.id_proveedor)
+                 .where(
+                     (ProductoProveedor.id_producto == id_producto) &
+                     (ProductoProveedor.es_principal == True)))
+
+    return (Proveedor
+            .select()
+            .where(
+                (Proveedor.estado == True) &
+                (~Proveedor.id_proveedor.in_(principal)))
+            .order_by(Proveedor.nombre))
+
 def obtener_relacion(id_producto, id_proveedor):
     return ProductoProveedor.get_or_none(
         (ProductoProveedor.id_producto == id_producto) &
@@ -42,6 +57,19 @@ def obtener_relacion_principal(id_producto):
         (ProductoProveedor.id_producto == id_producto) &
         (ProductoProveedor.es_principal == True)
     )
+
+def quitar_relaciuon_principal(id_producto):
+    return (ProductoProveedor
+            .update(es_principal=False)
+            .where(ProductoProveedor.id_producto == id_producto)
+            .execute())
+
+def asignar_como_principal(id_producto, id_proveedor):
+    return (ProductoProveedor
+            .update(es_principal=True)
+            .where((ProductoProveedor.id_producto == id_producto) &
+                   (ProductoProveedor.id_proveedor == id_proveedor))
+            .execute())
 
 # ------------ Escritura ------------
 
@@ -64,6 +92,7 @@ def crear_relacion(id_producto, id_proveedor, es_principal=False):
         print(f"Error general de Peewee: {e}")
         
     return False
+
 
 # borrado fisico para eliminar la relacion de proveedor principal y asignar otra
 def quitar_relacion(relacion: ProductoProveedor):

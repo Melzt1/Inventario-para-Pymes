@@ -6,7 +6,6 @@ from auxiliares.entradas import (
     actualizar_mantener_campo_texto, 
     forzar_decimal_positivo, 
     forzar_fecha,
-    actualizar_mantener_campo_entero,
     actualizar_mantener_campo_decimal
 )
 from presentacion.presentacion_categoria import solicitar_seleccion_categoria

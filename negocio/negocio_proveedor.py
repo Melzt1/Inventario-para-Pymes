@@ -43,16 +43,16 @@ def obtener_proveedor(id_almacen):
 # ------------ Escritura ------------
 
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
-    if not validar_rut(rut):
-        return False
 
-    if rut_en_uso(rut):
-        return False
+    # El rut es opcional para permitir proveedores extranjeros
+    if rut is not None:
+        if not validar_rut(rut):
+            return False
+
+        if rut_en_uso(rut):
+            return False
 
     if correo_en_uso(correo):
-        return False
-
-    if telefono_en_uso(telefono):
         return False
     
     nuevo_proveedor = Proveedor()

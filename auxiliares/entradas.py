@@ -1,5 +1,8 @@
-from auxiliares.mensajes import MENSAJE_NUMERO_ENTERO, MENSAJE_NUMERO_DECIMAL, MENSAJE_MAYOR_QUE_CERO
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
+
+from auxiliares.mensajes import MENSAJE_NUMERO_ENTERO, MENSAJE_NUMERO_DECIMAL, MENSAJE_MAYOR_QUE_CERO
+
 
 """ En este repositorio somos hater del while True!
     Si eres partidario del while True por favor sal de este repositorio """
@@ -23,12 +26,12 @@ def forzar_decimal_positivo(mensaje):
 
     while not valido:
         try:
-            numero = float(input(mensaje))
+            numero = Decimal(input(mensaje))
             if numero > 0:
                 valido = True
             else:
                 print(MENSAJE_MAYOR_QUE_CERO) 
-        except ValueError:
+        except InvalidOperation:
             print(MENSAJE_NUMERO_DECIMAL)
     return numero
     
@@ -42,6 +45,14 @@ def campo_obligatorio(mensaje):
             continue
         valido = True
     return texto        
+
+def campo_opcional(mensaje):
+    valor = input(f"{mensaje} (ENTER para omitir): ").strip()
+
+    if valor == "":
+        return None
+
+    return valor
 
 # Metodos auxiliares para retornar el valor actual o nuevo
 def actualizar_mantener_campo_texto(mensaje, valor_actual):
@@ -77,8 +88,8 @@ def actualizar_mantener_campo_decimal(mensaje, valor_actual):
             numero = valor_actual
         else:
             try:
-                numero = float(texto)
-            except ValueError:
+                numero = Decimal(texto)
+            except InvalidOperation:
                 print(MENSAJE_NUMERO_DECIMAL)
 
     return numero
@@ -100,8 +111,21 @@ def forzar_fecha(mensaje, obligatorio=False):
 
         try:
             fecha = datetime.strptime(texto, "%d-%m-%Y").date()
-        except ValueError:
+        except InvalidOperation:
             print("Ingrese una fecha válida con el formato DD-MM-YYYY.")
 
     return fecha
-         
+
+
+def solicitar_confirmacion(mensaje):
+    respuesta_valida = False
+
+    while not respuesta_valida:
+        respuesta = input(f"{mensaje} (S/N): ").strip().upper()
+
+        if respuesta == "S":
+            return True
+        elif respuesta == "N":
+            return False
+        else:
+            print("Opción no válida. Ingrese S o N.")         

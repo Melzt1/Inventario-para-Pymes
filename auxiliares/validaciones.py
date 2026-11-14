@@ -1,6 +1,9 @@
 import re
 
 def validar_rut(rut):
+    if rut is None:
+        return False
+
     # Limpiar los caracteres del rut (puntos y guion) 
     rut_limpio = rut.replace(".", "").replace("-","").upper()
 
@@ -73,6 +76,6 @@ def validar_correo(correo):
 
 def validar_telefono(telefono):
 
-    patron_telefono = r'^9\d{8}$'
+    patron_telefono = r"^\+?\d{8,15}$"
 
     return bool(re.match(patron_telefono, telefono))       

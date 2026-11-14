@@ -1,5 +1,6 @@
 from peewee import PeeweeException
 
+from datos.modelos.models import database
 from datos.repositorios.repositorio_producto_proveedor import (
     crear_relacion, 
     obtener_relacion, 
@@ -7,7 +8,10 @@ from datos.repositorios.repositorio_producto_proveedor import (
     listar_relaciones, 
     obtener_relacion_principal, 
     listar_relaciones_de_producto_repo, 
-    listado_proveedores_disponibles
+    listado_proveedores_disponibles,
+    quitar_relaciuon_principal,
+    asignar_como_principal,
+    listado_proveedores_para_principal
 )
 from datos.modelos.producto import Producto
 from datos.modelos.proveedor import Proveedor
@@ -24,36 +28,55 @@ def listar_relaciones_de_producto(id_producto):
 def listar_proveedores_disponibles(id_producto):
     return listado_proveedores_disponibles(id_producto)
 
+# Todos los proveedores excepto el que ya es principal
+def listar_proveedores_para_principal(id_producto):
+    return listado_proveedores_para_principal(id_producto)
+    
 def obtener_proveedor_principal(id_producto):
     return obtener_relacion_principal(id_producto)
 
 
 # ------------ Escritura ------------
 
-"""             regla de negocio:
-el producto solo puede tener 1 proveedor principal, y no
-se reemplaza si ya existe uno, hay que quitar esa relacion primero."""
+""" Finalmente solucionado: Ahoora al asignar un proveedor principal 
+se reemplaza el anterior y se evita el tener que eliminar la relacion,
+todo gracias al bendito atomic() """
 
 def asignar_proveedor_principal(producto: Producto, proveedor: Proveedor):
-    if producto is None:
+    if producto is None or proveedor is None:
         return False
 
-    if proveedor is None:
-        return False
-
-    if obtener_relacion_principal(producto.id_producto) is not None:
+    # Validamos que el producto y el proveedor no esten desactivados
+    if not producto.estado or not proveedor.estado:
         return False
 
     try:
-        return crear_relacion(producto.id_producto, proveedor.id_proveedor, es_principal=True)
-    except PeeweeException:
-        return False   
+        with database.atomic():
+            # Primero desmarcar al proveedor principala anterior
+            quitar_relaciuon_principal(producto.id_producto)
+
+            # Segundo: comprobar si el nuevo proveedor ya esta relacionado
+            relacion = obtener_relacion(producto.id_producto, proveedor.id_proveedor)
+
+            # Tecero: si no existe la relacion, la creamos
+            if relacion is None:
+                if not crear_relacion(producto.id_producto, proveedor.id_proveedor, es_principal=True):
+                    raise ValueError("No se pudo crear la relación")
+            # Cuarto: en caso de existir la relacion (proveedor secundario) pasa a ser principal              
+            else:
+                if not(asignar_como_principal(producto.id_producto, proveedor.id_proveedor)):
+                    raise ValueError("No se pudo asignar como principal")
+                                
+        return True
+    
+    except (PeeweeException, ValueError):
+        return False            
 
 def asignar_proveedor_secundario(producto: Producto, proveedor: Proveedor):
-    if producto is None:
+    if producto is None or proveedor is None:
         return False
 
-    if proveedor is None:
+    if not producto.estado or not proveedor.estado:
         return False
 
     # Si ya esta asociado no se puede volver a asociar
@@ -66,10 +89,7 @@ def asignar_proveedor_secundario(producto: Producto, proveedor: Proveedor):
         return False
 
 def quitar_proveedor_de_producto(producto: Producto, proveedor: Proveedor):
-    if producto is None:
-        return False
-
-    if proveedor is None:
+    if producto is None or proveedor is None:
         return False
     
     relacion = obtener_relacion(producto.id_producto, proveedor.id_proveedor)
