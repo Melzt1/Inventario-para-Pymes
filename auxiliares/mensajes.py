@@ -12,5 +12,7 @@ SOLICITUD_ID_PRODUCTO = "Ingrese el ID del producto: "
 
 
 NO_HAY_MOVIMIENTOS = "No hay movimientos registrados."
+NO_HAY_ALMACENES = "No hay almacenes registrados."
+NO_HAY_SECCIONES = "No hay secciones creadas."
 
 SELECCIONE_PROVEEDOR = "\nSeleccione el proveedor: "

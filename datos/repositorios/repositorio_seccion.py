@@ -9,7 +9,7 @@ def listar_secciones_de_almacen(id_almacen):
     return Seccion.select().where((Seccion.id_almacen == id_almacen) & (Seccion.estado == True))
 
 # Listar secciones deshabilitadas
-def listar_secciones_desactivadas(id_almacen):
+def listar_secciones_de_almacen_desactivadas(id_almacen):
     return Seccion.select().where((Seccion.id_almacen == id_almacen) & (Seccion.estado == False))
 
 # ------------ Escritura ------------

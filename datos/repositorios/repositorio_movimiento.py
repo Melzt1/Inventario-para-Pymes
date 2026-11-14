@@ -6,16 +6,16 @@ from datos.modelos.inventario import Inventario
 # ------------ Lectura ------------
 
 def listar_movimientos():
-    return Movimiento.select()
+    return Movimiento.select().order_by(Movimiento.fecha.desc())
 
 def listar_movimientos_de_entrada_repo():
-    return Movimiento.select().where(Movimiento.tipo == "ENTRADA")
+    return Movimiento.select().where(Movimiento.tipo == "ENTRADA").order_by(Movimiento.fecha.desc())
 
 def listar_movimientos_de_salida_repo():
-    return Movimiento.select().where(Movimiento.tipo == "SALIDA")
+    return Movimiento.select().where(Movimiento.tipo == "SALIDA").order_by(Movimiento.fecha.desc())
 
 def listar_movimientos_entre_fechas(fecha_inicio, fecha_termino):
-    return Movimiento.select().where(Movimiento.fecha.between(fecha_inicio, fecha_termino))
+    return Movimiento.select().where(Movimiento.fecha.between(fecha_inicio, fecha_termino)).order_by(Movimiento.fecha.desc())
 
 # ------------ Escritura ------------
 

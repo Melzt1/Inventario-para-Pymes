@@ -8,6 +8,7 @@ from auxiliares import (
     submenu_producto, 
     submenu_producto_proveedor, 
     submenu_inventario, 
+    submenu_seccion,
     submenu_movimientos
 )
 from presentacion.presentacion_categoria import (
@@ -63,9 +64,17 @@ from presentacion.presentacion_movimiento import (
     solicitar_consultar_movimiento, 
     mostrar_movimientos_rango_fecha
 )
+from presentacion.presentacion_seccion import (
+    mostrar_secciones_de_un_almacen,
+    solicitar_crear_seccion,
+    solicitar_actualizar_seccion,
+    solicitar_desactivar_seccion,
+    solicitar_activar_seccion
+)
+
 from auxiliares.mensajes import OPCION_INVALIDA
 
-def menu_principal():
+def menu_principal(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -84,7 +93,7 @@ def menu_principal():
         elif opcion == "4":
             menu_almacen()
         elif opcion == "5":
-            menu_inventario()                          
+            menu_inventario(sesion)                          
         elif opcion == "0":
             print("Programa Finalizado.")
         else:
@@ -169,9 +178,33 @@ def menu_almacen():
         elif opcion == "6":
             solicitar_desactivar_almacen()  
         elif opcion == "7":
-            solicitar_activar_almacen()                                                                              
+            solicitar_activar_almacen()  
+        elif opcion == "8":
+            menu_seccion()                                                                                        
         elif opcion != "0":
             print(OPCION_INVALIDA) 
+
+def menu_seccion():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Gestión de secciones ===")
+        for clave, valor in submenu_seccion.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input(f'\nIngrese su opción [0-{len(submenu_seccion)-1}]: ').strip()
+        if opcion == "1":
+            mostrar_secciones_de_un_almacen()
+        elif opcion == "2":
+            solicitar_crear_seccion()
+        elif opcion == "3":
+            solicitar_actualizar_seccion()
+        elif opcion == "4":
+            solicitar_desactivar_seccion()
+        elif opcion == "5":
+            solicitar_activar_seccion()
+        elif opcion != "0":
+            print(OPCION_INVALIDA)
 
 def menu_producto():
     opcion = ""
@@ -227,7 +260,7 @@ def menu_producto_proveedor():
         else:
             print(OPCION_INVALIDA)       
 
-def menu_inventario():
+def menu_inventario(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -247,13 +280,13 @@ def menu_inventario():
         elif opcion == "4":
             mostrar_productos_stock_critico()  
         elif opcion == "5":
-            menu_movimientos()                                               
+            menu_movimientos(sesion)                                               
         elif opcion == "0":
             return
         else:
             print(OPCION_INVALIDA)
 
-def menu_movimientos():
+def menu_movimientos(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -265,9 +298,9 @@ def menu_movimientos():
         opcion = input(f'\nIngrese su opción [0-{len(submenu_movimientos)-1}]: ').strip()
 
         if opcion == "1":
-            solicitar_registrar_entrada()
+            solicitar_registrar_entrada(sesion)
         elif opcion == "2":
-            solicitar_registrar_salida()
+            solicitar_registrar_salida(sesion)
         elif opcion == "3":
             solicitar_consultar_movimiento()
         elif opcion == "4":

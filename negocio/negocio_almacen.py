@@ -30,46 +30,36 @@ def obtener_almacen(id_almacen):
 
 # ------------ Escritura ------------
 
-def crear_almacen(nombre, encargado, calle, numero, comuna, ciudad):
+def crear_almacen(nombre, calle, numero, comuna, ciudad):
     try:
-        # atomic() si falla el almacen, se revierte la direccion, asi no queda huerfana)
+        # atomic() si falla la creacion de uno de los objetos se revierte y no guarda datos huerfanos.
         with database.atomic():
             nueva_direccion = crear_direccion(calle, numero, comuna, ciudad)
-            if not guardar_direccion(nueva_direccion):
-                return False
+            guardar_direccion(nueva_direccion)
 
             nuevo_almacen = Almacen()
             nuevo_almacen.nombre = nombre
-            nuevo_almacen.encargado = encargado
-            # Peewee acepta el objeto relacionado y usa su PK como valor de la FK
-            # Internamente hace esto (nueva_direccion.id_direccion)
-            nuevo_almacen.id_direccion = nueva_direccion
+            nuevo_almacen.id_direccion = nueva_direccion # es lo mismo que (nueva_direccion.id_direccion)
+            guardar_almacen(nuevo_almacen)
 
-            if not guardar_almacen(nuevo_almacen):
-                return False
-                    
             # REGLA DE NEGOCIO: 
             # Al momento de crear un almacen DEBE nacer con una seccion principal
-            seccion_principal = Seccion()
-            seccion_principal.nombre = "Principal"
-            seccion_principal.codigo = "1-P"
-            seccion_principal.descripcion = "Seccion Principal"
-            seccion_principal.id_almacen = nuevo_almacen
-        
-            if not guardar_seccion(seccion_principal):
-                return False
+            principal = Seccion()
+            principal.nombre = "Principal"
+            principal.descripcion = "Seccion Principal"
+            principal.id_almacen = nuevo_almacen
+            guardar_seccion(principal)
 
         return True
 
-    except PeeweeException:
+    except (PeeweeException, ValueError):
         return False      
 
-def actualizar_almacen(almacen: Almacen, nombre, encagado):
+def actualizar_almacen(almacen: Almacen, nombre):
     if almacen is None:
         return False
 
     almacen.nombre = nombre
-    almacen.encargado = encagado
     return guardar_almacen(almacen)
 
 def actualizar_direccion_almacen(almacen: Almacen, calle, numero, comuna, ciudad):
