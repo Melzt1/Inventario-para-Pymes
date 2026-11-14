@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 
 from auxiliares.mensajes import NO_HAY_SECCIONES
-from auxiliares.entradas import campo_obligatorio, forzar_entero, campo_opcional
+from auxiliares.entradas import campo_obligatorio, forzar_entero_positivo, actualizar_mantener_campo_texto
 from negocio.negocio_seccion import (
     activar_seccion,
     actualizar_seccion,
@@ -24,7 +24,7 @@ def seleccionar_seccion(secciones):
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("Seleccione la seccion: ")
+        seleccion = forzar_entero_positivo("Seleccione la seccion: ")
 
         if 1 <= seleccion <= len(secciones):
             opcion_valida = True
@@ -78,7 +78,7 @@ def solicitar_actualizar_seccion():
     if seccion is None:
         return
 
-    nombre = campo_opcional("Ingrese el nuevo nombre", seccion.nombre).capitalize()
+    nombre = actualizar_mantener_campo_texto("Ingrese el nuevo nombre", seccion.nombre).capitalize()
 
     while nombre == "Principal" or nombre == "PRINCIPAL":
         print("El nombre 'Principal' esta reservado por el sistema. Ingresa otro.")

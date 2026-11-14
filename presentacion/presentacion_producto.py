@@ -1,13 +1,13 @@
 from prettytable import PrettyTable
 
-from auxiliares.mensajes import MENSAJE_ID_NO_EXISTE
 from auxiliares.entradas import (
-    forzar_entero, 
+    forzar_entero_positivo, 
     campo_obligatorio, 
     actualizar_mantener_campo_texto, 
-    forzar_positivo, 
+    forzar_decimal_positivo, 
     forzar_fecha,
-    actualizar_mantener_campo_entero
+    actualizar_mantener_campo_entero,
+    actualizar_mantener_campo_decimal
 )
 from presentacion.presentacion_categoria import solicitar_seleccion_categoria
 from negocio.negocio_producto import (
@@ -37,7 +37,7 @@ def solicitar_seleccion_producto():
     opcion_valida = False
 
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el producto: ")  
+        seleccion = forzar_entero_positivo("\nSeleccione el producto: ")  
         if 1 <= seleccion <= len(productos):
             producto = productos[seleccion-1]
             opcion_valida = True
@@ -60,8 +60,8 @@ def mostrar_productos():
             producto.id_producto,
             producto.nombre,
             producto.sku,
-            producto.precio_costo,
-            producto.precio_venta,
+            f"${producto.precio_costo:,.0f}".replace(",", "."),
+            f"${producto.precio_costo:,.0f}".replace(",", "."),
             producto.descripcion,
             producto.fecha_elaboracion or '-',
             producto.fecha_vencimiento or '-',
@@ -86,12 +86,12 @@ def solicitar_datos_producto():
 
         sku_valido = True
 
-    precio_costo = forzar_positivo("Ingrese el precio costo del producto: ")
-    precio_venta = forzar_positivo("Ingrese el precio venta del producto: ")
+    precio_costo = forzar_decimal_positivo("Ingrese el precio costo del producto: ")
+    precio_venta = forzar_decimal_positivo("Ingrese el precio venta del producto: ")
         
     while precio_venta < precio_costo:
         print("El precio de venta no puede ser menor que el precio costo")
-        precio_venta = forzar_positivo("Ingrese el precio venta del producto: ")
+        precio_venta = forzar_decimal_positivo("Ingrese el precio venta del producto: ")
     
     descripcion = campo_obligatorio("Ingrese la descripcion del producto: ")
 
@@ -126,8 +126,8 @@ def solicitar_consultar_producto():
     print(f"{'ID':<18}: {producto.id_producto}")
     print(f"{'Nombre':<18}: {producto.nombre}")
     print(f"{'SKU':<18}: {producto.sku}")
-    print(f"{'Precio costo':<18}: {producto.precio_costo}")
-    print(f"{'Precio venta':<18}: {producto.precio_venta}")
+    print(f"{'Precio costo':<18}: {f"${producto.precio_costo:,.0f}".replace(",", ".")}")
+    print(f"{'Precio venta':<18}: {f"${producto.precio_venta:,.0f}".replace(",", ".")}")
     print(f"{'Descripcion':<18}: {producto.descripcion}")
     print(f"{'Fecha elaboracion':<18}: {fecha_elaboracion}")
     print(f"{'Fecha vencimiento':<18}: {fecha_vencimiento}")
@@ -151,9 +151,9 @@ def solicitar_actualizar_producto():
         return False
 
     # la funcion actualizar_mantener_campo_entero al pulasr ENTER devuelve el valor (NO setea ningún atributo)
-    precio_costo = actualizar_mantener_campo_entero("Ingrese el nuevo precio de costo", producto.precio_costo)
+    precio_costo = actualizar_mantener_campo_decimal("Ingrese el nuevo precio de costo", producto.precio_costo)
 
-    precio_venta = actualizar_mantener_campo_entero("Ingrese el nuevo precio de venta", producto.precio_venta)      
+    precio_venta = actualizar_mantener_campo_decimal("Ingrese el nuevo precio de venta", producto.precio_venta)      
 
     descripcion = actualizar_mantener_campo_texto("Ingrese la nueva descripcion", producto.descripcion) 
 
@@ -183,7 +183,7 @@ def solicitar_activar_producto():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el producto: ")
+        seleccion = forzar_entero_positivo("\nSeleccione el producto: ")
 
         if 1 <= seleccion <= len(productos):
             opcion_valida = True

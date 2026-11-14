@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import forzar_entero, campo_obligatorio, actualizar_mantener_campo_texto
+from auxiliares.entradas import forzar_entero_positivo, campo_obligatorio, actualizar_mantener_campo_texto
 from auxiliares.mensajes import OPCION_INVALIDA
 from negocio.negocio_categoria import (
     crear_categoria, 
@@ -26,7 +26,7 @@ def solicitar_seleccion_categoria():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione la categoria: ")
+        seleccion = forzar_entero_positivo("\nSeleccione la categoria: ")
 
         if 1 <= seleccion <= len(categorias):
             opcion_valida = True
@@ -118,7 +118,7 @@ def solicitar_activar_categoria():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione la categoria: ")
+        seleccion = forzar_entero_positivo("\nSeleccione la categoria: ")
 
         if 1 <= seleccion <= len(categorias):
             opcion_valida = True

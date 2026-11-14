@@ -7,7 +7,7 @@ class Sesion:
             raise ValueError("Usuario o contrasena invalido.")
 
         self.usuario_actual = usuario # Guardo la instancia de Usuario
-        self.almacen = usuario.id_almacen # Guardo el almacen asociado al usuario
+        #self.almacen = usuario.id_almacen # Guardo el almacen asociado al usuario
         self.sesion_activa = False
 
     def iniciar_sesion(self):
@@ -16,7 +16,7 @@ class Sesion:
     # Al cerrar sesion limpiamos todos los datos antes de poner False
     def cerrar_sesion(self):
         self.usuario_actual = None
-        self.almacen = None
+        #self.almacen = None
         self.sesion_activa = False
 
     # Para comprobar que rol tiene el usuario

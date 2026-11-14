@@ -1,7 +1,12 @@
 defecto = 'DEFAULT 1'
 VOLVER_AL_MENU = "Volver al menú principal"
 
-MENSAJE_ID_ENTERO = "Debes ingresar un numero entero."
+MENSAJE_NUMERO_ENTERO = "Debes ingresar un número entero."
+MENSAJE_NUMERO_DECIMAL = "Debes ingresar un número decimal."
+
+MENSAJE_MAYOR_QUE_CERO = "Debes ingresar un valor mayor que cero"
+
+
 MENSAJE_ID_NO_EXISTE = "No hay registros con ese ID."
 OPCION_INVALIDA = "Opcion invalida."
 

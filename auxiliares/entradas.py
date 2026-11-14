@@ -1,31 +1,37 @@
-from auxiliares.mensajes import MENSAJE_ID_ENTERO
+from auxiliares.mensajes import MENSAJE_NUMERO_ENTERO, MENSAJE_NUMERO_DECIMAL, MENSAJE_MAYOR_QUE_CERO
 from datetime import datetime
 
 """ En este repositorio somos hater del while True!
     Si eres partidario del while True por favor sal de este repositorio """
 
-# EntradaS de INT
-def forzar_entero(mensaje):
+def forzar_entero_positivo(mensaje):
     valido = False
     while not valido:
         try:
             numero = int(input(mensaje))
-            valido = True
+            if numero > 0:
+                valido = True
+            else:
+                print(MENSAJE_MAYOR_QUE_CERO)          
         except ValueError:
-            print(MENSAJE_ID_ENTERO)
+            print(MENSAJE_NUMERO_ENTERO)
     return numero
 
-# EntradaS de INT positivo
-def forzar_positivo(mensaje):
+# Entradas de decimales
+def forzar_decimal_positivo(mensaje):
     valido = False
-    while not valido:
-        numero = forzar_entero(mensaje)
-        if numero > 0:
-            valido = True
-        else:
-            print("Debes ingresar un valor mayor que cero")
-    return numero
 
+    while not valido:
+        try:
+            numero = float(input(mensaje))
+            if numero > 0:
+                valido = True
+            else:
+                print(MENSAJE_MAYOR_QUE_CERO) 
+        except ValueError:
+            print(MENSAJE_NUMERO_DECIMAL)
+    return numero
+    
 # EntradaS NOT NULL
 def campo_obligatorio(mensaje):
     valido = False
@@ -37,7 +43,7 @@ def campo_obligatorio(mensaje):
         valido = True
     return texto        
 
-# ENTRADAS NULL
+# Metodos auxiliares para retornar el valor actual o nuevo
 def actualizar_mantener_campo_texto(mensaje, valor_actual):
     valor_nuevo = input(f"{mensaje} (ENTER para mantener): ").strip()
 
@@ -46,36 +52,56 @@ def actualizar_mantener_campo_texto(mensaje, valor_actual):
     return valor_nuevo
 
 def actualizar_mantener_campo_entero(mensaje, valor_actual):
-    valido = False
-    numero = valor_actual
+    numero = None
 
-    while not valido:
+    while numero is None:
         texto = input(f"{mensaje} (ENTER para mantener): ").strip()
 
         if texto == "":
-            valido = True
+            numero = valor_actual
         else:
             try:
                 numero = int(texto)
-                valido = True
             except ValueError:
-                print("Debe ingresar un número entero.")
+                print(MENSAJE_NUMERO_ENTERO)
 
     return numero
 
-# ENTRADAS DATE
-def forzar_fecha(mensaje, obligatorio=False):
-    fecha_valida = False
-    while not fecha_valida:
-        texto = input(mensaje).strip()
+def actualizar_mantener_campo_decimal(mensaje, valor_actual):
+    numero = None
+
+    while numero is None:
+        texto = input(f"{mensaje} (ENTER para mantener): ").strip()
+
         if texto == "":
-            if obligatorio:
-                print("La fecha es obligatoria.")
-                continue
+            numero = valor_actual
+        else:
+            try:
+                numero = float(texto)
+            except ValueError:
+                print(MENSAJE_NUMERO_DECIMAL)
+
+    return numero
+                           
+
+# ENTRADAS DATE
+
+def forzar_fecha(mensaje, obligatorio=False):
+    fecha = None
+
+    while fecha is None:
+        texto = input(mensaje).strip()
+
+        if texto == "" and obligatorio:
+            print("La fecha es obligatoria.")
+            continue
+        elif texto == "":
             return None
-        try: 
+
+        try:
             fecha = datetime.strptime(texto, "%d-%m-%Y").date()
-            fecha_valida = True
         except ValueError:
-            print("Ingrese una fecha válida con el formato DD-MM-YYYY.")   
-    return fecha                   
+            print("Ingrese una fecha válida con el formato DD-MM-YYYY.")
+
+    return fecha
+         

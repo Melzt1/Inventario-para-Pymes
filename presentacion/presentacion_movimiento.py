@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero, forzar_fecha
+from auxiliares.entradas import campo_obligatorio, forzar_entero_positivo, forzar_fecha
 from auxiliares.mensajes import NO_HAY_MOVIMIENTOS
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_inventario import listar_inventario_por_producto
@@ -35,7 +35,7 @@ def solicitar_registrar_movimiento(sesion, tipo):
         seccion = inventario.id_seccion
         print(f"[{i}] - {seccion.id_almacen.nombre} / {seccion.nombre} - Stock: {inventario.stock_actual}")
 
-    seleccion = forzar_entero("\nSeleccione el Almacen: ")
+    seleccion = forzar_entero_positivo("\nSeleccione el Almacen: ")
 
     if not 1 <= seleccion <= len(lista_inventario):
         print(f"Opción fuera de rango (1-{len(lista_inventario)}).")
@@ -44,7 +44,7 @@ def solicitar_registrar_movimiento(sesion, tipo):
     inventario = lista_inventario[seleccion - 1]
 
     descripcion = campo_obligatorio("Ingrese la descripcion: ")
-    cantidad = forzar_positivo("Ingrese la cantidad: ")    
+    cantidad = forzar_entero_positivo("Ingrese la cantidad: ")    
 
     if tipo == "SALIDA" and cantidad > inventario.stock_actual:
         print("El stock es insuficiente para esa salida.")

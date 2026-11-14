@@ -1,5 +1,5 @@
 from prettytable import PrettyTable
-from auxiliares.entradas import forzar_entero, campo_obligatorio, actualizar_mantener_campo_texto
+from auxiliares.entradas import forzar_entero_positivo, campo_obligatorio, actualizar_mantener_campo_texto
 from auxiliares.validaciones import validar_rut, validar_correo, validar_telefono
 from negocio.negocio_proveedor import (
     listar_proveedores_activos, 
@@ -36,7 +36,7 @@ def solicitar_seleccion_proveedor():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el proveedor: ")
+        seleccion = forzar_entero_positivo("\nSeleccione el proveedor: ")
 
         if 1 <= seleccion <= len(proveedores):
             opcion_valida = True
@@ -205,7 +205,7 @@ def solicitar_activar_proveedor():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el proveedor: ")
+        seleccion = forzar_entero_positivo("\nSeleccione el proveedor: ")
 
         if 1 <= seleccion <= len(proveedores):
             opcion_valida = True

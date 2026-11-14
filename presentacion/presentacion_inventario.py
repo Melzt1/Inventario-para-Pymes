@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import campo_obligatorio, forzar_entero, forzar_positivo
+from auxiliares.entradas import campo_obligatorio, forzar_entero_positivo
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_almacen import listar_almacenes_activos
 from negocio.negocio_seccion import listar_secciones
@@ -27,7 +27,7 @@ def solicitar_almacen():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero("\nSeleccione el almacen: ")
+        seleccion = forzar_entero_positivo("\nSeleccione el almacen: ")
 
         if 1 <= seleccion <= len(almacenes):
             opcion_valida = True
@@ -46,7 +46,7 @@ def solicitar_seccion(almacen):
     for indice, seccion in enumerate(secciones, start=1):
         print(f"[{indice}] {seccion.nombre}")
 
-    seleccion = forzar_entero("Seleccione la sección: ")
+    seleccion = forzar_entero_positivo("Seleccione la sección: ")
 
     if not 1 <= seleccion <= len(secciones):
         print(f"Opción fuera de rango (1-{len(secciones)}).")
@@ -77,7 +77,7 @@ def solicitar_asociar_producto_almacen():
     minimo = obtener_minimo(producto, almacen)
 
     if minimo is None:
-        stock_minimo = forzar_positivo("Stock mínimo para este almacén: ")
+        stock_minimo = forzar_entero_positivo("Stock mínimo para este almacén: ")
     else:
         stock_minimo = minimo.stock_minimo
         

@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import forzar_entero 
+from auxiliares.entradas import forzar_entero_positivo 
 from auxiliares.mensajes import SELECCIONE_PROVEEDOR  
 from presentacion.presentacion_producto import solicitar_seleccion_producto
 from negocio.negocio_producto_proveedor import (
@@ -37,7 +37,7 @@ def solicitar_asignar_proveedor_principal():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero(SELECCIONE_PROVEEDOR)
+        seleccion = forzar_entero_positivo(SELECCIONE_PROVEEDOR)
 
         if 1 <= seleccion <= len(disponibles):
             proveedor = disponibles[seleccion - 1]
@@ -68,7 +68,7 @@ def solicitar_asignar_proveedor_secundario():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero(SELECCIONE_PROVEEDOR)
+        seleccion = forzar_entero_positivo(SELECCIONE_PROVEEDOR)
 
         if 1 <= seleccion <= len(disponibles):
             proveedor = disponibles[seleccion - 1]
@@ -98,7 +98,7 @@ def solicitar_quitar_proveedor():
 
     opcion_valida = False
     while not opcion_valida:
-        seleccion = forzar_entero(SELECCIONE_PROVEEDOR)
+        seleccion = forzar_entero_positivo(SELECCIONE_PROVEEDOR)
 
         if 1 <= seleccion <= len(relaciones):
             relacion = relaciones[seleccion - 1] # es objeto ProductoProveedor
