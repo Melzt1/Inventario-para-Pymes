@@ -49,7 +49,8 @@ from presentacion.presentacion_producto_proveedor import (
     solicitar_asignar_proveedor_principal, 
     solicitar_asignar_proveedor_secundario, 
     solicitar_quitar_proveedor, 
-    mostrar_proveedores_producto
+    mostrar_proveedores_producto,
+    solicitar_cambiar_proveedor_principal
 )
 from presentacion.presentacion_inventario import (
     solicitar_asociar_producto_almacen, 
@@ -255,6 +256,8 @@ def menu_producto_proveedor():
             solicitar_quitar_proveedor()
         elif opcion == "4":
             mostrar_proveedores_producto()
+        elif opcion == "5":
+            solicitar_cambiar_proveedor_principal()
         elif opcion == "0":
             return
         else:

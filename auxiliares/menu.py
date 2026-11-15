@@ -58,7 +58,8 @@ submenu_producto_proveedor = {
     "2": "Asignar proveedor secundario al producto",
     "3": "Quitar proveedor al producto",
     "4": "Ver proveedores del producto",
-    "0": "Volver al menu anterior"
+    "5": "Cambiar proveedor principal",
+    "0": VOLVER_AL_MENU
 }
 
 submenu_inventario = {
@@ -85,5 +86,5 @@ submenu_movimientos = {
     "3": "Consultar movimientos por tipo",
     "4": "Consultar movimientos por rango de fecha",    
     "5": "Ver historial completo",
-    "0": "Volver al menu anterior"
+    "0": VOLVER_AL_MENU
 }
