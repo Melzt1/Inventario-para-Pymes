@@ -15,6 +15,8 @@ import secrets
 
 # generar_hash y verificar_contrasena deben usar el mismo valor, por eso lo almaceno en una constante, porr si quiero cambiarlo, lo haga en un solo lugar.
 ITERACIONES = 100_000
+# Caracteres especiales permitidos en la contraseña.
+CARACTERES_ESPECIALES = "!@#$%&/"
 
 def generar_hash(contrasena):
     # Generar la sal con 16 bytes aleatorios
@@ -57,3 +59,24 @@ def verificar_contrasena(contrasena, guardado):
 
     except (ValueError, TypeError, AttributeError):
         return False
+    
+    
+# ------------ Validación de Contraseña by claudito ------------
+# le mostre el modelo del profesor y que no queria tener tantos if
+# me sugerio usar una lista de tuplas con las reglas y sus mensajes, y luego recorrerla para ver si alguna falla.
+# sinceramente me gusto mucho la idea, y la implemente, ya que es mucho mas facil de leer y mantener.
+
+REGLAS_CONTRASENA = [
+    (lambda c: 8 <= len(c) <= 15,                            "Debe tener entre 8 y 15 caracteres."),
+    (lambda c: any(x.isupper() for x in c),                  "Debe contener al menos una letra mayúscula."),
+    (lambda c: any(x.islower() for x in c),                  "Debe contener al menos una letra minúscula."),
+    (lambda c: any(x.isdigit() for x in c),                  "Debe contener al menos un número."),
+    (lambda c: any(x in CARACTERES_ESPECIALES for x in c),   f"Debe contener al menos un carácter especial: {CARACTERES_ESPECIALES}"),
+]
+
+def validar_contrasena(contrasena):
+    #contrasenia no puede quedar vacia, es un campo NOT NULL.
+    if contrasena is None:
+        return ["La contraseña es obligatoria."]
+    
+    return [mensaje for regla, mensaje in REGLAS_CONTRASENA if not regla(contrasena)]

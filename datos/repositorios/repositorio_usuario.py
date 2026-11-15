@@ -16,6 +16,8 @@ def listar_usuarios_desactivados():
 def obtener_usuario_por_id(id_usuario):
     return Usuario.get_or_none(Usuario.id_usuario == id_usuario)
 
+def obtener_usuario_por_nombre_usuario(nombre_usuario):
+    return Usuario.get_or_none(Usuario.usuario == nombre_usuario)
 
 # ------------ Escritura ------------
 
