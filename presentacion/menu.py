@@ -10,7 +10,8 @@ from auxiliares import (
     submenu_inventario, 
     submenu_seccion,
     submenu_movimientos,
-    submenu_usuario
+    submenu_usuario,
+    submenu_usuario_almacen
 )
 from presentacion.presentacion_categoria import (
     solicitar_datos_categoria, 
@@ -80,6 +81,13 @@ from presentacion.presentacion_usuario import (
     solicitar_desactivar_usuario,
     solicitar_cambiar_contrasena
 )
+from presentacion.presentacion_usuario_almacen import (
+    mostrar_almacenes_de_un_usuario,
+    mostrar_usuarios_de_un_almacen,
+    solicitar_asignar_usuario,
+    solicitar_quitar_usuario,
+    solicitar_cambiar_encargado
+)
 from auxiliares.mensajes import OPCION_INVALIDA
 
 def menu_principal(sesion):
@@ -104,6 +112,8 @@ def menu_principal(sesion):
             menu_inventario(sesion)
         elif opcion == "6":
             menu_usuarios()
+        elif opcion == "7":
+            menu_usuario_almacen()            
         elif opcion == "0":
             print("Programa Finalizado.")
         else:
@@ -347,6 +357,32 @@ def menu_usuarios():
             solicitar_desactivar_usuario()
         elif opcion == "7":
             solicitar_activar_usuario()
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)
+
+def menu_usuario_almacen():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Usuarios y almacenes ===")
+
+        for clave, valor in submenu_usuario_almacen.items():
+            print(f"[{clave}] - {valor}")
+
+        opcion = input("\nIngrese su opcion: ").strip()
+
+        if opcion == "1":
+            solicitar_asignar_usuario()
+        elif opcion == "2":
+            solicitar_quitar_usuario()
+        elif opcion == "3":
+            solicitar_cambiar_encargado()
+        elif opcion == "4":
+            mostrar_almacenes_de_un_usuario()
+        elif opcion == "5":
+            mostrar_usuarios_de_un_almacen()
         elif opcion == "0":
             return
         else:

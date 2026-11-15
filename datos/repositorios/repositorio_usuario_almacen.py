@@ -7,24 +7,37 @@ from datos.modelos.almacen import Almacen
 # ------------ Lectura ------------
 
 # Listado de usuarios que trabajan en un Almacen
-def listado_almacenes_de_usuario(id_usuario):
-    return (Usuario
-            .select()
-            .join(UsuarioAlmacen)
-            .where(UsuarioAlmacen.id_usuario == id_usuario))
+def listado_usuarios_de_almacen(id_almacen):
+    return (UsuarioAlmacen
+            .select(UsuarioAlmacen, Usuario)
+            .join(Usuario)
+            .where(UsuarioAlmacen.id_almacen == id_almacen))
 
 # Listado de almacenes en los que trabaja X trabajador
-def listado_usuarios_de_almacen(id_almacen):
-    return (Almacen
-            .select()
-            .join(UsuarioAlmacen)
-            .where(UsuarioAlmacen.id_almacen == id_almacen))
+def listado_almacenes_de_usuario(id_usario):
+    return (UsuarioAlmacen
+            .select(UsuarioAlmacen, Almacen)
+            .join(Almacen)
+            .where(UsuarioAlmacen.id_usuario == id_usario))
 
 def obtener_asignacion(id_usuario, id_almacen):
     return UsuarioAlmacen.get_or_none(
         (UsuarioAlmacen.id_usuario == id_usuario) &
         (UsuarioAlmacen.id_almacen == id_almacen)
     )
+
+def obtener_encargado(id_usuario, id_almacen):
+    return UsuarioAlmacen.get_or_none(
+        (UsuarioAlmacen.id_usuario == id_usuario) &
+        (UsuarioAlmacen.id_almacen == id_almacen) &
+        (UsuarioAlmacen.es_encargado == True)
+    )
+
+def quitar_encargado_de_almacen(id_almacen):
+    return (UsuarioAlmacen
+            .update(es_encargado=False)
+            .where(UsuarioAlmacen.id_almacen == id_almacen)
+            .execute())
 
 # ------------ Escritura ------------
 
@@ -44,6 +57,16 @@ def guardar_asignacion(id_usuario, id_almacen, es_encargado=False):
         print(f"Error operativo: {e}")
     except DataError as e:
         print(f"Error de validación de datos: {e}")
+    except PeeweeException as e:
+        print(f"Error general de Peewee: {e}")
+
+    return False
+
+def actualizar_asignacion(asignacion: UsuarioAlmacen):
+    try:
+        asignacion.save()
+        return True
+    
     except PeeweeException as e:
         print(f"Error general de Peewee: {e}")
 
