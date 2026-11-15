@@ -10,5 +10,6 @@ from auxiliares.menu import (
     submenu_inventario,
     submenu_seccion,
     submenu_movimientos,
-    submenu_usuario
+    submenu_usuario,
+    submenu_usuario_almacen
 )

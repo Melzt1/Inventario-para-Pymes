@@ -10,7 +10,8 @@ from auxiliares import (
     submenu_inventario, 
     submenu_seccion,
     submenu_movimientos,
-    submenu_usuario
+    submenu_usuario,
+    submenu_usuario_almacen
 )
 from presentacion.presentacion_categoria import (
     solicitar_datos_categoria, 
@@ -81,6 +82,13 @@ from presentacion.presentacion_usuario import (
     solicitar_desactivar_usuario,
     solicitar_activar_usuario
 )
+from presentacion.presentacion_usuario_almacen import (
+    solicitar_asignar_usuario_almacen,
+    solicitar_quitar_usuario_almacen,
+    solicitar_cambiar_encargado,
+    mostrar_almacenes_de_usuario,
+    mostrar_usuarios_de_almacen
+)
 
 from auxiliares.mensajes import OPCION_INVALIDA
 
@@ -106,6 +114,8 @@ def menu_principal(sesion):
             menu_inventario(sesion)
         elif opcion == "6":
             menu_usuario()
+        elif opcion == "7":
+            menu_usuario_almacen()
         elif opcion == "0":
             print("Programa Finalizado.")
         else:
@@ -134,7 +144,7 @@ def menu_categoria():
         elif opcion == "5":
             solicitar_desactivar_categoria() 
         elif opcion == "6":
-            solicitar_activar_categoria()                                                    
+            solicitar_activar_categoria()                                          
         elif opcion != "0":
             print(OPCION_INVALIDA)
 
@@ -350,5 +360,32 @@ def menu_usuario():
             solicitar_desactivar_usuario()
         elif opcion == "6":
             solicitar_activar_usuario()
+        elif opcion == "7":
+            menu_usuario_almacen()
+        elif opcion != "0":
+            print(OPCION_INVALIDA)
+            
+
+def menu_usuario_almacen():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Asignaciones de almacén ===")
+
+        for clave, valor in submenu_usuario_almacen.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input(f'\nIngrese su opción [0-{len(submenu_usuario_almacen)-1}]: ').strip()
+
+        if opcion == "1":
+            solicitar_asignar_usuario_almacen()
+        elif opcion == "2":
+            solicitar_quitar_usuario_almacen()
+        elif opcion == "3":
+            solicitar_cambiar_encargado()
+        elif opcion == "4":
+            mostrar_almacenes_de_usuario()
+        elif opcion == "5":
+            mostrar_usuarios_de_almacen()
         elif opcion != "0":
             print(OPCION_INVALIDA)
