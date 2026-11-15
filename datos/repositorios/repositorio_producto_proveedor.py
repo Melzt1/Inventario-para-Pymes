@@ -65,6 +65,22 @@ def crear_relacion(id_producto, id_proveedor, es_principal=False):
         
     return False
 
+# Quita la marca de principal a todas las relaciones del producto
+def quitar_marca_principal(id_producto):
+    return (ProductoProveedor
+            .update(es_principal=False)
+            .where((ProductoProveedor.id_producto == id_producto) &
+                   (ProductoProveedor.es_principal == True))
+            .execute())
+
+# Marca como principal una relacion existente. Devuelve cuantas filas cambio (0 o 1)
+def marcar_como_principal(id_producto, id_proveedor):
+    return (ProductoProveedor
+            .update(es_principal=True)
+            .where((ProductoProveedor.id_producto == id_producto) &
+                   (ProductoProveedor.id_proveedor == id_proveedor))
+            .execute())
+
 # borrado fisico para eliminar la relacion de proveedor principal y asignar otra
 def quitar_relacion(relacion):
     try:

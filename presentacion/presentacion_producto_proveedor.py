@@ -8,6 +8,7 @@ from negocio.negocio_producto_proveedor import (
     listar_relaciones_de_producto,
     asignar_proveedor_secundario, 
     quitar_proveedor_de_producto, 
+    establecer_principal,
     obtener_proveedor_principal, 
     listar_proveedores_disponibles
 )
@@ -140,4 +141,41 @@ def mostrar_proveedores_producto():
             ('Secundario', 'Principal')[relacion.es_principal],
         ])
     print(f"\n=== Proveedores de '{producto.nombre}' ===")
-    print(tabla)       
+    print(tabla)
+
+
+def solicitar_cambiar_proveedor_principal():
+    print("\n=== Cambiar proveedor principal ===")
+
+    producto = solicitar_seleccion_producto()
+    if producto is None:
+        return
+
+    # Solo los secundarios pueden pasar a principal
+    secundarios = [relacion for relacion in listar_relaciones_de_producto(producto.id_producto)
+                   if not relacion.es_principal]
+
+    if not secundarios:
+        print(f"El producto '{producto.nombre}' no tiene proveedores secundarios.")
+        return
+
+    principal = obtener_proveedor_principal(producto.id_producto)
+    if principal is not None:
+        print(f"Proveedor principal actual: {principal.id_proveedor.nombre}")
+
+    print(f"\nProveedores secundarios de '{producto.nombre}':")
+    for i, relacion in enumerate(secundarios, start=1):
+        print(f"[{i}] - {relacion.id_proveedor.nombre} ({relacion.id_proveedor.rut or 'Sin RUT'})")
+
+    opcion_valida = False
+    while not opcion_valida:
+        seleccion = forzar_entero(SELECCIONE_PROVEEDOR)
+
+        if 1 <= seleccion <= len(secundarios):
+            proveedor = secundarios[seleccion - 1].id_proveedor
+            opcion_valida = True
+        else:
+            print(f"Opcion fuera de rango (1-{len(secundarios)}).")
+
+    resultado = establecer_principal(producto, proveedor)
+    print(f"Proveedor {proveedor.nombre} es ahora el principal.") if resultado else print("No se pudo cambiar el proveedor principal.")

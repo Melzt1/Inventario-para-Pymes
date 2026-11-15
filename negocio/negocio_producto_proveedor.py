@@ -7,8 +7,11 @@ from datos.repositorios.repositorio_producto_proveedor import (
     listar_relaciones, 
     obtener_relacion_principal, 
     listar_relaciones_de_producto_repo, 
-    listado_proveedores_disponibles
+    listado_proveedores_disponibles,
+    quitar_marca_principal,
+    marcar_como_principal
 )
+from datos.modelos.models import database
 from datos.modelos.producto import Producto
 from datos.modelos.proveedor import Proveedor
 
@@ -62,6 +65,36 @@ def asignar_proveedor_secundario(producto: Producto, proveedor: Proveedor):
     
     try:
         return crear_relacion(producto.id_producto, proveedor.id_proveedor, es_principal=False)
+    except PeeweeException:
+        return False
+
+# M09: un proveedor secundario pasa a ser el principal.
+# Se quita la marca al principal actual y se pone en la relacion elegida,
+# dentro de una transaccion para que nunca queden dos principales (ni ninguno).
+def establecer_principal(producto: Producto, proveedor: Proveedor):
+    if producto is None or proveedor is None:
+        return False
+
+    relacion = obtener_relacion(producto.id_producto, proveedor.id_proveedor)
+
+    # El proveedor debe estar asociado al producto
+    if relacion is None:
+        return False
+
+    # Ya es el principal: no hay nada que cambiar
+    if relacion.es_principal:
+        return False
+
+    try:
+        with database.atomic() as transaccion:
+            quitar_marca_principal(producto.id_producto)
+
+            if marcar_como_principal(producto.id_producto, proveedor.id_proveedor) != 1:
+                transaccion.rollback()
+                return False
+
+        return True
+
     except PeeweeException:
         return False
 

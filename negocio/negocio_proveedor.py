@@ -4,68 +4,68 @@ from datos.modelos.models import database
 from datos.modelos.proveedor import Proveedor
 from datos.repositorios.repositorio_direccion import guardar_direccion
 from datos.repositorios.repositorio_proveedor import (
-    listar_proveedores, 
-    guardar_proveedor, 
-    obtener_proveedor_por_id, 
-    existe_correo, existe_telefono, 
-    existe_rut, 
+    listar_proveedores,
+    guardar_proveedor,
+    obtener_proveedor_por_id,
+    existe_correo,
+    existe_rut,
     buscar_proveedores_por_nombre,
     listar_proveedores_desactivados_repo
 )
+from auxiliares.validaciones import (validar_telefono,
+                                     validar_rut,
+                                     normalizar_rut)
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
 # ------------ Validaciones ------------
+# La presentacion usa estas funciones para no importar directamente
+# desde auxiliares ni desde los repositorios.
 
-def validar_rut(rut):
-    # Limpiar los caracteres del rut (puntos y guion) 
-    rut_limpio = rut.replace(".", "").replace("-","").upper()
-
-    # Debe existir al menos un digito y un digito verificador.
-    if len(rut_limpio) < 2:
-        return False
-    
-    # obtener todos los digitos menos el DV
-    rut_sin_dv = rut_limpio[:-1] 
-    dv_original = rut_limpio[-1]
-
-    # validar que sean digitos
-    if not rut_sin_dv.isdigit() or dv_original not in "0123456789K":
-        return False
-
-    multiplicador = 2
-    suma = 0
-
-    # reversed para invertir los digitos del rut
-    for digito in reversed(rut_sin_dv):
-        resultado = int(digito) * multiplicador # Hacemos un cast para poder multiplicar
-        suma += resultado
-
-        # Aumentamos 1 por cada iteracion hasta 7 y luego lo reseteamos
-        multiplicador += 1
-        if multiplicador == 8:
-            multiplicador = 2
-
-    # calcular el digito verificador
-    dv_calculado = 11 - (suma % 11)
-
-    if dv_calculado == 11:
-        dv_calculado = "0"
-    elif dv_calculado  == 10:
-        dv_calculado = "K" 
-    else:
-        dv_calculado = str(dv_calculado )  
-
-    # Comprobar si coincide con el digito verificador orignal
-    return dv_original == dv_calculado
+def validar_rut_ingresado(rut):
+    return validar_rut(rut)
 
 def rut_en_uso(rut):
-    return existe_rut(rut)
+    # Sin RUT no hay duplicado: varios proveedores extranjeros pueden no tenerlo.
+    if rut is None:
+        return False
+    return existe_rut(normalizar_rut(rut))
+
+# Convierte un texto vacio en None, porque en la BD una columna UNIQUE
+# acepta varios NULL, pero no dos textos vacios "".
+def texto_o_none(texto):
+    if texto is None:
+        return None
+    texto = texto.strip()
+    return texto if texto else None
+
 
 def correo_en_uso(correo, id_proveedor=None):
     return existe_correo(correo, id_proveedor)
 
-def telefono_en_uso(telefono, id_proveedor=None):
-    return existe_telefono(telefono, id_proveedor)
+def validar_telefono_ingresado(telefono):
+    return validar_telefono(telefono)
+
+
+# Reglas de M08. Devuelve True si los datos se pueden guardar.
+def datos_proveedor_validos(rut, nombre, correo, telefono, id_proveedor=None):
+    # Nombre y correo son obligatorios (NOT NULL en el DDL)
+    if nombre is None or correo is None:
+        return False
+
+    # El RUT es opcional: solo se valida si se escribio
+    if rut is not None:
+        if not validar_rut(rut) or rut_en_uso(rut):
+            return False
+
+    # El correo no se puede repetir
+    if correo_en_uso(correo, id_proveedor):
+        return False
+
+    # El telefono es opcional y puede repetirse: solo se revisa el formato
+    if telefono is not None and not validar_telefono(telefono):
+        return False
+
+    return True
 
 # ------------ Lectura ------------
 
@@ -78,40 +78,44 @@ def listar_proveedores_desactivados():
 def buscar_proveedores(nombre):
     return buscar_proveedores_por_nombre(nombre)
 
-def obtener_proveedor(id_almacen):
-    return obtener_proveedor_por_id(id_almacen)
+def obtener_proveedor(id_proveedor):
+    return obtener_proveedor_por_id(id_proveedor)
 
 # ------------ Escritura ------------
 
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
-    if not validar_rut(rut):
+    rut = texto_o_none(rut)
+    # Se guarda siempre como 12345678-5 para que el mismo RUT no se repita
+    if rut is not None:
+        rut = normalizar_rut(rut)
+    nombre = texto_o_none(nombre)
+    correo = texto_o_none(correo)
+    telefono = texto_o_none(telefono)
+
+    if not datos_proveedor_validos(rut, nombre, correo, telefono):
         return False
 
-    if rut_en_uso(rut):
-        return False
-
-    if correo_en_uso(correo):
-        return False
-
-    if telefono_en_uso(telefono):
-        return False
-    
     nuevo_proveedor = Proveedor()
     nuevo_proveedor.rut = rut
     nuevo_proveedor.nombre = nombre
     nuevo_proveedor.correo = correo
     nuevo_proveedor.telefono = telefono
 
-    # Asociar direccion (relacion entre entidades)
     try:
         # atomic: si falla el proveedor, se revierte la direccion, asi no queda huerfana
-        with database.atomic():
+        with database.atomic() as transaccion:
             nueva_direccion = crear_direccion(calle, numero, comuna, ciudad)
-            guardar_direccion(nueva_direccion)
+
+            if not guardar_direccion(nueva_direccion):
+                transaccion.rollback()
+                return False
 
             # nueva_direccion es el objeto Direccion y contiene id_direccion
             nuevo_proveedor.id_direccion = nueva_direccion
-            guardar_proveedor(nuevo_proveedor)
+
+            if not guardar_proveedor(nuevo_proveedor):
+                transaccion.rollback()
+                return False
 
         return True
 
@@ -119,25 +123,28 @@ def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ci
         return False
 
 
-def actualizar_proveedor(proveedor: Proveedor, correo, telefono):   
+def actualizar_proveedor(proveedor: Proveedor, correo, telefono):
     if proveedor is None:
         return False
 
-    # Excluimos este proveedor para que pueda conservar su correo actual.
-    if correo_en_uso(correo, proveedor.id_proveedor):
+    correo = texto_o_none(correo)
+    telefono = texto_o_none(telefono)
+
+    # El RUT no se modifica aqui, por eso se pasa None: si se pasara el actual,
+    # rut_en_uso encontraria al mismo proveedor y rechazaria la actualizacion.
+    # Se pasa el id del proveedor para que pueda conservar su propio correo.
+    if not datos_proveedor_validos(None, proveedor.nombre, correo, telefono,
+                                   proveedor.id_proveedor):
         return False
 
-    # Excluimos este proveedor para que pueda conservar su telefono actual.
-    if telefono_en_uso(telefono, proveedor.id_proveedor):
-        return False
-    
     proveedor.correo = correo
     proveedor.telefono = telefono
 
     try:
         return guardar_proveedor(proveedor)
     except PeeweeException:
-        return False  
+        return False
+
 
 def actualizar_direccion_proveedor(proveedor: Proveedor, calle, numero, comuna, ciudad):
     if proveedor is None:
@@ -170,4 +177,3 @@ def activar_proveedor(proveedor: Proveedor):
         return guardar_proveedor(proveedor)
     except PeeweeException:
         return False
-
