@@ -9,5 +9,6 @@ from auxiliares.menu import (
     submenu_producto_proveedor, 
     submenu_inventario,
     submenu_seccion,
-    submenu_movimientos
+    submenu_movimientos,
+    submenu_usuario
 )
