@@ -15,7 +15,7 @@ def listar_proveedores_desactivados_repo():
 
 def buscar_proveedores_por_nombre(nombre):
     return (Proveedor.select()
-            .where(Proveedor.nombre.contains(nombre) & Proveedor.estado == True)
+            .where((Proveedor.nombre.contains(nombre)) & (Proveedor.estado == True))
             .order_by(Proveedor.nombre))
 
 # ------------ Escritura ------------
