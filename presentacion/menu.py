@@ -74,7 +74,7 @@ from presentacion.presentacion_seccion import (
 
 from auxiliares.mensajes import OPCION_INVALIDA
 
-def menu_principal():
+def menu_principal(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -93,7 +93,7 @@ def menu_principal():
         elif opcion == "4":
             menu_almacen()
         elif opcion == "5":
-            menu_inventario()                          
+            menu_inventario(sesion)                          
         elif opcion == "0":
             print("Programa Finalizado.")
         else:
@@ -260,7 +260,7 @@ def menu_producto_proveedor():
         else:
             print(OPCION_INVALIDA)       
 
-def menu_inventario():
+def menu_inventario(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -280,13 +280,13 @@ def menu_inventario():
         elif opcion == "4":
             mostrar_productos_stock_critico()  
         elif opcion == "5":
-            menu_movimientos()                                               
+            menu_movimientos(sesion)                                               
         elif opcion == "0":
             return
         else:
             print(OPCION_INVALIDA)
 
-def menu_movimientos():
+def menu_movimientos(sesion):
     opcion = ""
 
     while opcion != "0":
@@ -298,9 +298,9 @@ def menu_movimientos():
         opcion = input(f'\nIngrese su opción [0-{len(submenu_movimientos)-1}]: ').strip()
 
         if opcion == "1":
-            solicitar_registrar_entrada()
+            solicitar_registrar_entrada(sesion)
         elif opcion == "2":
-            solicitar_registrar_salida()
+            solicitar_registrar_salida(sesion)
         elif opcion == "3":
             solicitar_consultar_movimiento()
         elif opcion == "4":
