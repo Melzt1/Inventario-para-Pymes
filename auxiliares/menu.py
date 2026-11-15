@@ -6,6 +6,7 @@ menu_superior = {
     "3": "Gestión de productos",
     "4": "Gestión de almacenes",
     "5": "Gestión de inventario y movimientos",
+    "6": "Gestión de usuarios",
     "0": "Salir",
 }
 
@@ -86,5 +87,15 @@ submenu_movimientos = {
     "3": "Consultar movimientos por tipo",
     "4": "Consultar movimientos por rango de fecha",    
     "5": "Ver historial completo",
+    "0": VOLVER_AL_MENU
+}
+
+submenu_usuario = {
+    "1": "Listar usuarios",
+    "2": "Registrar usuario",
+    "3": "Actualizar usuario",
+    "4": "Cambiar contraseña",
+    "5": "Desactivar usuario",
+    "6": "Activar usuario",
     "0": VOLVER_AL_MENU
 }

@@ -11,8 +11,14 @@ from datos.repositorios.repositorio_usuario import (
     listar_usuarios,
     listar_usuarios_desactivados,
     obtener_usuario_por_id,
+    obtener_usuario_por_nombre_usuario,
     guardar_usuario,
     existe_nombre_usuario
+)
+from auxiliares.seguridad import (
+    generar_hash,
+    verificar_contrasena,
+    validar_contrasena
 )
 
 # En este archivo:
@@ -22,17 +28,25 @@ from datos.repositorios.repositorio_usuario import (
 
 # ------------ Auxiliares ------------
 
+# Ojo: no se usa con contraseñas, porque strip() les quitaria espacios
+# y despues no coincidirian al iniciar sesion.
 def texto_o_none(texto):
     if texto is None:
         return None
     texto = texto.strip()
     return texto if texto else None
 
-# ------------ Validaciones ------------
-# La presentacion usa esta funcion para avisar antes de guardar.
 
+# ------------ Validaciones ------------
+# La presentacion usa estas funciones para avisar antes de guardar.
+
+#verifica si el nombre de usuario ya esta en uso por otro usuario (excluyendo el propio id_usuario)
 def nombre_usuario_en_uso(nombre_usuario, id_usuario=None):
     return existe_nombre_usuario(nombre_usuario, id_usuario)
+
+# Devuelve una lista de errores si la contraseña no cumple las reglas de seguridad.
+def errores_contrasena(contrasena):
+    return validar_contrasena(contrasena)
 
 
 # Reglas comunes de registrar y actualizar. Devuelve True si se puede guardar.
@@ -66,15 +80,38 @@ def listar_roles():
 def obtener_rol(id_rol):
     return obtener_rol_por_id(id_rol)
 
+# ------------ Autenticacion ------------
+
+# Devuelve el objeto Usuario si el nombre de usuario y la contraseña son correctos
+# y el usuario esta activo. En cualquier otro caso devuelve None.
+def autenticar(nombre_usuario, contrasena):
+    nombre_usuario = texto_o_none(nombre_usuario)
+
+    if nombre_usuario is None or contrasena is None:
+        return None
+
+    usuario = obtener_usuario_por_nombre_usuario(nombre_usuario)
+
+    if usuario is None:
+        return None
+
+    # Un usuario desactivado no puede iniciar sesion
+    if not usuario.estado:
+        return None
+
+    if not verificar_contrasena(contrasena, usuario.contrasena):
+        return None
+
+    return usuario
+
 # ------------ Escritura ------------
 
 def registrar_usuario(nombre, nombre_usuario, contrasena, rol: Rol):
     nombre = texto_o_none(nombre)
     nombre_usuario = texto_o_none(nombre_usuario)
-    contrasena = texto_o_none(contrasena)
 
-    # La contrasenia es NOT NULL en el DDL
-    if contrasena is None:
+    # La contraseña es NOT NULL en el DDL y debe cumplir las reglas de seguridad.
+    if validar_contrasena(contrasena):
         return False
 
     if not datos_usuario_validos(nombre, nombre_usuario, rol):
@@ -83,8 +120,8 @@ def registrar_usuario(nombre, nombre_usuario, contrasena, rol: Rol):
     nuevo_usuario = Usuario()
     nuevo_usuario.nombre = nombre
     nuevo_usuario.usuario = nombre_usuario
-    # B4: aplicar hash aqui (por ahora se guarda tal cual)
-    nuevo_usuario.contrasena = contrasena
+    # Se guarda el hash (sal$hash), nunca la contraseña legible
+    nuevo_usuario.contrasena = generar_hash(contrasena)
     nuevo_usuario.id_rol = rol
     # En (estado y fecha_creacion) la BD les pone su valor por defecto
 
@@ -94,7 +131,7 @@ def registrar_usuario(nombre, nombre_usuario, contrasena, rol: Rol):
         return False
 
 
-# La contrasenia no se cambia aqui: en B4 tendra su propio cambiar_contrasenia
+# La contraseña no se cambia aqui: tiene su propio cambiar_contrasena
 def actualizar_usuario(usuario: Usuario, nombre, nombre_usuario, rol: Rol):
     if usuario is None:
         return False
@@ -108,6 +145,26 @@ def actualizar_usuario(usuario: Usuario, nombre, nombre_usuario, rol: Rol):
     usuario.nombre = nombre
     usuario.usuario = nombre_usuario
     usuario.id_rol = rol
+
+    try:
+        return guardar_usuario(usuario)
+    except PeeweeException:
+        return False
+
+
+# Unico lugar donde se cambia una contraseña.
+# Pide la contraseña actual para confirmar que es la misma persona.
+def cambiar_contrasena(usuario: Usuario, contrasena_actual, contrasena_nueva):
+    if usuario is None:
+        return False
+
+    if not verificar_contrasena(contrasena_actual, usuario.contrasena):
+        return False
+
+    if validar_contrasena(contrasena_nueva):
+        return False
+
+    usuario.contrasena = generar_hash(contrasena_nueva)
 
     try:
         return guardar_usuario(usuario)
