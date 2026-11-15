@@ -13,7 +13,8 @@ from datos.repositorios.repositorio_proveedor import (
     listar_proveedores_desactivados_repo
 )
 from auxiliares.validaciones import (validar_telefono,
-                                     validar_rut)
+                                     validar_rut,
+                                     normalizar_rut)
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
 # ------------ Validaciones ------------
@@ -27,14 +28,7 @@ def rut_en_uso(rut):
     # Sin RUT no hay duplicado: varios proveedores extranjeros pueden no tenerlo.
     if rut is None:
         return False
-    return existe_rut(rut)
-
-def correo_en_uso(correo, id_proveedor=None):
-    return existe_correo(correo, id_proveedor)
-
-def validar_telefono_ingresado(telefono):
-    return validar_telefono(telefono)
-
+    return existe_rut(normalizar_rut(rut))
 
 # Convierte un texto vacio en None, porque en la BD una columna UNIQUE
 # acepta varios NULL, pero no dos textos vacios "".
@@ -43,6 +37,13 @@ def texto_o_none(texto):
         return None
     texto = texto.strip()
     return texto if texto else None
+
+
+def correo_en_uso(correo, id_proveedor=None):
+    return existe_correo(correo, id_proveedor)
+
+def validar_telefono_ingresado(telefono):
+    return validar_telefono(telefono)
 
 
 # Reglas de M08. Devuelve True si los datos se pueden guardar.
@@ -84,6 +85,9 @@ def obtener_proveedor(id_proveedor):
 
 def registrar_proveedor(rut, nombre, correo, telefono, calle, numero, comuna, ciudad):
     rut = texto_o_none(rut)
+    # Se guarda siempre como 12345678-5 para que el mismo RUT no se repita
+    if rut is not None:
+        rut = normalizar_rut(rut)
     nombre = texto_o_none(nombre)
     correo = texto_o_none(correo)
     telefono = texto_o_none(telefono)

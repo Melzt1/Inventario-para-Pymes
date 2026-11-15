@@ -32,6 +32,11 @@ def validar_rut(rut):
         
     return str(digito_verificador_calculado) == digito_verificador 
 
+def normalizar_rut(rut):
+    # Deja el RUT siempre como 12345678-5, sin puntos y con K mayuscula,
+    # para que el mismo RUT escrito de distintas formas no se guarde dos veces.
+    rut = rut.strip().replace(".", "").replace("-", "").upper()
+    return f"{rut[:-1]}-{rut[-1]}"
 
 def validar_telefono(telefono):
     telefono = telefono.strip().replace(" ", "")
