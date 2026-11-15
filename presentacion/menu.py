@@ -9,7 +9,8 @@ from auxiliares import (
     submenu_producto_proveedor, 
     submenu_inventario, 
     submenu_seccion,
-    submenu_movimientos
+    submenu_movimientos,
+    submenu_usuario
 )
 from presentacion.presentacion_categoria import (
     solicitar_datos_categoria, 
@@ -71,7 +72,9 @@ from presentacion.presentacion_seccion import (
     solicitar_desactivar_seccion,
     solicitar_activar_seccion
 )
-
+from presentacion.presentacion_usuario import (
+    solicitar_datos_usuario
+)
 from auxiliares.mensajes import OPCION_INVALIDA
 
 def menu_principal(sesion):
@@ -93,7 +96,9 @@ def menu_principal(sesion):
         elif opcion == "4":
             menu_almacen()
         elif opcion == "5":
-            menu_inventario(sesion)                          
+            menu_inventario(sesion)
+        elif opcion == "6":
+            menu_usuarios()
         elif opcion == "0":
             print("Programa Finalizado.")
         else:
@@ -307,6 +312,36 @@ def menu_movimientos(sesion):
             mostrar_movimientos_rango_fecha()
         elif opcion == "5":
             mostrar_historial_movimientos()            
+        elif opcion == "0":
+            return
+        else:
+            print(OPCION_INVALIDA)
+
+def menu_usuarios():
+    opcion = ""
+
+    while opcion != "0":
+        print("\n === Gestion de usuarios ===")
+
+        for clave, valor in submenu_usuario.items():
+            print(f'[{clave}] - {valor}')
+
+        opcion = input("\nIngrese su opcion: ").strip()
+
+        if opcion == "1":
+            print()
+        elif opcion == "2":
+            solicitar_datos_usuario()
+        elif opcion == "3":
+            print()
+        elif opcion == "4":
+            print()
+        elif opcion == "5":
+            print()
+        elif opcion == "6":
+            print()
+        elif opcion == "7":
+            print()
         elif opcion == "0":
             return
         else:

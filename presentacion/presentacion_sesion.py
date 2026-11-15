@@ -11,7 +11,6 @@ def solicitar_iniciar_sesion():
         contrasena = campo_obligatorio("Contrasena: ")
 
         # Este metodo se encarga de validar los datos y devolver el objeto
-        # aun no hace nada, se encuentra en desarrollo
         usuario = autenticar(nombre_usuario, contrasena)
 
         if usuario is None:
@@ -21,4 +20,5 @@ def solicitar_iniciar_sesion():
             # El constructor lo almacena en self.usuario_actual 
             sesion = Sesion(usuario) 
             sesion.iniciar_sesion()
+
     return sesion # Se retorna el objeto para usarlo en app.py               

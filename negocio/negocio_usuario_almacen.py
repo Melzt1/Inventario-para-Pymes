@@ -5,7 +5,7 @@ from datos.modelos.almacen import Almacen
 from datos.modelos.usuario_almacen import UsuarioAlmacen
 
 from datos.repositorios.repositorio_usuario_almacen import(
-    asignar_usuario,
+    guardar_asignacion,
     eliminar_asignacion,
     obtener_asignacion
 )
@@ -17,15 +17,12 @@ def asignar_usuario(usuario: Usuario, almacen: Almacen):
         return False
 
     # No permitir asginar usuarios y almacenes en estado desactivado
-    if not usuario.estado or not almacen.estado:
+    # Por defecto al crear un usuario no trae 'estado' por eso se compara con False
+    if usuario.estado is False or almacen.estado is False:
         return False
 
-    usuario_almacen = UsuarioAlmacen()
-    usuario_almacen.id_usuario = usuario
-    usuario_almacen.id_almacen = almacen
-
     try:
-        return asignar_usuario(usuario_almacen)
+        return guardar_asignacion(usuario.id_usuario, almacen.id_almacen)
     except PeeweeException:
         return False
 

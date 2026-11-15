@@ -28,12 +28,16 @@ def obtener_asignacion(id_usuario, id_almacen):
 
 # ------------ Escritura ------------
 
-# .save() sirve para CREATE y UPDATE 
-def asignar_usuario(asignacion:UsuarioAlmacen):
+# Al ser una PK compuesta se usa .create y NO .save
+def guardar_asignacion(id_usuario, id_almacen, es_encargado=False):
     try:
-        asignacion.save()
+        UsuarioAlmacen.create(
+            id_usuario=id_usuario,
+            id_almacen=id_almacen,
+            es_encargado=es_encargado,
+        )
         return True
-    
+
     except IntegrityError as e:
         print(f"Integridad de la base de datos: {e}")
     except OperationalError as e:
