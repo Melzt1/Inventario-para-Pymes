@@ -1,17 +1,19 @@
 from peewee import PeeweeException
 
-from datos.modelos.models import database
+from auxiliares.validaciones import validar_contrasena
 from auxiliares.seguridad import generar_hash, verificar_contrasena
 from datos.modelos.usuario import Usuario
 from datos.modelos.rol import Rol
 from datos.modelos.almacen import Almacen
+from datos.repositorios.repositorio_rol import listado_roles
 from datos.repositorios.repositorio_usuario import (
     guardar_usuario,
     listar_usuarios,
+    listado_usuarios_inactivos,
     obtener_usuario_por_nombre,
-    usuario_en_uso
+    usuario_en_uso,
+    hay_otro_administrador
 )
-from negocio.negocio_usuario_almacen import asignar_usuario
 # ------------ Autenticacion ------------
 
 def autenticar(username, contrasena):
@@ -34,48 +36,53 @@ def autenticar(username, contrasena):
 def listar_usuarios_activos():
     return listar_usuarios()
 
+def listar_usuarios_inactivos():
+    return listado_usuarios_inactivos()
+
+def listar_roles():
+    return listado_roles()
+
 def existe_nombre_usuario(username, id_usuario = None):
     return usuario_en_uso(username, id_usuario)
 
+def existe_otro_administrador(id_usuario):
+    return hay_otro_administrador(id_usuario)
+
 # ------------ Escritura ------------
 
-def registrar_usuario(nombre, username, contrasena, rol: Rol, almacen: Almacen):
-
-    if existe_nombre_usuario(username):
+def registrar_usuario(nombre, nombre_usuario, contrasena, rol: Rol):
+    if nombre is None or nombre_usuario is None or rol is None:
         return False
 
-    contrasena_hash = generar_hash(contrasena)
-    
+    if validar_contrasena(contrasena):
+        return False
+
+    if existe_nombre_usuario(nombre_usuario):
+        return False
+
     nuevo_usuario = Usuario()
     nuevo_usuario.nombre = nombre
-    nuevo_usuario.usuario = username
-    nuevo_usuario.contrasena = contrasena_hash
-    nuevo_usuario.id_rol = rol.id_rol
-    # FIX: Por defecto ya es True pero si no se define da error con asginar_usuario()
-    nuevo_usuario.estado = True 
+    nuevo_usuario.usuario = nombre_usuario
+    nuevo_usuario.contrasena = generar_hash(contrasena)
+    nuevo_usuario.id_rol = rol
 
     try:
-        with database.atomic():
-            if not guardar_usuario(nuevo_usuario):
-                raise ValueError ("No se pudo guardar el usuario.")
-            if not asignar_usuario(nuevo_usuario, almacen):
-                raise ValueError ("No se pudo asignar el almacen.")
-            
-        return True
+        return guardar_usuario(nuevo_usuario)
+    except PeeweeException:
+        return False
+
+def actualizar_usuario(usuario: Usuario, nombre, nombre_usuario, rol: Rol):
+    if usuario is None or rol is None:
+        return False
+
+    if nombre is None or nombre_usuario is None or rol is None:
+        return False    
     
-    except (PeeweeException, ValueError):
-        return False
-
-def actualizar_usuario(usuario: Usuario, nombre, username, rol):
-    if usuario is None:
-        return False
-
-    # Metodo que busca si el username existe para no replicarlo
-    if existe_nombre_usuario(username, usuario.id_usuario):
+    if existe_nombre_usuario(nombre_usuario, usuario.id_usuario):
         return False
     
     usuario.nombre = nombre
-    usuario.usuario = username
+    usuario.usuario = nombre_usuario
     usuario.id_rol = rol.id_rol
 
     try:
@@ -88,6 +95,9 @@ def actualizar_contrasena(usuario: Usuario, nueva_contrasena):
     if usuario is None:
         return False
 
+    if validar_contrasena(nueva_contrasena):
+        return False
+    
     usuario.contrasena = generar_hash(nueva_contrasena)
     try:
         return guardar_usuario(usuario)
@@ -98,6 +108,12 @@ def actualizar_contrasena(usuario: Usuario, nueva_contrasena):
 def desactivar_usuario(usuario: Usuario):
     if usuario is None:
         return False
+
+    # Si es el ultimo administrador se cancela
+    # Debe existir por lo menos 1 administrador para gestionar el sistema
+    if usuario.id_rol.nombre == "Administrador":
+        if not existe_otro_administrador(usuario.id_usuario):
+            return False
     
     usuario.estado = False
 

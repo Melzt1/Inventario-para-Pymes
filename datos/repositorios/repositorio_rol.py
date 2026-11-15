@@ -3,7 +3,7 @@ from peewee import IntegrityError, OperationalError, DataError, PeeweeException
 from datos.modelos.rol import Rol
 
 # ------------ Lectura ------------
-def listar_roles():
+def listado_roles():
     return Rol.select().order_by(Rol.nombre)
 
 # ------------ Escritura ------------

@@ -73,7 +73,12 @@ from presentacion.presentacion_seccion import (
     solicitar_activar_seccion
 )
 from presentacion.presentacion_usuario import (
-    solicitar_datos_usuario
+    solicitar_datos_usuario,
+    mostrar_usuarios,
+    solicitar_actualizar_usuario,
+    solicitar_activar_usuario,
+    solicitar_desactivar_usuario,
+    solicitar_cambiar_contrasena
 )
 from auxiliares.mensajes import OPCION_INVALIDA
 
@@ -329,19 +334,19 @@ def menu_usuarios():
         opcion = input("\nIngrese su opcion: ").strip()
 
         if opcion == "1":
-            print()
+            mostrar_usuarios()
         elif opcion == "2":
             solicitar_datos_usuario()
         elif opcion == "3":
-            print()
+            print("Aun no hago nada")
         elif opcion == "4":
-            print()
+            solicitar_actualizar_usuario()
         elif opcion == "5":
-            print()
+            solicitar_cambiar_contrasena()
         elif opcion == "6":
-            print()
+            solicitar_desactivar_usuario()
         elif opcion == "7":
-            print()
+            solicitar_activar_usuario()
         elif opcion == "0":
             return
         else:

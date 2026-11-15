@@ -51,6 +51,9 @@ def validar_contrasena(contrasena):
     errores = []
     caracteres_especiales = "!@#$%&/."
 
+    if not contrasena:
+        return ["La contraseña es obligatoria."]
+    
     if len(contrasena) < 8 or len(contrasena) > 16:
         errores.append("La contraseña debe tener entre 8 y 16 caracteres.")
 
