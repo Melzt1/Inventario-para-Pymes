@@ -7,7 +7,7 @@ menu_superior = {
     "4": "Gestión de almacenes",
     "5": "Gestión de inventario y movimientos",
     "6": "Gestión de usuarios",
-    "7": "Asignaciones de almacén",
+    "7": "Cerrar sesión",
     "0": "Salir",
 }
 
@@ -98,6 +98,7 @@ submenu_usuario = {
     "4": "Cambiar contraseña",
     "5": "Desactivar usuario",
     "6": "Activar usuario",
+    "7": "Asignaciones de almacén",
     "0": VOLVER_AL_MENU
 }
 

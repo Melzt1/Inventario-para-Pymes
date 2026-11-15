@@ -92,35 +92,7 @@ from presentacion.presentacion_usuario_almacen import (
 
 from auxiliares.mensajes import OPCION_INVALIDA
 
-def menu_principal(sesion):
-    opcion = ""
-
-    while opcion != "0":
-        print(f"{nombre_aplicacion} - {version_aplicacion}")
-        for clave, valor in menu_superior.items():
-            print(f'[{clave}] - {valor}')
-
-        opcion = input(f'\nIngrese su opción [0-{len(menu_superior)-1}]: ').strip()
-
-        if opcion == "1":
-            menu_categoria()
-        elif opcion == "2":
-            menu_proveedor()
-        elif opcion == "3":
-            menu_producto()            
-        elif opcion == "4":
-            menu_almacen()
-        elif opcion == "5":
-            menu_inventario(sesion)
-        elif opcion == "6":
-            menu_usuario()
-        elif opcion == "7":
-            menu_usuario_almacen()
-        elif opcion == "0":
-            print("Programa Finalizado.")
-        else:
-            print(OPCION_INVALIDA)
-
+OPCION_GESTION_USUARIOS = "6"
 
 def menu_categoria():
     opcion = ""
@@ -389,3 +361,45 @@ def menu_usuario_almacen():
             mostrar_usuarios_de_almacen()
         elif opcion != "0":
             print(OPCION_INVALIDA)
+
+
+def mostrar_menu_superior(sesion):
+    print(f"\n{nombre_aplicacion} - {version_aplicacion}")
+    print(f"Usuario: {sesion.usuario_actual.usuario} ({sesion.usuario_actual.id_rol.nombre})")
+
+    for clave, valor in menu_superior.items():
+        # La gestion de usuarios se oculta a quien no es administrador
+        if clave == OPCION_GESTION_USUARIOS and not sesion.es_administrador():
+            continue
+        print(f'[{clave}] - {valor}')
+
+def menu_principal(sesion):
+    opcion = ""
+
+    while opcion != "0":
+        mostrar_menu_superior(sesion)
+
+        opcion = input('\nIngrese su opción: ').strip()
+
+        if opcion == "1":
+            menu_categoria()
+        elif opcion == "2":
+            menu_proveedor()
+        elif opcion == "3":
+            menu_producto()
+        elif opcion == "4":
+            menu_almacen()
+        elif opcion == "5":
+            menu_inventario(sesion)
+        elif opcion == OPCION_GESTION_USUARIOS and sesion.es_administrador():
+            menu_usuario()
+        elif opcion == "7":
+            print(f"Sesion de '{sesion.usuario_actual.usuario}' cerrada.")
+            return True
+        elif opcion == "0":
+            print("Programa Finalizado.")
+        else:
+            # Incluye a un trabajador que escribe "6" aunque no lo vea en el menu
+            print(OPCION_INVALIDA)
+
+    return False
