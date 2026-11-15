@@ -1,12 +1,15 @@
 from presentacion import menu_principal
+from presentacion.presentacion_sesion import solicitar_iniciar_sesion
 
-menu_principal()
+# Al cerrar sesion se vuelve a pedir usuario y contraseña.
+# El programa termina al elegir "Salir" o al agotar los intentos de inicio de sesion.
+continuar = True
 
-""" Para ejecutar se requiere la clase Sesion (B6) """
+while continuar:
+    sesion = solicitar_iniciar_sesion()
 
-# from presentacion import menu_principal
-# from presentacion.presentacion_sesion import solicitar_iniciar_sesion
-
-# sesion = solicitar_iniciar_sesion()
-# if sesion is not None:
-#     menu_principal(sesion)    
+    if sesion is None:
+        continuar = False
+    else:
+        # menu_principal devuelve True si se cerro sesion y False si se eligio Salir
+        continuar = menu_principal(sesion)
