@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 
 from auxiliares.entradas import campo_obligatorio, forzar_positivo, forzar_entero, forzar_fecha
-from auxiliares.mensajes import NO_HAY_MOVIMIENTOS
+from auxiliares.mensajes import NO_HAY_MOVIMIENTOS, SIN_ALMACENES_ASIGNADOS
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_inventario import listar_inventario_por_producto
 from negocio.negocio_movimiento import (
@@ -12,7 +12,15 @@ from negocio.negocio_movimiento import (
     listar_movimientos_por_rango_fecha
 )
 
+# sesion = la sesion del usuario logeado
+# la instancia sesion almacena el objeto usuario actual, de esta forma se deja registro de quien hizo el movimiento
 def solicitar_registrar_movimiento(sesion, tipo):
+
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return False
+        
     print(f"\n=== Registrar {tipo} ===")
 
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
@@ -22,10 +30,20 @@ def solicitar_registrar_movimiento(sesion, tipo):
         print("No existe producto con ese SKU.")
         return False
 
-    lista_inventario = listar_inventario_por_producto(producto.id_producto)
+    inventarios = listar_inventario_por_producto(producto.id_producto)
+
+    if not inventarios:
+        print(f"'{producto.nombre}' no esta asociado a ningun almacen.")
+        return False
+
+    lista_inventario = []
+
+    for inventario in inventarios:
+        if sesion.puede_acceder_almacen(inventario.id_seccion.id_almacen):
+            lista_inventario.append(inventario)
 
     if not lista_inventario:
-        print("El producto no esta asociado a ningun almacen.")
+        print(f"'{producto.nombre}' no esta disponible en sus almacenes asignados.")
         return False
     
     print(f"Producto encontrado: {producto.nombre}")
@@ -51,9 +69,9 @@ def solicitar_registrar_movimiento(sesion, tipo):
         return False
 
     if tipo == "ENTRADA":
-        resultado = registrar_entrada(descripcion, cantidad, inventario, sesion.usuario_actual)
+        resultado = registrar_entrada(descripcion, cantidad, inventario, sesion)
     else:
-        resultado = registrar_salida(descripcion, cantidad, inventario, sesion.usuario_actual)
+        resultado = registrar_salida(descripcion, cantidad, inventario, sesion)
 
     print(f"{tipo.capitalize()} registrada con exito") if resultado else print("No se pudo realizar el movimiento")
 
@@ -88,7 +106,12 @@ def mostrar_tabla_movimientos(movimientos):
         ])
     print(tabla_movimiento)   
 
-def solicitar_consultar_movimiento():
+def solicitar_consultar_movimiento(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return False
+    
     print("=== Consulta de Movimientos ===")
     opcion = campo_obligatorio("Ingrese el tipo de movimiento (ENTRADA/SALIDA): ").strip().upper()
 
@@ -103,7 +126,12 @@ def solicitar_consultar_movimiento():
     mostrar_tabla_movimientos(movimientos)
      
 
-def mostrar_movimientos_rango_fecha():
+def mostrar_movimientos_rango_fecha(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return False
+        
     fecha_inicio = forzar_fecha("Ingrese la fecha de inicio (DD-MM-YYYY): ", obligatorio=True)
     fecha_termino = forzar_fecha("Ingrese la fecha de termino (DD-MM-YYYY): ", obligatorio=True)       
 
@@ -114,6 +142,11 @@ def mostrar_movimientos_rango_fecha():
     movimientos = listar_movimientos_por_rango_fecha(fecha_inicio, fecha_termino)
     mostrar_tabla_movimientos(movimientos)     
 
-def mostrar_historial_movimientos():
+def mostrar_historial_movimientos(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return False
+        
     movimientos = listar_historial_movimientos()
     mostrar_tabla_movimientos(movimientos)      

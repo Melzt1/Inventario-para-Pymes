@@ -268,13 +268,13 @@ def menu_inventario(sesion):
         opcion = input(f'\nIngrese su opción [0-{len(submenu_inventario)-1}]: ').strip()
 
         if opcion == "1":
-            solicitar_asociar_producto_almacen()
+            solicitar_asociar_producto_almacen(sesion)
         elif opcion == "2":
-            consultar_inventario_producto()  
+            consultar_inventario_producto(sesion)  
         elif opcion == "3":
-            mostrar_inventario_de_almacen() 
+            mostrar_inventario_de_almacen(sesion) 
         elif opcion == "4":
-            mostrar_productos_stock_critico()  
+            mostrar_productos_stock_critico(sesion)  
         elif opcion == "5":
             menu_movimientos(sesion)                                               
         elif opcion == "0":
@@ -298,11 +298,11 @@ def menu_movimientos(sesion):
         elif opcion == "2":
             solicitar_registrar_salida(sesion)
         elif opcion == "3":
-            solicitar_consultar_movimiento()
+            solicitar_consultar_movimiento(sesion)
         elif opcion == "4":
-            mostrar_movimientos_rango_fecha()
+            mostrar_movimientos_rango_fecha(sesion)
         elif opcion == "5":
-            mostrar_historial_movimientos()            
+            mostrar_historial_movimientos(sesion)            
         elif opcion == "0":
             return
         else:

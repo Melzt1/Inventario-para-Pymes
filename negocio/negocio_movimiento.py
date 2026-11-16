@@ -29,8 +29,14 @@ def listar_movimientos_por_rango_fecha(fecha_inicio, fecha_termino):
 
 # ------------ Escritura ------------
 
-def registrar_entrada(descripcion, cantidad, inventario, usuario):
-    if inventario is None or usuario is None:
+# La instancia sesion guarda el usuario logeado, asi se deja registro de quien hizo el movimiento
+def registrar_entrada(descripcion, cantidad, inventario, sesion):
+    if inventario is None or sesion is None:
+        return False
+
+    # El trabajador solo opera en sus almacenes, el admin en todos
+    almacen = inventario.id_seccion.id_almacen
+    if not sesion.puede_acceder_almacen(almacen):
         return False
 
     if cantidad <= 0:
@@ -51,7 +57,7 @@ def registrar_entrada(descripcion, cantidad, inventario, usuario):
             movimiento.cantidad = cantidad
             movimiento.tipo = "ENTRADA"
             movimiento.id_inventario = inventario
-            movimiento.id_usuario = usuario
+            movimiento.id_usuario = sesion.usuario_actual
 
             if not guardar_movimiento(movimiento):
                 raise ValueError("No se pudo registrar el movimiento.")
@@ -61,9 +67,13 @@ def registrar_entrada(descripcion, cantidad, inventario, usuario):
         return False
 
 
-def registrar_salida(descripcion, cantidad, inventario, usuario):
-    if inventario is None or usuario is None:
+def registrar_salida(descripcion, cantidad, inventario, sesion):
+    if inventario is None or sesion is None:
         return False
+
+    # El trabajador solo opera en sus almacenes, el admin en todos
+    if not sesion.puede_acceder_almacen(inventario.id_seccion.id_almacen):
+        return False    
     
     if cantidad <= 0 or cantidad > inventario.stock_actual:
         return False
@@ -83,7 +93,7 @@ def registrar_salida(descripcion, cantidad, inventario, usuario):
             movimiento.cantidad = cantidad
             movimiento.tipo = "SALIDA"
             movimiento.id_inventario = inventario
-            movimiento.id_usuario = usuario
+            movimiento.id_usuario = sesion.usuario_actual
 
             if not guardar_movimiento(movimiento):
                 raise ValueError("No se pudo registrar el movimiento.")

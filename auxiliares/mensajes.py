@@ -20,3 +20,5 @@ SELECCIONE_PROVEEDOR = "\nSeleccione el proveedor: "
 MENSAJE_NUMERO_DECIMAL = "Error: Entrada no válida. Debe ingresar un número decimal (ej: 12.5)."
 MENSAJE_NUMERO_POSITIVO = "Debes ingresar un valor mayor que cero"
 MENSAJE_MAXIMO_DECIMALES = "Se permiten como máximo {} decimales."
+
+SIN_ALMACENES_ASIGNADOS = "No tiene almacenes asignados. Ponte en contacto con el jefe Melzt."

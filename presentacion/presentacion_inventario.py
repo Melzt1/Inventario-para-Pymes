@@ -1,5 +1,6 @@
 from prettytable import PrettyTable
 
+from auxiliares.mensajes import SIN_ALMACENES_ASIGNADOS
 from auxiliares.entradas import campo_obligatorio, forzar_entero, forzar_positivo
 from negocio.negocio_producto import obtener_producto_sku
 from negocio.negocio_almacen import listar_almacenes_activos
@@ -13,12 +14,16 @@ from negocio.negocio_inventario import (
 
 # ------------ Funcion Auxiliar ------------
 
-def solicitar_almacen():
-    # Muestra los almacenes activos y devuelve el elegido o None
-    almacenes = listar_almacenes_activos()
+def solicitar_almacen(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return None
+        
+    almacenes = [almacen for almacen in listar_almacenes_activos() if sesion.puede_acceder_almacen(almacen)]
 
     if not almacenes:
-        print("No hay almacenes registrados.")
+        print("No tiene almacenes asignados.")
         return None
 
     print("\nAlmacenes disponibles:")
@@ -54,7 +59,12 @@ def solicitar_seccion(almacen):
     
     return secciones[seleccion - 1]        
 
-def solicitar_asociar_producto_almacen():
+def solicitar_asociar_producto_almacen(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return False
+        
     print("\n=== Registrar producto a un almacen ===")
 
     sku = campo_obligatorio("ingrese el SKU del producto: ").strip()
@@ -64,7 +74,7 @@ def solicitar_asociar_producto_almacen():
         print("No existe el producto con ese SKU.")     
         return
 
-    almacen = solicitar_almacen()
+    almacen = solicitar_almacen(sesion)
 
     if almacen is None:
         return         
@@ -84,7 +94,12 @@ def solicitar_asociar_producto_almacen():
     resultado = asociar_producto_a_almacen(producto, seccion, stock_minimo)
     print(f"Producto '{producto.nombre}' asociado a '{almacen.nombre} / {seccion.nombre}'.") if resultado else print("No se pudo asociar.")
 
-def consultar_inventario_producto():
+def consultar_inventario_producto(sesion):
+    # si el usuario aun no tiene asignado un almacen se cancela
+    if not sesion.tiene_almacenes():
+        print(SIN_ALMACENES_ASIGNADOS)
+        return
+            
     print("\n=== Consultar inventario de un producto ===")
 
     sku = campo_obligatorio("Ingrese el SKU del producto: ").strip()
@@ -94,11 +109,22 @@ def consultar_inventario_producto():
         print("No existe un producto con ese SKU.")
         return 
 
-    inventarios = listar_inventario_por_producto(producto.id_producto)
+    inventarios = list(listar_inventario_por_producto(producto.id_producto))
 
     if not inventarios:
         print(f"El producto '{producto.nombre}' no está asociado a ningún almacén.")
         return 
+
+    # inventarios disponibles en los que trabaja el usuario
+    lista_inventario = []
+
+    for inventario in inventarios:
+        if sesion.puede_acceder_almacen(inventario.id_seccion.id_almacen):
+            lista_inventario.append(inventario)
+
+    if not lista_inventario:
+        print(f"'{producto.nombre}' no esta disponible en sus almacenes asignados.")
+        return False
 
     tabla = PrettyTable()
     tabla.field_names = ["Almacen", "Seccinn", "Stock actual"]
@@ -113,8 +139,8 @@ def consultar_inventario_producto():
     print(tabla)
 
 
-def mostrar_inventario_de_almacen():
-    almacen = solicitar_almacen()
+def mostrar_inventario_de_almacen(sesion):
+    almacen = solicitar_almacen(sesion)
 
     if almacen is None:
         return
@@ -143,8 +169,8 @@ def mostrar_inventario_de_almacen():
     print(f"=== Inventario de {almacen.nombre} ===")        
     print(tabla_inventario)        
 
-def mostrar_productos_stock_critico():
-    almacen = solicitar_almacen()
+def mostrar_productos_stock_critico(sesion):
+    almacen = solicitar_almacen(sesion)
 
     if almacen is None:
         return    
