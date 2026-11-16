@@ -5,6 +5,7 @@ from negocio.negocio_proveedor import (
     registrar_proveedor, 
     validar_rut_ingresado,
     validar_telefono_ingresado,
+    validar_correo_ingresado,
     actualizar_proveedor, 
     actualizar_direccion_proveedor, 
     desactivar_proveedor, 
@@ -91,7 +92,9 @@ def solicitar_correo():
     while not correo_valido:
         correo = campo_obligatorio("Ingrese el correo: ")
 
-        if correo_en_uso(correo):
+        if not validar_correo_ingresado(correo):
+            print("El correo no tiene un formato valido.")
+        elif correo_en_uso(correo):
             print("El correo ya fue registrado. Ingrese otro.")
         else:
             correo_valido = True
@@ -160,11 +163,17 @@ def solicitar_actualizar_proveedor():
         return
 
     id_proveedor = proveedor.id_proveedor
-    correo = campo_opcional("Ingrese el nuevo correo", proveedor.correo)
 
-    if correo_en_uso(correo, id_proveedor):
-        print("El correo ya fue registrado")
-        return False
+    correo_valido = False
+    while not correo_valido:
+        correo = campo_opcional("Ingrese el nuevo correo", proveedor.correo)
+
+        if not validar_correo_ingresado(correo):
+            print("El correo no tiene un formato valido.")
+        elif correo_en_uso(correo, id_proveedor):
+            print("El correo ya fue registrado. Ingrese otro.")
+        else:
+            correo_valido = True
     
     telefono_valido = False
     while not telefono_valido:

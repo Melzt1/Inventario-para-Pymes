@@ -14,7 +14,8 @@ from datos.repositorios.repositorio_proveedor import (
 )
 from auxiliares.validaciones import (validar_telefono,
                                      validar_rut,
-                                     normalizar_rut)
+                                     normalizar_rut,
+                                     validar_correo)
 from negocio.negocio_direccion import crear_direccion, actualizar_direccion
 
 # ------------ Validaciones ------------
@@ -45,6 +46,9 @@ def correo_en_uso(correo, id_proveedor=None):
 def validar_telefono_ingresado(telefono):
     return validar_telefono(telefono)
 
+def validar_correo_ingresado(correo):
+    return validar_correo(correo)
+
 
 # Reglas de M08. Devuelve True si los datos se pueden guardar.
 def datos_proveedor_validos(rut, nombre, correo, telefono, id_proveedor=None):
@@ -57,6 +61,9 @@ def datos_proveedor_validos(rut, nombre, correo, telefono, id_proveedor=None):
         if not validar_rut(rut) or rut_en_uso(rut):
             return False
 
+    if not validar_correo(correo):
+        return False
+    
     # El correo no se puede repetir
     if correo_en_uso(correo, id_proveedor):
         return False

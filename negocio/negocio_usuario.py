@@ -13,7 +13,9 @@ from datos.repositorios.repositorio_usuario import (
     obtener_usuario_por_id,
     obtener_usuario_por_nombre_usuario,
     guardar_usuario,
-    existe_nombre_usuario
+    existe_nombre_usuario,
+    hay_otro_administrador,
+    listar_trabajores_asignables
 )
 from auxiliares.seguridad import (
     generar_hash,
@@ -71,6 +73,9 @@ def listar_usuarios_activos():
 def listar_usuarios_inactivos():
     return listar_usuarios_desactivados()
 
+def listar_trabajores():
+    return listar_trabajores_asignables()
+
 def obtener_usuario(id_usuario):
     return obtener_usuario_por_id(id_usuario)
 
@@ -79,6 +84,9 @@ def listar_roles():
 
 def obtener_rol(id_rol):
     return obtener_rol_por_id(id_rol)
+
+def existe_otro_administrador(id_usuario):
+    return hay_otro_administrador(id_usuario)
 
 # ------------ Autenticacion ------------
 
@@ -176,6 +184,12 @@ def cambiar_contrasena(usuario: Usuario, contrasena_actual, contrasena_nueva):
 def desactivar_usuario(usuario: Usuario):
     if usuario is None:
         return False
+
+    # Si es el ultimo administrador se cancela
+    # Debe existir por lo menos 1 administrador para gestionar el sistema
+    if usuario.id_rol.nombre == "Administrador":
+        if not existe_otro_administrador(usuario.id_usuario):
+            return False
 
     usuario.estado = False
 

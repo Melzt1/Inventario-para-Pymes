@@ -25,10 +25,15 @@ def listar_usuarios_de_almacen(almacen:Almacen):
 
 
 def asignar_usuario_almacen(usuario:Usuario, almacen:Almacen):
-    if usuario is None:
+    if usuario is None or almacen is None:
         return False
 
-    if almacen is None:
+    # validar que sean usuarios y almacenes activos
+    if not usuario.estado or not almacen.estado:
+        return False
+
+    # Administrador no le asigna almacen, accede a todos gracias a su rol
+    if usuario.id_rol.nombre == "Administrador":
         return False
 
     if existe_usuario_almacen(usuario.id_usuario, almacen.id_almacen):

@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-from negocio.negocio_usuario import listar_usuarios_activos
+from negocio.negocio_usuario import listar_trabajores
 from negocio.negocio_almacen import listar_almacenes_activos
 from negocio.negocio_usuario_almacen import (
     listar_almacenes_de_usuario,
@@ -27,7 +27,7 @@ def solicitar_almacen(titulo):
 
 
 def solicitar_trabajador(titulo):
-    return solicitar_seleccion_usuario(listar_usuarios_activos(), titulo)
+    return solicitar_seleccion_usuario(listar_trabajores(), titulo)
 
 # ternario
 def texto_encargado(asignacion):

@@ -41,3 +41,9 @@ def normalizar_rut(rut):
 def validar_telefono(telefono):
     telefono = telefono.strip().replace(" ", "")
     return re.fullmatch(r"\+?\d{8,15}", telefono) is not None
+
+def validar_correo(correo):
+
+    patron_correo = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    return bool(re.match(patron_correo, correo))

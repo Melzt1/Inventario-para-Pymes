@@ -7,6 +7,7 @@ from negocio.negocio_usuario import (
     listar_usuarios_activos,
     listar_usuarios_inactivos,
     listar_roles,
+    listar_trabajores,
     nombre_usuario_en_uso,
     errores_contrasena,
     registrar_usuario,
@@ -182,7 +183,7 @@ def solicitar_cambiar_contrasena():
 # ------------ Borrado logico ------------
 
 def solicitar_desactivar_usuario():
-    usuario = solicitar_seleccion_usuario(listar_usuarios_activos(), "=== Desactivar usuario ===")
+    usuario = solicitar_seleccion_usuario(listar_trabajores(), "=== Desactivar usuario ===")
     if usuario is None:
         return
 
