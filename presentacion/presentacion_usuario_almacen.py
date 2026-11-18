@@ -36,20 +36,21 @@ def mostrar_almacenes_de_un_usuario(): # Mostrar los almacenes donde trabaja un 
 
     print(tabla)
 
-def mostrar_usuarios_de_un_almacen(): # Muestra los usarios asignados a un almacen
+def mostrar_usuarios_de_un_almacen(): # Muestra los usarios que pertenecen a un almacen
     almacen = seleccionar_elemento(listar_almacenes_activos(), "almacenes")
     if almacen is None:
         return
 
-    usuarios = listar_usuarios_de_almacen(almacen)
-    if not usuarios:
+    asignaciones = listar_usuarios_de_almacen(almacen)
+    if not asignaciones:
         print(f"No hay usuarios asginado al almacen {almacen.nombre}")
         return
 
     tabla = PrettyTable()
     tabla.field_names = ['ID', 'Nombre', 'Usuario', 'Rol', 'Es encargado']
 
-    for usuario in usuarios:
+    for asignado in asignaciones:
+        usuario = asignado.id_usuario
         tabla.add_row([
             usuario.id_usuario,
             usuario.nombre,
@@ -71,7 +72,13 @@ def solicitar_asignar_usuario():
     if almacen is None:
         return
 
-    resultado = asignar_usuario(usuario, almacen)
+    confirmar = solicitar_confirmacion("Es encargado?")
+
+    if confirmar:
+        resultado = asignar_usuario(usuario, almacen, True)
+    else:
+        resultado = asignar_usuario(usuario, almacen)
+
     print("Usuario asignado correctamente") if resultado else print("No se pudo asignar el usuario al almacen")
 
 def solicitar_quitar_usuario(): # Quitar un usuario de un almacen
@@ -98,3 +105,22 @@ def solicitar_quitar_usuario(): # Quitar un usuario de un almacen
 
 def solicitar_cambiar_encargado():
     print("\n=== Cambiar encargado de almacen ===")
+
+    almacen = seleccionar_elemento(listar_almacenes_activos(), "almacenes")
+    if almacen is None:
+        return
+
+    asignados = listar_usuarios_de_almacen(almacen)
+
+    # Creo una nueva lista con todos los usuarios que NO son encargados
+    # Para que el encargado actual no sea elegible
+    asignables = [asignado for asignado in asignados if not asignado.es_encargado]
+    encargado = seleccionar_elemento(asignables, "usuarios")
+
+    if encargado is None:
+        return False
+
+    usuario = encargado.id_usuario
+    
+    resulltado = cambiar_encargado(usuario, almacen)
+    print(f"{usuario.nombre} ahora es encargado de {almacen.nombre}") if resulltado else print("No se pudo cambiar el encargado")

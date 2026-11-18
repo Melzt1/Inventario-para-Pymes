@@ -1,6 +1,11 @@
 from prettytable import PrettyTable
 
-from auxiliares.entradas import forzar_entero_positivo, campo_obligatorio, actualizar_mantener_campo_texto
+from auxiliares.entradas import (
+    campo_opcional,
+    forzar_entero_positivo, 
+    campo_obligatorio, 
+    actualizar_mantener_campo_texto
+)
 from negocio.negocio_almacen import (
     crear_almacen, 
     actualizar_almacen, 
@@ -62,8 +67,8 @@ def solicitar_datos_almacen():
 
     print("\n=== Direccion del almacen ===")
     calle = campo_obligatorio("Ingrese el nombre de la calle: ")
-    numero = input("Ingrese el numero de la direccion: ")
-    comuna = campo_obligatorio("Ingrese la comuna: ")
+    numero = campo_opcional("Ingrese el numero de la direccion: ")
+    comuna = campo_opcional("Ingrese la comuna: ")
     ciudad = campo_obligatorio("Ingrese la ciudad: ")
 
     resultado = crear_almacen(nombre, calle, numero, comuna, ciudad)

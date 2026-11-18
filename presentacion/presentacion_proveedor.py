@@ -126,7 +126,7 @@ def solicitar_datos_proveedor():
 
     print("\n=== Direccion del proveedor ===")
     calle = campo_obligatorio("Ingrese el nombre de la calle: ")
-    numero = input("Ingrese el numero de la direccion: ")
+    numero = campo_opcional("Ingrese el numero de la direccion: ")
     comuna = campo_opcional("Ingrese la comuna")
     ciudad = campo_obligatorio("Ingrese la ciudad: ")
 

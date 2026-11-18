@@ -1,5 +1,7 @@
 from prettytable import PrettyTable
 
+from datos.modelos.usuario import Usuario
+from datos.modelos.usuario_almacen import UsuarioAlmacen
 from auxiliares.validaciones import validar_contrasena
 from auxiliares.entradas import (
     campo_obligatorio, 
@@ -26,7 +28,12 @@ def seleccionar_elemento(elementos, mensaje):
 
     print(f"\n{mensaje} disponibles:")
     for i, elemento in enumerate(elementos, start=1):
-        print(f"[{i}] - {elemento.nombre}")    
+        if isinstance(elemento, Usuario):
+            print(f"[{i}] - {elemento.nombre:<12} - ({elemento.id_rol.nombre})")   
+        elif isinstance(elemento, UsuarioAlmacen): 
+            print(f"[{i}] - {elemento.id_usuario.nombre:<12} - ({elemento.id_usuario.id_rol.nombre})")               
+        else:
+            print(f"[{i}] - {elemento.nombre}")              
 
     opcion_valida = False
 

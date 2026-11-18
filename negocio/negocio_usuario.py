@@ -4,7 +4,6 @@ from auxiliares.validaciones import validar_contrasena
 from auxiliares.seguridad import generar_hash, verificar_contrasena
 from datos.modelos.usuario import Usuario
 from datos.modelos.rol import Rol
-from datos.modelos.almacen import Almacen
 from datos.repositorios.repositorio_rol import listado_roles
 from datos.repositorios.repositorio_usuario import (
     guardar_usuario,

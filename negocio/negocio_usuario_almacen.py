@@ -25,7 +25,7 @@ def listar_usuarios_de_almacen(id_almacen):
 def es_encargado(id_usuario, id_almacen):
     return obtener_encargado(id_usuario, id_almacen)
 
-def asignar_usuario(usuario: Usuario, almacen: Almacen):
+def asignar_usuario(usuario: Usuario, almacen: Almacen, es_encargado=False):
 
     # Validar que los objetos existan
     if usuario is None or almacen is None:
@@ -43,7 +43,7 @@ def asignar_usuario(usuario: Usuario, almacen: Almacen):
         return False
 
     try:
-        return guardar_asignacion(usuario.id_usuario, almacen.id_almacen)
+        return guardar_asignacion(usuario.id_usuario, almacen.id_almacen, es_encargado)
     except PeeweeException:
         return False
 
